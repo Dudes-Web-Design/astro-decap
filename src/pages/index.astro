@@ -2,11 +2,36 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import CTA from "@components/CTA.astro";
 import FAQ from "@components/FAQ.astro";
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 // Optimize our landing image and pass it as props to the BaseLayout (for preloading) and Landing (for rendering)
-import landingImage from "@assets/images/landing.jpg" // <-- THE PATH TO THE ASSET YOU WANT TO PRELOAD - The asset must live in src
+import landingImage from "@assets/images/landing.jpg"
 import { getImage } from "astro:assets";
 const optimizedImage = await getImage({src: landingImage, format: 'avif'})
+
+// Dynamically import SBS images
+const sbsImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/sbs/*.{jpg,jpeg,png,avif,webp}");
+const sbsImageEntries = Object.entries(sbsImages);
+const sbsImageData = await Promise.all(
+  sbsImageEntries.map(async ([path, loader]) => ({
+    path,
+    mod: await loader(),
+  }))
+);
+// Sort by filename for consistent order
+sbsImageData.sort((a, b) => a.path.localeCompare(b.path));
+
+// Dynamically import SBS-R images
+const sbsrImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/sbs-r/*.{jpg,jpeg,png,avif,webp}");
+const sbsrImageEntries = Object.entries(sbsrImages);
+const sbsrImageData = await Promise.all(
+  sbsrImageEntries.map(async ([path, loader]) => ({
+    path,
+    mod: await loader(),
+  }))
+);
+sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
 <BaseLayout
@@ -21,24 +46,14 @@ const optimizedImage = await getImage({src: landingImage, format: 'avif'})
   <section id="hero">
     <div class="cs-container">
       <div class="cs-flex-group">
-        <span class="cs-topper">Intermediate Kit</span>
-        <h1 class="cs-title">Intermediate Astro v4 <br/> Decap CMS</h1>
+        <span class="cs-topper">Licensed & Insured</span>
+        <h1 class="cs-title">Quality Septic & Excavation Services</h1>
         <p class="cs-text">
-          This intermediate kit includes a pre-configured Astro environment, which
-allows for repeated components, centralized data and greater room to scale as your clients grow. Decap CMS has been integrated to run a blog.
+          We are a full-service septic, groundwork, and excavation company serving the North Alabama and Middle Tennessee areas.
         </p>
-        <a href="/about" class="cs-button-solid">Explore More</a>
+        <a href="/about" class="cs-button-solid">Free Quote</a>
         <a href="/contact" class="cs-button-transparent">
-          <img
-            class="cs-img"
-            loading="lazy"
-            decoding="async"
-            src="https://csimg.nyc3.digitaloceanspaces.com/Hero/play.svg"
-            alt="play icon"
-            width="17"
-            height="17"
-          />
-          Get in Touch
+          Our Work
         </a>
       </div>
     </div>
@@ -46,16 +61,13 @@ allows for repeated components, centralized data and greater room to scale as yo
     <!-- Background Image -->
     <!-- We can't use Astro <Picture /> as it does not support multiple sources -->
     <picture class="cs-picture">
-      <source
-        media="(max-width: 600px)"
-        srcset="/assets/images/hero-m.webp"
-      />
-      <source media="(min-width: 601px)" srcset="/assets/images/hero.jpg" />
+      <source media="(max-width: 600px)" srcset={optimizedImage.src} />
+      <source media="(min-width: 601px)" srcset={optimizedImage.src} />
       <img
         aria-hidden="true"
         decoding="async"
         src={optimizedImage.src}
-        alt="new home"
+        alt="new septic system"
         width="2500"
         height="1667"
         loading="eager"
@@ -74,16 +86,15 @@ allows for repeated components, centralized data and greater room to scale as yo
         <img
           aria-hidden="true"
           decoding="async"
-          src="/assets/svgs/service1.svg"
+          src="/assets/svgs/sewer.svg"
           alt="appliance"
           width="48"
           height="48"
         />
       </picture>
-      <h2>Service 1</h2>
+      <h2>Septic Systems</h2>
       <p>
-        Talk about the service with keywords people will be searching for it by.
-        Keep it 1-2 sentences.
+        We offer septic system installation, repair, and maintenance.
       </p>
     </div>
     <div class="card">
@@ -91,16 +102,15 @@ allows for repeated components, centralized data and greater room to scale as yo
         <img
           aria-hidden="true"
           decoding="async"
-          src="/assets/svgs/service2.svg"
+          src="/assets/svgs/bulldozer.svg"
           alt="appliance"
           width="48"
           height="48"
         />
       </picture>
-      <h2>Service 2</h2>
+      <h2>Groundwork</h2>
       <p>
-        Talk about the service with keywords people will be searching for it by.
-        Keep it 1-2 sentences.
+        We offer groundwork services, including excavation, grading, and site preparation.
       </p>
     </div>
     <div class="card">
@@ -108,16 +118,15 @@ allows for repeated components, centralized data and greater room to scale as yo
         <img
           aria-hidden="true"
           decoding="async"
-          src="/assets/svgs/service3.svg"
+          src="/assets/svgs/trowel-bricks-solid.svg"
           alt="appliance"
           width="48"
           height="48"
         />
       </picture>
-      <h2>Service 3</h2>
+      <h2>Concrete Work</h2>
       <p>
-        Talk about the service with keywords people will be searching for it by.
-        Keep it 1-2 sentences.
+        We offer a variety of concrete work, including slabs, concrete sidewalks, retaining walls, and driveways.
       </p>
     </div>
   </section>
@@ -131,18 +140,10 @@ allows for repeated components, centralized data and greater room to scale as yo
       <!-- Left Image Section -->
       <div class="cs-left">
         <picture class="cs-picture cs-picture1">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/cabinets2-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/cabinets2.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/cabinets2.jpg"
+            src={sbsImageData[1] ? sbsImageData[1].mod.default.src : '/assets/images/equipment2.jpg'}
             alt="cabinets"
             loading="lazy"
             width="400"
@@ -150,18 +151,10 @@ allows for repeated components, centralized data and greater room to scale as yo
           />
         </picture>
         <picture class="cs-picture cs-picture2">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/construction-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/construction.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/construction.jpg"
+            src={sbsImageData[0] ? sbsImageData[0].mod.default.src : '/assets/images/driveway.jpg'}
             alt="house"
             loading="lazy"
             width="400"
@@ -172,26 +165,19 @@ allows for repeated components, centralized data and greater room to scale as yo
       <!-- Right Content Section-->
       <div class="cs-right">
         <span class="cs-topper">About Us</span>
-        <h2 class="cs-title">About Company Title</h2>
+        <h2 class="cs-title">J.R. Outdoor Solutions</h2>
         <p class="cs-text">
-          In consequat tincidunt turpis sit amet imperdiet. Praesent Class
-          officelan nonatoureanor mauris laoreet, iaculis libero quis. Curabitur
-          et tempus eri consequat tincidunt turpis sit amet imperdiet. Praesent
-          nonatourean olei aptent taciti sociosqu ad litora torquent per.
+          We transform properties with expert excavation and hardscaping services across North Alabama and Middle Tennessee. Our specialized team delivers premium septic system installations, custom patio designs, retaining walls, professional concrete work, and drainage solutions.
         </p>
         <p class="cs-text">
-          In consequat tincidunt turpis sit amet imperdiet. Praesent Class
-          officelan nonatoureanor mauris laoreet, iaculis libero quis. Curabitur
-          et tempus eri consequat tincidunt turpis sit amet imperdiet. Praesent
-          nonatourean olei aptent taciti sociosqu ad litora torquent per.
+          As a young boy, Jake was immersed in the world of agriculture, spending countless hours alongside his father on their family farm. Those years spent working on the farm, ignited a deep-rooted love for the outdoors within him.  It didn't take him long to find himself drawn to heavy equipment and the experience of working with his hands in the dirt. 
         </p>
         <div class="cs-flex-group">
           <p class="cs-flex-p">
-            In consequat tincidunt turpis sit amet imperdiet. Praesent Classei
-            consequat tincidunt turpis sit amet imperdiet for mind.
+            Your project deserves the best, and that's exactly what we deliver.
           </p>
-          <span class="cs-name">Justin Time</span>
-          <span class="cs-job">CEO-Founder</span>
+          <span class="cs-name">Jake Rubelsky</span>
+          <span class="cs-job">Owner & Operator</span>
           <img
             class="cs-quote-icon"
             loading="lazy"
@@ -216,18 +202,10 @@ allows for repeated components, centralized data and greater room to scale as yo
       <!-- Left Image Section -->
       <div class="cs-left">
         <picture class="cs-picture cs-picture1">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/construction-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/construction.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/construction.jpg"
+            src={sbsrImageData[0] ? sbsrImageData[0].mod.default.src : '/assets/images/construction.jpg'}
             alt="house"
             loading="lazy"
             width="400"
@@ -235,18 +213,10 @@ allows for repeated components, centralized data and greater room to scale as yo
           />
         </picture>
         <picture class="cs-picture cs-picture2">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/cabinets2-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/cabinets2.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/cabinets2.jpg"
+            src={sbsrImageData[1] ? sbsrImageData[1].mod.default.src : '/assets/images/cabinets2.jpg'}
             alt="cabinets"
             loading="lazy"
             width="400"
@@ -256,22 +226,21 @@ allows for repeated components, centralized data and greater room to scale as yo
       </div>
       <!-- Right Content Section-->
       <div class="cs-right">
-        <span class="cs-topper">SEO Ranking</span>
-        <h2 class="cs-title">Talk about a main service keyword</h2>
+        <span class="cs-topper">Full-Service</span>
+        <h2 class="cs-title">Septic Install, Repairs, and Maintenance</h2>
         <p class="cs-text">
-          In consequat tincidunt turpis sit amet imperdiet. Praesent Class
-          officelan nonatoureanor mauris laoreet, iaculis libero quis. Curabitur
-          et tempus eri consequat tincidunt turpis sit amet imperdiet. Praesent
-          nonatourean olei aptent taciti sociosqu ad litora torquent per.
+          Transform your property with professional septic system installation 
+          and repair services from our expert excavation team. From complete septic system 
+          overhauls to new installations for commercial properties, we deliver reliable solutions 
+          that stand the test of time. Our comprehensive services include a variety of drainage systems, field line installation, and extensions that
+          ensures your septic system operates at peak efficiency. 
         </p>
         <p class="cs-text">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non tenetur,
-          iure nihil ipsam qui atque commodi id voluptatem nesciunt, quis animi
-          fuga cum doloribus! Eaque laboriosam, unde consectetur iure asperiores
-          ullam. Consequuntur debitis a voluptatibus vitae optio autem explicabo
-          quia neque est quas, in placeat. Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Doloribus modi laudantium voluptatibus
-          rem libero error minus quia eligendi sapiente eos.
+          Beyond septic services, we're your trusted partner for other excavation needs, 
+          including driveway and patio construction, retaining walls, and concrete pad installations. 
+          With our proven track record in land management and commercial site preparation, 
+          property owners trust us to handle projects of any scale. Every job is executed with precision and care, 
+          backed by our commitment to quality and customer satisfaction.
         </p>
       </div>
     </div>
@@ -283,9 +252,9 @@ allows for repeated components, centralized data and greater room to scale as yo
 
   <section id="gallery">
     <div class="cs-container">
-      <span class="cs-topper">Our Portfolio</span>
+      <span class="cs-topper">Our Work</span>
       <h2 class="cs-title">
-        Et orci volutpat, back up generator installations
+        See Our Recent Projects
       </h2>
       <div class="cs-image-group">
         <!-- Row 1-->
@@ -765,26 +734,12 @@ allows for repeated components, centralized data and greater room to scale as yo
 
       .cs-container {
         padding: clamp(7em, 27.95vw, 17.5em) 0 clamp(9em, 30.95vw, 23.5em) 0;
+        /* Remove these pseudo-elements that create the lines */
         &:after {
-          /* Right Line */
-          content: "";
-          width: 1px;
-          height: 100%;
-          background: -moz-linear-gradient(
-            top,
-            rgba(250, 251, 252, 0) 0%,
-            rgba(250, 251, 252, 0.5) 100%
-          ); /* FF3.6-15 */
-          background: -webkit-linear-gradient(
-            top,
-            rgba(250, 251, 252, 0) 0%,
-            rgba(250, 251, 252, 0.5) 100%
-          ); /* Chrome10-25,Safari5.1-6 */
-          opacity: 1;
-          display: block;
-          position: absolute;
-          top: 0;
-          right: 0;
+          display: none; /* This removes the right line */
+        }
+        &:before {
+          display: none; /* This removes the left line */
         }
       }
 
@@ -798,11 +753,10 @@ allows for repeated components, centralized data and greater room to scale as yo
   /* Desktop Parallax Effect - 1300px */
   @media only screen and (min-width: 81.25em) {
     #hero {
-      background: url("/assets/images/hero.jpg");
+      background: url("assets/images/landing.jpg");
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-      /* creates parallax effect on background image */
       background-attachment: fixed;
     }
   }
@@ -1604,5 +1558,10 @@ allows for repeated components, centralized data and greater room to scale as yo
         }
       }
     }
+  }
+
+  /* Remove vertical fade lines in hero on all screen sizes */
+  #hero .cs-container:before {
+    display: none;
   }
 </style>

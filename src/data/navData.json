@@ -24,12 +24,12 @@
     ]
   },
   {
-    "key": "Reviews",
+    "key": "Services",
     "url": "/reviews/",
     "children": []
   },
   {
-    "key": "Blog",
+    "key": "Areas Served",
     "url": "/blog/",
     "children": []     
   }
