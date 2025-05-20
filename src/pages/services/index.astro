@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Landing from "@components/Landing.astro";
+import Services from "@components/Services.astro";
+import CTA from "@components/CTA.astro";
+import landingImage from "@assets/images/landing.jpg";
+import { getImage } from "astro:assets";
+
+const optimizedImage = await getImage({ src: landingImage, format: 'avif' });
+---
+
+<BaseLayout title="Our Services" description="All the services we offer." preloadedImage={optimizedImage}>
+  <Landing title="Our Services" image={landingImage} imageAlt="Septic and excavation services" />
+  <Services />
+  <CTA />
+</BaseLayout> 

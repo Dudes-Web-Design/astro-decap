@@ -1,25 +1,21 @@
 ---
-import { Picture } from "astro:assets"
-const { title, image } = Astro.props
+import { Image } from "astro:assets"
+const { title, image, imageAlt } = Astro.props
 ---
 
 <section id="int-hero">
-<h1 id="home-h">{title}</h1>
-
-<!-- standard <picture> attributes are supported. Set loading to lazy for assets below the fold -->
- <!-- Note: because we use the getImage function to generate an optimized image, we need to use special properties. More info on [the getImage() page](https://docs.astro.build/en/guides/images/#generating-images-with-getimage) -->
- <Picture 
-    src={image.src}
-    width={image.attributes.width}
-    height={image.attributes.height}
-    formats={['avif', 'webp']} 
-    alt="A description of my image."
-    aria-hidden="true" 
-    decoding="async"
-    alt="kitchen cabinets"
-    loading="eager"
-/>
-
+  <picture class="int-hero-image">
+    <Image 
+      src={image} 
+      alt={imageAlt ?? `${title} landscape`} 
+      width={1200} 
+      height={400} 
+      decoding="async" 
+      loading="eager" 
+      style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:-2;" 
+    />
+  </picture>
+  <h1 id="home-h">{title}</h1>
 </section>
 
 <style lang="less">

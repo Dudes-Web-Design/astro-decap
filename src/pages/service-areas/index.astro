@@ -1,0 +1,28 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Landing from "@components/Landing.astro";
+import { getCollection } from "astro:content";
+
+// Import will provide metadata directly
+import landingImageMeta from "@assets/images/landing.jpg";
+// const { getImage } = AstroAssets; // No longer needed if using direct meta
+
+// landingImageMeta is ALREADY an image metadata object.
+const imageToRender = landingImageMeta;
+
+const areas = await getCollection("service-areas");
+---
+
+<BaseLayout title="Service Areas" description="Our service areas" preloadedImage={imageToRender}>
+  <Landing title="Service Areas" image={imageToRender} />
+  <section>
+    <h2>We proudly serve:</h2>
+    <ul>
+      {areas.map(area => (
+        <li>
+          <a href={`/service-areas/${area.data.slug}/`}>{area.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout> 

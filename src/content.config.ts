@@ -19,6 +19,34 @@ const blogsCollection = defineCollection({
 		}),
 });
 
+const serviceAreasCollection = defineCollection({
+	loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/service-areas" }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			slug: z.string(),
+			image: image(),
+			imageAlt: z.string(),
+			body: z.string(),
+		}),
+});
+
+const servicesCollection = defineCollection({
+	loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/services" }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			slug: z.string(),
+			image: image(),
+			imageAlt: z.string(),
+			body: z.string(),
+		}),
+});
+
 export const collections = {
 	blog: blogsCollection,
+	"service-areas": serviceAreasCollection,
+	services: servicesCollection,
 };

@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+const services = await getCollection("services");
+---
+
+<section id="services">
+  <h2>Our Services</h2>
+  <div class="services-list">
+    {services.map((service) => (
+      <a href={`/services/${service.data.slug}`} class="service-card">
+        <img src={service.data.image.src} alt={service.data.imageAlt} width="200" />
+        <h3>{service.data.title}</h3>
+        <p>{service.data.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style lang="less">
+#services {
+  padding: 2rem 0;
+  .services-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    background: #f7f7f7;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    width: 220px;
+    transition: box-shadow 0.2s;
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    img {
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      width: 200px;
+      height: 120px;
+      object-fit: cover;
+    }
+    h3 {
+      margin: 0.5rem 0 0.25rem 0;
+      color: var(--headerColor, #222);
+      font-size: 1.25rem;
+      text-align: center;
+    }
+    p {
+      color: var(--bodyTextColor, #444);
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+}
+</style> 

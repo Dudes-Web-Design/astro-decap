@@ -6,6 +6,7 @@ import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import "@styles/root.less";
 import "@styles/dark.less";
+import { ViewTransitions } from "astro:transitions";
 
 // Define a type for images from the content collection
 type ContentImage = {
@@ -31,7 +32,7 @@ const { description, title, preloadedImage } = Astro.props as Props;
 <html lang="en">
         <head>
             <!-- View Transitions support -->
-            <ClientRouter />
+            <ViewTransitions />
 
             <!-- Standard meta tags -->
             <meta charset="UTF-8">

@@ -4,16 +4,18 @@ import CTA from "@components/CTA.astro";
 import Landing from "@components/Landing.astro";
 import FAQ from "@components/FAQ.astro";
 
-// Optimize our landing image and pass it as props to the BaseLayout (for preloading) and Landing (for rendering)
-import landingImage from "@assets/images/landing.jpg" // <-- THE PATH TO THE ASSET YOU WANT TO PRELOAD - The asset must live in src
-import { getImage } from "astro:assets";
-const optimizedImage = await getImage({src: landingImage, format: 'avif'})
+// Import will provide metadata directly
+import landingImageMeta from "@assets/images/landing.jpg";
+// const { getImage } = AstroAssets; // No longer needed if using direct meta
+
+// landingImageMeta is ALREADY an image metadata object.
+const imageToRender = landingImageMeta;
 ---
 
 <BaseLayout
   title="About"
   description="Meta description for the page"
-  preloadedImage = {optimizedImage}
+  preloadedImage = {imageToRender}
 >
   <!-- ============================================ -->
   <!--                    LANDING                   -->
@@ -21,7 +23,7 @@ const optimizedImage = await getImage({src: landingImage, format: 'avif'})
 
   <Landing 
     title="About Us"
-    image={optimizedImage}
+    image={imageToRender}
   />
 
   <!-- ============================================ -->

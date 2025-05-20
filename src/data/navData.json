@@ -25,12 +25,25 @@
   },
   {
     "key": "Services",
+    "url": "/services/",
+    "children": []
+  },
+  {
+    "key": "Reviews",
     "url": "/reviews/",
     "children": []
   },
   {
-    "key": "Areas Served",
+    "key": "Blog",
     "url": "/blog/",
     "children": []     
+  },
+  {
+    "key": "Service Areas",
+    "url": "/service-areas/",
+    "children": [
+      { "key": "Pulaski, TN", "url": "/service-areas/pulaski-tn/" },
+      { "key": "Athens, AL", "url": "/service-areas/athens-al/" }
+    ]
   }
 ]

@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Landing from "@components/Landing.astro";
+
+export async function getStaticPaths() {
+  const areas = await getCollection("service-areas");
+  return areas.map((entry) => ({
+    params: { city: entry.data.slug },
+    props: { area: entry },
+  }));
+}
+
+const { area } = Astro.props as { area: CollectionEntry<"service-areas"> };
+const { Content } = await render(area);
+---
+
+<BaseLayout title={area.data.title} description={area.data.description} preloadedImage={area.data.image}>
+  <Landing title={area.data.title} image={area.data.image} />
+  <section>
+    <Content />
+  </section>
+</BaseLayout> 

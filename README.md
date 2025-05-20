@@ -11,29 +11,6 @@
     Created and maintained by <a href="https://github.com/BuckyBuck135" target="_blank">BuckyBuck135</a>
   </p>
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Getting Started](#gettingStarted)
-- [Prerequisites](#prerequisites)
-- [Features](#features)
-- [Project Structure](#projectStructure)
-  - [Project Tree](#projectTree)
-  - [Root Files and Folders](#rootFilesAndFolders)
-- [Expanding the Project](#expandingTheProject)
-  - [Reusing Code](#reusingCode)
-  - [Scripts and Event Handling](#scripts)
-  - [Adding More Pages](#addingMorePages)
-  - [Navigation via navData.json](#navigationViaFrontMatter)
-  - [Built-in Astro components](#builtinastrocomponents)
-  - [Custom Picture component](#Custompicturecomponent)
-  - [Configuring the CMS](#configuringTheCms)
-  - [Astro Content Collections](#AstroContentCollections)
-  - [Preloading images](#preloadingimages)
-  - [Sitemap Configuration](#sitemapConfiguration)
-- [Deployment](#deployment)
-- [Acknowledgments](#acknowledgments)
-- [Conclusion](#conclusion)
 
 <a name="overview"></a>
 
