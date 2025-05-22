@@ -29,16 +29,6 @@
     "children": []
   },
   {
-    "key": "Reviews",
-    "url": "/reviews/",
-    "children": []
-  },
-  {
-    "key": "Blog",
-    "url": "/blog/",
-    "children": []     
-  },
-  {
     "key": "Service Areas",
     "url": "/service-areas/",
     "children": [
