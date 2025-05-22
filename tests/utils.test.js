@@ -1,13 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
 import { formatDate, getCurrentYear } from '../src/js/utils.js';
 
-describe('utils', () => {
-  it('formats date to "MMM D, YYYY"', () => {
-    expect(formatDate('2020-01-02')).toBe('Jan 2, 2020');
-  });
+test('formats date to "MMM D, YYYY"', () => {
+  assert.equal(formatDate('2020-01-02'), 'Jan 2, 2020');
+});
 
-  it('returns the current year', () => {
-    const year = new Date().getFullYear();
-    expect(getCurrentYear()).toBe(year);
-  });
+test('returns the current year', () => {
+  const year = new Date().getFullYear();
+  assert.equal(getCurrentYear(), year);
 });
