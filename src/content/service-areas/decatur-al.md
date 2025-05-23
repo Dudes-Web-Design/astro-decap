@@ -5,8 +5,7 @@ description: Septic & Excavation Services in Decatur, AL
 image: ../../assets/images/landing.jpg
 imageAlt: Decatur, AL landscape
 body: |
-  ## Serving Decatur, AL
-  We offer septic, groundwork, and excavation services in Decatur and the surrounding Morgan County region. Get in touch for a free estimate!
+  As "The River City," with a metropolitan population over 159,000, Decatur requires specialized outdoor services to manage its unique riverside environment and address aging infrastructure. J.R. Outdoor Solutions is expertly equipped, offering advanced Drainage Solutions crucial for managing water effectively near the Tennessee River, especially given the characteristics of the local Decatur soil series. Our services include thorough Excavation & Site Prep and comprehensive Land Clearing & Grading for new residential developments like River Road Estates and major community projects such as the Wilson Morgan Park recreation center. We also provide essential Septic Installation and prompt Septic Repair & Replacement. To complement the area's natural beauty and historic districts, we design and build custom Outdoor Living Spaces, resilient Retaining Walls, and attractive Concrete Patios & Walkways.
 ---
 
 ## About Decatur, AL
