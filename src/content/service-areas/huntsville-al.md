@@ -5,8 +5,7 @@ description: Septic & Excavation Services in Huntsville, AL
 image: ../../assets/images/landing.jpg
 imageAlt: Huntsville, AL landscape
 body: |
-  ## Serving Huntsville, AL
-  We offer septic, groundwork, and excavation services in Huntsville and the surrounding Madison County region. Get in touch for a free estimate!
+  "The Rocket City," Alabama's most populous with over 219,000 residents and a metro area exceeding 542,000, is experiencing unparalleled growth driven by aerospace and technology. J.R. Outdoor Solutions supports this dynamic expansion with large-scale Excavation & Site Prep and comprehensive Land Clearing & Grading for major mixed-use developments like Clift Farm and Hays Farm. We implement advanced Drainage Solutions critical for managing the area's heavy, compacted clay soil and protecting new constructions. We also provide essential Septic Installation and efficient Septic Repair & Replacement. We craft beautiful, functional Outdoor Living Spaces, durable Concrete Patios & Walkways, and engineered Retaining Walls, enhancing the quality of life in this thriving hub near landmarks like the U.S. Space & Rocket Center.
 ---
 
 ## About Huntsville, AL

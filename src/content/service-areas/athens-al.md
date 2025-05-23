@@ -5,8 +5,7 @@ description: Septic & Excavation Services in Athens, AL
 image: ../../assets/images/landing.jpg
 imageAlt: Athens, AL landscape
 body: |
-  ## Serving Athens, AL
-  We offer septic, groundwork, and excavation services in Athens and the surrounding region. Get in touch for a free estimate!
+  As Alabama's second fastest-growing city with over 32,000 residents, Athens is experiencing remarkable expansion. J.R. Outdoor Solutions provides critical support for this development, offering expert Excavation & Site Prep and thorough Land Clearing & Grading for new residential communities like Whispering Pines and commercial ventures such as The Shoppes at Lindsay Lane. To protect investments from local weather, our specialized Drainage Solutions effectively manage water, considering the nuances of the regional Bama soil and addressing needs highlighted by initiatives like the Strain Road Project. For new constructions or upgrades, we offer dependable Septic Installation and timely Septic Repair & Replacement. We also enhance properties with durable Retaining Walls for landscape stability, custom Concrete Patios & Walkways, and complete Outdoor Living Spaces designed to complement both historic districts and modern homes.
 ---
 
 ## About Athens, AL
