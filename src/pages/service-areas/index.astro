@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Landing from "@components/Landing.astro";
+import ServiceAreasMap from "@components/ServiceAreasMap.astro";
+import ServiceAreasDirectory from "@components/ServiceAreasDirectory.astro";
+import ServiceAreaInquiry from "@components/ServiceAreaInquiry.astro";
 import { getCollection } from "astro:content";
 
 // Import will provide metadata directly
@@ -11,18 +14,53 @@ import landingImageMeta from "@assets/images/landing.jpg";
 const imageToRender = landingImageMeta;
 
 const areas = await getCollection("service-areas");
+
+// Transform data for components
+const serviceAreasData = areas.map(area => ({
+  title: area.data.title,
+  slug: area.data.slug,
+  description: area.data.description,
+  lat: area.data.lat,
+  lng: area.data.lng,
+}));
 ---
 
 <BaseLayout title="Service Areas" description="Our service areas" preloadedImage={imageToRender}>
-  <Landing title="Service Areas" image={imageToRender} />
-  <section>
-    <h2>We proudly serve:</h2>
-    <ul>
-      {areas.map(area => (
-        <li>
-          <a href={`/service-areas/${area.data.slug}/`}>{area.data.title}</a>
-        </li>
-      ))}
-    </ul>
+  <Landing 
+    title="Service Areas" 
+    subtitle="Professional Septic & Excavation Services Across North Alabama and Middle Tennessee"
+    image={imageToRender} 
+  />
+  
+  <!-- Interactive Map Section -->
+  <section class="cs-map-section">
+    <div class="cs-container">
+      <ServiceAreasMap serviceAreas={serviceAreasData} />
+    </div>
   </section>
-</BaseLayout> 
+
+  <!-- Service Areas Directory -->
+  <ServiceAreasDirectory serviceAreas={serviceAreasData} />
+
+  <!-- Service Area Inquiry -->
+  <ServiceAreaInquiry />
+</BaseLayout>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.cs-map-section {
+  .section-padding();
+  background-color: var(--bodyTextColorWhite);
+  
+  body.dark-mode & {
+    background-color: @dark-bg;
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 80rem;
+  }
+}
+</style> 

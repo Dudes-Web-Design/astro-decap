@@ -15,48 +15,71 @@ backend:
     deleteMedia: Delete "{{path}}" - {{author-name}} <{{author-login}}> via DecapBridge
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
-# Logo for Decap login page. Change url to a link to the image you want to use, no file paths, must be a URL
+# Logo for Decap login page
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 
-# Add site link in DecapCMS (optional)
-site_url: https://intermediate-astro-kit-decap-cms.netlify.app
+# Site URL for J.R. Outdoor Solutions
+site_url: https://jroutdoorsolutions.com
 
-media_folder: src/assets/images/blog # Location where files will be stored in the repo - we store them in src so that Astro can optimize them.
-public_folder: src/assets/images/blog # Ensure that this path is the same as the media_folder path above.
+# Media configuration - organized by content type for better asset management
+media_folder: src/assets/images
+public_folder: src/assets/images
+
+# Configure media library for better organization
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demo
+    multiple: false
+    tabs: 'file camera url facebook gdrive gphotos dropbox instagram'
+    effects: 'crop,rotate,enhance,grayscale'
+    imageShrink: '2000x2000'
+    previewStep: true
+    clearable: true
 
 collections:
-  - name: "blog" # Used in routes, e.g., /admin/collections/blog. Is also the key when fetching data from the CMS.
-    label: "Blog" # Used in the admin dashboard UI
-    folder: "src/content/blog" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    fields: # The fields for each document
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "description", widget: "string" }
-      - { label: "Author", name: "author", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Cover Image", name: "image", widget: "image" }
-      - { label: "Image Caption", name: "imageAlt", widget: "string" }
-      - { label: "Is it a featured post?", name: "isFeatured", widget: "boolean", default: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "blog/{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "SEO Description", name: "description", widget: "text", required: true, hint: "Brief description for search engines (150-160 characters)" }
+      - { label: "Author", name: "author", widget: "string", required: true, default: "J.R. Outdoor Solutions" }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: true }
+      - { label: "Cover Image", name: "image", widget: "image", required: true, media_folder: "/src/assets/images/blog" }
+      - { label: "Image Alt Text", name: "imageAlt", widget: "string", required: true, hint: "Describe the image for accessibility" }
+      - { label: "Featured Post", name: "isFeatured", widget: "boolean", default: false, hint: "Show on homepage" }
+      - { label: "Content", name: "body", widget: "markdown", required: true }
+
   - name: "service-areas"
     label: "Service Areas"
     folder: "src/content/service-areas"
     create: true
+    slug: "{{slug}}"
+    preview_path: "service-areas/{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "description", widget: "string" }
-      - { label: "City Slug", name: "slug", widget: "string", hint: "URL slug, e.g. pulaski-tn" }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Image Alt", name: "imageAlt", widget: "string" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "City/Area Name", name: "title", widget: "string", required: true }
+      - { label: "SEO Description", name: "description", widget: "text", required: true, hint: "Brief description for search engines (150-160 characters)" }
+      - { label: "URL Slug", name: "slug", widget: "string", required: true, hint: "URL-friendly version, e.g. pulaski-tn", pattern: ['^[a-z0-9-]+$', "Must be lowercase letters, numbers, and hyphens only"] }
+      - { label: "Header Image", name: "image", widget: "image", required: true, media_folder: "/src/assets/images/service-areas" }
+      - { label: "Image Alt Text", name: "imageAlt", widget: "string", required: true, hint: "Describe the image for accessibility" }
+      - { label: "Latitude", name: "lat", widget: "number", value_type: "float", step: 0.0001, required: false, hint: "Optional: For map display" }
+      - { label: "Longitude", name: "lng", widget: "number", value_type: "float", step: 0.0001, required: false, hint: "Optional: For map display" }
+      - { label: "Content", name: "body", widget: "markdown", required: true, hint: "Detailed information about services in this area" }
+
   - name: "services"
     label: "Services"
     folder: "src/content/services"
     create: true
+    slug: "{{slug}}"
+    preview_path: "services/{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "description", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string", hint: "URL slug, e.g. septic-installation" }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Image Alt", name: "imageAlt", widget: "string" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Service Name", name: "title", widget: "string", required: true }
+      - { label: "SEO Description", name: "description", widget: "text", required: true, hint: "Brief description for search engines (150-160 characters)" }
+      - { label: "URL Slug", name: "slug", widget: "string", required: true, hint: "URL-friendly version, e.g. septic-installation", pattern: ['^[a-z0-9-]+$', "Must be lowercase letters, numbers, and hyphens only"] }
+      - { label: "Service Image", name: "image", widget: "image", required: true, media_folder: "/src/assets/images/services" }
+      - { label: "Image Alt Text", name: "imageAlt", widget: "string", required: true, hint: "Describe the image for accessibility" }
+      - { label: "Service Details", name: "body", widget: "markdown", required: true, hint: "Detailed description of the service, process, and benefits" }

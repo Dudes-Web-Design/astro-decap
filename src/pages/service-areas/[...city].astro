@@ -3,6 +3,9 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Landing from "@components/Landing.astro";
+import AboutSection from "@components/AboutSection.astro";
+import ServicesGrid from "@components/ServicesGrid.astro";
+import ContactForm from "@components/ContactForm.astro";
 
 export async function getStaticPaths() {
   const areas = await getCollection("service-areas");
@@ -14,11 +17,34 @@ export async function getStaticPaths() {
 
 const { area } = Astro.props as { area: CollectionEntry<"service-areas"> };
 const { Content } = await render(area);
+
+// Extract city name for display (remove state abbreviation for cleaner display)
+const cityDisplayName = area.data.title.replace(/, (AL|TN)$/, '');
 ---
 
 <BaseLayout title={area.data.title} description={area.data.description} preloadedImage={area.data.image}>
   <Landing title={area.data.title} image={area.data.image} />
-  <section>
-    <Content />
-  </section>
+  
+  <!-- About Section with content from markdown -->
+  <AboutSection 
+    title={`About Our Services in ${cityDisplayName}`}
+    content={area.data.body}
+    topper="Service Area"
+    id="about-services"
+  />
+  
+  <!-- Services Grid showing available services -->
+  <ServicesGrid 
+    cityName={area.data.title}
+    title={`Services We Offer in ${cityDisplayName}`}
+  />
+  
+  <!-- Contact Form for inquiries -->
+  <ContactForm 
+    title={`Get Started in ${cityDisplayName}`}
+    subtitle="Free Consultation & Estimate"
+    description={`Ready to start your project in ${cityDisplayName}? Contact our experienced team today for professional excavation, septic, and groundwork services.`}
+    topper="Contact Us"
+    id="contact-form"
+  />
 </BaseLayout> 

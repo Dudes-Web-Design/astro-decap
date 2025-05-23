@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets"
-const { title, image, imageAlt } = Astro.props
+const { title, subtitle, image, imageAlt } = Astro.props
 ---
 
 <section id="int-hero">
@@ -16,6 +16,7 @@ const { title, image, imageAlt } = Astro.props
     />
   </picture>
   <h1 id="home-h">{title}</h1>
+  {subtitle && <p class="hero-subtitle">{subtitle}</p>}
 </section>
 
 <style lang="less">
@@ -79,6 +80,19 @@ const { title, image, imageAlt } = Astro.props
             position: relative;
         }
 
+        .hero-subtitle {
+            font-size: 1.125rem;
+            font-weight: 500;
+            text-align: center;
+            width: 96%;
+            max-width: (600/16rem);
+            margin: 0 auto;
+            margin-bottom: (30/16rem);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+            position: relative;
+        }
+
         p {
             text-align: center;
             width: 96%;
@@ -99,6 +113,11 @@ const { title, image, imageAlt } = Astro.props
         padding-top: (180/16rem);
         background-attachment: fixed;
         padding-block-end: (100/16rem);
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            max-width: (700/16rem);
+        }
     }
 }
 </style>

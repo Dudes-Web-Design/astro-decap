@@ -1,0 +1,343 @@
+/* LESS Mixins for Component System */
+
+/*-- -------------------------- -->
+<---      Spacing Mixins        -->
+<--- -------------------------- -*/
+
+// Flexible padding mixin
+.padding(@top: @spacing-md, @right: @spacing-md, @bottom: @spacing-md, @left: @spacing-md) {
+    padding: @top @right @bottom @left;
+}
+
+// Flexible margin mixin
+.margin(@top: @spacing-md, @right: @spacing-md, @bottom: @spacing-md, @left: @spacing-md) {
+    margin: @top @right @bottom @left;
+}
+
+// Section padding (consistent with existing styles)
+.section-padding() {
+    padding: @section-padding;
+}
+
+// Container mixin (consistent with existing .container class)
+.container() {
+    width: 92%;
+    margin: auto;
+    position: relative;
+}
+
+// Common spacing patterns
+.stack-spacing(@gap: @spacing-md) {
+    > * + * {
+        margin-top: @gap;
+    }
+}
+
+.inline-spacing(@gap: @spacing-md) {
+    > * + * {
+        margin-left: @gap;
+    }
+}
+
+// Component spacing patterns
+.component-spacing() {
+    margin-bottom: @spacing-xxl;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/*-- -------------------------- -->
+<---    Typography Mixins       -->
+<--- -------------------------- -*/
+
+// Enhanced CodeStitch-style heading with standardized line height
+.cs-title-style() {
+    font-family: @font-family-base;
+    font-size: var(--headerFontSize);
+    font-weight: @font-weight-black;
+    line-height: @line-height-tight;
+    margin: 0 auto (16/16rem);
+    color: var(--headerColor);
+}
+
+// Enhanced CodeStitch-style body text with standardized line height
+.cs-text-style() {
+    font-family: @font-family-base;
+    font-size: var(--bodyFontSize);
+    line-height: @line-height-relaxed;
+    width: 100%;
+    margin: 0 auto;
+    color: var(--bodyTextColor);
+}
+
+// Enhanced CodeStitch-style topper with standardized sizing
+.cs-topper-style() {
+    font-family: @font-family-base;
+    font-size: @topper-text-size;
+    font-weight: @font-weight-bold;
+    line-height: @line-height-normal;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    display: block;
+}
+
+// Standardized card title typography
+.card-title-style() {
+    font-family: @font-family-base;
+    font-size: @card-title-size;
+    font-weight: @font-weight-bold;
+    line-height: @line-height-tight;
+    color: var(--headerColor);
+    margin: 0;
+    
+    body.dark-mode & {
+        color: @dark-text-primary;
+    }
+}
+
+// Standardized card text typography
+.card-text-style() {
+    font-family: @font-family-base;
+    font-size: @card-text-size;
+    font-weight: @font-weight-normal;
+    line-height: @line-height-relaxed;
+    color: @body-text-color;
+    margin: 0;
+    
+    body.dark-mode & {
+        color: @dark-text-secondary;
+    }
+}
+
+// Standardized card CTA typography
+.card-cta-style() {
+    font-family: @font-family-base;
+    font-size: @card-cta-size;
+    font-weight: @font-weight-semibold;
+    line-height: @line-height-normal;
+    color: @link-color-light;
+    text-decoration: none;
+    
+    body.dark-mode & {
+        color: @link-color-dark;
+    }
+}
+
+// Standardized subtitle typography for components
+.cs-subtitle-style() {
+    font-family: @font-family-base;
+    font-size: @font-size-xxl;
+    font-weight: @font-weight-bold;
+    line-height: @line-height-tight;
+    color: var(--headerColor);
+    margin: 0;
+    
+    body.dark-mode & {
+        color: #fff;
+    }
+}
+
+/*-- -------------------------- -->
+<---      Button Mixins         -->
+<--- -------------------------- -*/
+
+// Primary button (consistent with .cs-button-solid)
+.button-primary() {
+    font-size: (16/16rem);
+    font-weight: @font-weight-bold;
+    line-height: (50/16em);
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    width: auto;
+    height: (50/16rem);
+    padding: 0 (30/16rem);
+    color: #000;
+    background-color: var(--primary);
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    transition: color @transition-normal;
+    transition-delay: 0.1s;
+
+    &:hover {
+        color: #fff;
+        &:before {
+            width: 100%;
+        }
+    }
+
+    &:before {
+        content: "";
+        width: 0;
+        height: 100%;
+        background-color: #000;
+        opacity: 1;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: width @transition-normal;
+    }
+}
+
+/*-- -------------------------- -->
+<---       Card Mixins          -->
+<--- -------------------------- -*/
+
+// Basic card style with improved contrast and theme support
+.card-base() {
+    background-color: @card-bg-light;
+    border: @border-width @border-style @card-border-light;
+    border-radius: @border-radius-lg;
+    padding: @card-padding;
+    box-shadow: @shadow-sm;
+    transition: box-shadow @transition-normal, transform @transition-normal;
+    color: @body-text-color;
+
+    &:hover {
+        box-shadow: @shadow-lg;
+        transform: translateY(-2px);
+    }
+
+    // Dark mode styles with proper contrast
+    body.dark-mode & {
+        background-color: @card-bg-dark;
+        border-color: @card-border-dark;
+        color: @dark-text-secondary;
+        box-shadow: @shadow-dark-sm;
+
+        &:hover {
+            box-shadow: @shadow-dark-lg;
+        }
+    }
+}
+
+/*-- -------------------------- -->
+<---       Form Mixins          -->
+<--- -------------------------- -*/
+
+// Form input base styles
+.form-input() {
+    width: 100%;
+    font-size: @form-input-size;
+    padding: @spacing-sm @spacing-md;
+    border: @border-width @border-style @border-color;
+    border-radius: @border-radius-sm;
+    background-color: #fff;
+    color: @body-text-color;
+    transition: border-color @transition-fast, box-shadow @transition-fast;
+
+    &:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(128, 192, 92, 0.2);
+    }
+
+    &:invalid {
+        border-color: #e74c3c;
+    }
+
+    // Dark mode styles
+    body.dark-mode & {
+        background-color: @dark-medium;
+        border-color: @border-color-dark;
+        color: #fff;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 2px rgba(128, 192, 92, 0.3);
+        }
+    }
+}
+
+// Form label styles
+.form-label() {
+    display: block;
+    font-size: @form-label-size;
+    font-weight: @font-weight-bold;
+    color: @header-color;
+    margin-bottom: @spacing-sm;
+
+    body.dark-mode & {
+        color: #fff;
+    }
+}
+
+/*-- -------------------------- -->
+<---      Grid Mixins           -->
+<--- -------------------------- -*/
+
+// Responsive grid layout
+.responsive-grid(@columns-mobile: 1, @columns-tablet: 2, @columns-desktop: 3) {
+    display: grid;
+    gap: @grid-gap;
+    grid-template-columns: repeat(@columns-mobile, 1fr);
+
+    @media only screen and (min-width: @tablet) {
+        grid-template-columns: repeat(@columns-tablet, 1fr);
+    }
+
+    @media only screen and (min-width: @desktop) {
+        grid-template-columns: repeat(@columns-desktop, 1fr);
+    }
+}
+
+/*-- -------------------------- -->
+<---    Accessibility Mixins    -->
+<--- -------------------------- -*/
+
+// Screen reader only content
+.sr-only() {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// Focus styles
+.focus-visible() {
+    &:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+}
+
+/*-- -------------------------- -->
+<---     Utility Mixins         -->
+<--- -------------------------- -*/
+
+// Smooth transitions
+.smooth-transition(@property: all, @duration: @transition-normal) {
+    transition: @property @duration;
+}
+
+// Truncate text with ellipsis
+.text-truncate() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Clearfix
+.clearfix() {
+    &::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+} 

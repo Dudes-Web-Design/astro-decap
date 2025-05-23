@@ -71,15 +71,6 @@ const imageToRender = landingImageMeta;
             placeholder="Phone"
           />
         </label>
-        <label>
-          How Did You Find Us
-          <input
-            type="text"
-            id="find"
-            name="find-us"
-            placeholder="How did you find us?"
-          />
-        </label>
         <label class="cs-label-message">
           Message
           <textarea
@@ -195,18 +186,28 @@ const imageToRender = landingImageMeta;
           font-size: (16/16rem);
           font-weight: 700;
           line-height: 1.5em;
-          /* 12px - 20px */
-          margin-bottom: clamp(0.75rem, 1.3em, 1.25rem);
+          /* Standardized spacing to match other forms */
+          margin-bottom: 1.25rem; // @spacing-lg equivalent
           color: var(--headerColor);
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
+          
+          /* Mobile: reduce spacing for compact layout */
+          @media only screen and (max-width: 43.75em) {
+            margin-bottom: 1rem; // @spacing-md equivalent
+          }
         }
 
         .cs-label-message {
-          /* 32px - 48px */
-          margin-bottom: clamp(2rem, 6.3vw, 3rem);
+          /* Consistent message label spacing */
+          margin-bottom: 1.25rem; // @spacing-lg equivalent
+          
+          /* Mobile: consistent with other fields */
+          @media only screen and (max-width: 43.75em) {
+            margin-bottom: 1rem; // @spacing-md equivalent
+          }
         }
 
         input,

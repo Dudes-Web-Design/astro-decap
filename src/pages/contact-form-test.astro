@@ -1,0 +1,76 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ContactForm from "@components/ContactForm.astro";
+
+const pageTitle = "ContactForm Component Test";
+const pageDescription = "Testing the new ContactForm component with various configurations";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <section class="test-section">
+    <div class="cs-container">
+      <h1>ContactForm Component Test</h1>
+      <p>Testing the ContactForm component with different configurations:</p>
+    </div>
+  </section>
+
+  <!-- Default ContactForm -->
+  <ContactForm />
+
+  <!-- Custom content ContactForm -->
+  <ContactForm 
+    title="Start Your Project Today"
+    subtitle="Free Consultation Available"
+    description="Ready to transform your outdoor space? Our experienced team is here to help bring your vision to life with professional excavation, septic, and groundwork services."
+    topper="Get Started"
+    id="custom-contact"
+    className="custom-contact-form"
+  />
+
+  <!-- Minimal ContactForm -->
+  <ContactForm 
+    title="Quick Contact"
+    description=""
+    topper=""
+    id="minimal-contact"
+  />
+</BaseLayout>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.test-section {
+  .section-padding();
+  background-color: rgba(128, 192, 92, 0.05);
+  
+  .cs-container {
+    .container();
+    max-width: 80rem;
+    text-align: center;
+  }
+
+  h1 {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+  }
+
+  p {
+    .cs-text-style();
+    margin-bottom: 0;
+  }
+
+  body.dark-mode & {
+    background-color: rgba(128, 192, 92, 0.1);
+  }
+}
+
+// Custom styling for testing
+.custom-contact-form {
+  background-color: rgba(128, 192, 92, 0.03);
+  
+  body.dark-mode & {
+    background-color: rgba(128, 192, 92, 0.05);
+  }
+}
+</style> 

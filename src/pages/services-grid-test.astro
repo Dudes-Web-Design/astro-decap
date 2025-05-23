@@ -1,0 +1,71 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ServicesGrid from "@components/ServicesGrid.astro";
+
+const pageTitle = "ServicesGrid Component Test";
+const pageDescription = "Testing the new ServicesGrid component with services content collection data";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <section class="test-section">
+    <div class="cs-container">
+      <h1>ServicesGrid Component Test</h1>
+      <p>Testing the ServicesGrid component with different configurations:</p>
+    </div>
+  </section>
+
+  <!-- Default ServicesGrid -->
+  <ServicesGrid cityName="Huntsville, AL" />
+
+  <!-- Custom title -->
+  <ServicesGrid 
+    cityName="Franklin, TN" 
+    title="Our Premium Services in Franklin"
+    className="cs-services-grid--featured"
+  />
+
+  <!-- Limited services -->
+  <ServicesGrid 
+    cityName="Athens, AL" 
+    title="Featured Services in Athens" 
+    maxServices={4}
+    className="cs-services-grid--compact"
+  />
+
+  <!-- No title version -->
+  <ServicesGrid 
+    cityName="Madison, AL" 
+    title={false}
+    maxServices={3}
+  />
+</BaseLayout>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.test-section {
+  .section-padding();
+  background-color: rgba(128, 192, 92, 0.05);
+  
+  .cs-container {
+    .container();
+    max-width: 80rem;
+    text-align: center;
+  }
+
+  h1 {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+  }
+
+  p {
+    .cs-text-style();
+    margin-bottom: 0;
+  }
+
+  body.dark-mode & {
+    background-color: rgba(128, 192, 92, 0.1);
+  }
+}
+</style> 

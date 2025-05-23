@@ -1,0 +1,170 @@
+---
+interface Props {
+  title: string;
+  content: string;
+  topper?: string;
+  id?: string;
+  className?: string;
+}
+
+const { title, content, topper, id = "about", className = "" } = Astro.props;
+---
+
+<section class={`cs-about ${className}`} id={id} aria-labelledby={`${id}-heading`}>
+  <div class="cs-container">
+    <div class="cs-content">
+      {topper && <span class="cs-topper">{topper}</span>}
+      <h2 class="cs-title" id={`${id}-heading`}>{title}</h2>
+      <div class="cs-text" set:html={content}></div>
+    </div>
+  </div>
+</section>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.cs-about {
+  .section-padding();
+  background-color: @card-bg-light;
+  .smooth-transition(background-color);
+  
+  // Dark mode background
+  body.dark-mode & {
+    background-color: var(--dark);
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 80rem; // 1280px
+  }
+
+  .cs-content {
+    text-align: center;
+    max-width: 48rem; // 768px
+    margin: 0 auto;
+    
+    @media only screen and (min-width: @tablet) {
+      text-align: left;
+    }
+  }
+
+  .cs-topper {
+    .cs-topper-style();
+    margin-bottom: @spacing-md;
+    // Enhanced visual differentiation
+    position: relative;
+    
+    &::after {
+      content: "";
+      display: block;
+      width: 3rem;
+      height: 2px;
+      background-color: var(--primary);
+      margin: @spacing-sm auto 0;
+      transition: width @transition-normal;
+      
+      @media only screen and (min-width: @tablet) {
+        margin: @spacing-sm 0 0;
+      }
+    }
+    
+    // Enhanced hover state for interactive feel
+    &:hover::after {
+      width: 4rem;
+    }
+  }
+
+  .cs-title {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+  }
+
+  .cs-text {
+    .cs-text-style();
+
+    // Style content HTML elements
+    p {
+      margin-bottom: @spacing-md;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    strong, b {
+      font-weight: @font-weight-bold;
+      color: var(--headerColor);
+    }
+
+    em, i {
+      font-style: italic;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+      .smooth-transition(color);
+
+      &:hover {
+        color: var(--primaryLight);
+      }
+
+      .focus-visible();
+    }
+
+    ul, ol {
+      margin: @spacing-md 0;
+      padding-left: @spacing-xl;
+
+      li {
+        margin-bottom: @spacing-sm;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    ul li {
+      list-style-type: disc;
+    }
+
+    ol li {
+      list-style-type: decimal;
+    }
+
+    // Dark mode adjustments for content
+    body.dark-mode & {
+      strong, b {
+        color: @dark-text-primary;
+      }
+
+      a {
+        &:hover {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media only screen and (min-width: @tablet) {
+    .cs-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cs-topper {
+      align-self: flex-start;
+    }
+
+    .cs-title {
+      align-self: flex-start;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+</style> 

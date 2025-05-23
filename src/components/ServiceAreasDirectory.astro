@@ -1,0 +1,340 @@
+---
+export interface Props {
+  serviceAreas: Array<{
+    title: string;
+    slug: string;
+    description: string;
+    lat?: number;
+    lng?: number;
+  }>;
+  class?: string;
+}
+
+const { serviceAreas, class: className = "" } = Astro.props;
+
+// Group service areas by state
+const groupedAreas = serviceAreas.reduce((acc, area) => {
+  // Extract state from title (e.g., "Athens, AL" -> "Alabama")
+  const statePart = area.title.split(', ')[1];
+  let stateName = '';
+  
+  if (statePart === 'AL') {
+    stateName = 'Alabama';
+  } else if (statePart === 'TN') {
+    stateName = 'Tennessee';
+  } else {
+    stateName = statePart || 'Other';
+  }
+  
+  if (!acc[stateName]) {
+    acc[stateName] = [];
+  }
+  acc[stateName].push(area);
+  return acc;
+}, {} as Record<string, typeof serviceAreas>);
+
+// Sort cities within each state alphabetically
+Object.keys(groupedAreas).forEach(state => {
+  groupedAreas[state].sort((a, b) => a.title.localeCompare(b.title));
+});
+
+// Sort states (Alabama first, then Tennessee)
+const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
+  if (a === 'Alabama') return -1;
+  if (b === 'Alabama') return 1;
+  if (a === 'Tennessee') return -1;
+  if (b === 'Tennessee') return 1;
+  return a.localeCompare(b);
+});
+---
+
+<section class={`cs-service-areas-directory ${className}`} aria-labelledby="directory-heading">
+  <div class="cs-container">
+    <div class="cs-content">
+      <h2 class="cs-title" id="directory-heading">Service Areas Directory</h2>
+      <p class="cs-text">
+        We proudly serve communities across North Alabama and Middle Tennessee. 
+        Click on any city below to learn more about our services in your area.
+      </p>
+    </div>
+    
+    <div class="cs-states-wrapper">
+      {sortedStates.map(stateName => (
+        <div class="cs-state-section">
+          <h3 class="cs-state-title">{stateName}</h3>
+          <ul class="cs-cities-list" role="list">
+            {groupedAreas[stateName].map(area => (
+              <li class="cs-city-item">
+                <a href={`/service-areas/${area.slug}`} class="cs-city-link">
+                  <div class="cs-city-info">
+                    <h4 class="cs-city-name">{area.title}</h4>
+                    <p class="cs-city-description">{area.description}</p>
+                  </div>
+                  <div class="cs-city-action">
+                    <span class="cs-learn-more">
+                      View Details
+                      <svg class="cs-arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.cs-service-areas-directory {
+  .section-padding();
+  
+  .cs-container {
+    .container();
+    max-width: 80rem;
+  }
+
+  .cs-content {
+    text-align: center;
+    margin-bottom: @spacing-xxl;
+    position: relative;
+    
+    // Add visual hierarchy element
+    &::before {
+      content: "Our Coverage";
+      display: block;
+      font-family: @font-family-base;
+      font-size: @topper-text-size;
+      font-weight: @font-weight-bold;
+      line-height: @line-height-normal;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--secondary);
+      margin-bottom: @spacing-md;
+    }
+    
+    &::after {
+      content: "";
+      display: block;
+      width: 3rem;
+      height: 2px;
+      background-color: var(--primary);
+      margin: @spacing-sm auto 0;
+      transition: width @transition-normal;
+    }
+  }
+
+  .cs-title {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+    color: var(--headerColor);
+    
+    body.dark-mode & {
+      color: @dark-text-primary;
+    }
+  }
+
+  .cs-text {
+    font-size: 1.125rem;
+    line-height: @line-height-relaxed;
+    color: var(--bodyTextColor);
+    max-width: 600px;
+    margin: 0 auto;
+    
+    body.dark-mode & {
+      color: @dark-text-secondary;
+    }
+  }
+
+  .cs-states-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xxl;
+  }
+
+  .cs-state-section {
+    .cs-state-title {
+      font-size: 2rem;
+      font-weight: @font-weight-bold;
+      color: var(--primary);
+      margin-bottom: @spacing-xl;
+      text-align: center;
+      position: relative;
+      
+      &::after {
+        content: "";
+        display: block;
+        width: 2rem;
+        height: 2px;
+        background-color: var(--secondary);
+        margin: @spacing-sm auto 0;
+      }
+      
+      @media only screen and (min-width: @tablet) {
+        text-align: left;
+        
+        &::after {
+          margin: @spacing-sm 0 0;
+        }
+      }
+      
+      body.dark-mode & {
+        color: @dark-accent;
+      }
+    }
+  }
+
+  .cs-cities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .cs-city-item {
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    body.dark-mode & {
+      border-bottom-color: @border-color-dark;
+    }
+  }
+
+  .cs-city-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: @spacing-lg @spacing-md;
+    transition: all @transition-normal;
+    border-left: 3px solid transparent;
+    
+    &:hover {
+      background-color: rgba(var(--primary-rgb), 0.05);
+      border-left-color: var(--primary);
+      
+      .cs-arrow-icon {
+        transform: translateX(4px);
+      }
+      
+      .cs-city-name {
+        color: var(--primary);
+      }
+    }
+    
+    &:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
+      background-color: rgba(var(--primary-rgb), 0.05);
+    }
+    
+    body.dark-mode & {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-left-color: @dark-accent;
+      }
+      
+      &:focus {
+        outline-color: @dark-accent;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    @media only screen and (min-width: @tablet) {
+      padding: @spacing-lg;
+    }
+  }
+
+  .cs-city-info {
+    flex-grow: 1;
+    min-width: 0; // Prevent text overflow
+  }
+
+  .cs-city-name {
+    font-size: 1.125rem;
+    font-weight: @font-weight-semibold;
+    color: var(--headerColor);
+    margin: 0 0 @spacing-xs 0;
+    transition: color @transition-normal;
+    
+    body.dark-mode & {
+      color: @dark-text-primary;
+    }
+  }
+
+  .cs-city-description {
+    font-size: 0.875rem;
+    line-height: @line-height-normal;
+    color: var(--bodyTextColor);
+    margin: 0;
+    
+    // Truncate on smaller screens
+    @media only screen and (max-width: @tablet) {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    body.dark-mode & {
+      color: @dark-text-secondary;
+    }
+  }
+
+  .cs-city-action {
+    flex-shrink: 0;
+    margin-left: @spacing-md;
+  }
+
+  .cs-learn-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: @font-weight-medium;
+    color: var(--primary);
+    white-space: nowrap;
+    
+    body.dark-mode & {
+      color: @dark-accent;
+    }
+  }
+
+  .cs-arrow-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform @transition-normal;
+    
+    body.dark-mode & {
+      color: @dark-accent;
+    }
+  }
+
+  // Responsive adjustments
+  @media only screen and (max-width: @tablet) {
+    .cs-city-link {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: @spacing-sm;
+    }
+    
+    .cs-city-action {
+      margin-left: 0;
+      align-self: flex-end;
+    }
+    
+    .cs-state-title {
+      font-size: 1.75rem;
+    }
+  }
+}
+</style> 

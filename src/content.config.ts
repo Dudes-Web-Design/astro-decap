@@ -29,6 +29,8 @@ const serviceAreasCollection = defineCollection({
 			image: image(),
 			imageAlt: z.string(),
 			body: z.string(),
+			lat: z.number().optional(),
+			lng: z.number().optional(),
 		}),
 });
 

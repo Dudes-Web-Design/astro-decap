@@ -1,0 +1,80 @@
+# Overview
+J.R. Outdoor Solutions is a professional service provider specializing in septic, groundwork, and excavation services for North Alabama and Middle Tennessee. The website's goal is to generate leads, inform potential clients, and showcase expertise through past projects and a blog. Content is managed by non-technical users via Decap CMS. The site must be visually consistent, responsive, accessible, and support both light and dark modes.
+
+# Core Features
+- **Homepage:** Hero, service overview, about, gallery, FAQ, reviews, clear CTAs.
+- **About Page:** Company mission, values, and team.
+- **Services:**
+  - Main listing page for all services.
+  - Dynamic individual service pages (Decap CMS managed).
+- **Service Areas:**
+  - Main listing page for all service areas.
+  - Dynamic city/area pages (Decap CMS managed) with about section, services grid, and contact form.
+- **Projects:** Gallery and static detail pages.
+- **Reviews:** Customer testimonials.
+- **Contact:** Form, business details, optional map.
+- **Blog:** Listing and individual posts (Decap CMS managed), featured post support.
+- **Navigation:** Main and footer navigation, dropdowns for nested pages.
+- **Dark Mode:** User-selectable toggle, consistent LESS theming.
+- **Image Optimization:** Astro's built-in asset handling, lazy loading, preloading for critical images.
+- **SEO:** Clean URLs, meta tags, sitemap, robots.txt.
+- **Performance:** Fast load times, responsive images.
+- **Accessibility:** WCAG adherence, keyboard navigation, ARIA labels, color contrast.
+
+# User Experience
+- **Personas:** Homeowners and businesses in target regions seeking outdoor solutions.
+- **Key Flows:**
+  - Discover services/areas → Learn about company → View projects/reviews → Contact for quote.
+  - CMS users: Easily update content via Decap CMS.
+- **UI/UX:** Consistent LESS-based design, responsive layouts, accessible forms, clear CTAs, dark/light mode.
+
+# Technical Architecture
+- **Framework:** Astro v5
+- **Styling:** LESS for CSS preprocessing, global variables for theming (light/dark), standard CSS fallback.
+- **Content Management:** Decap CMS (Git Gateway/DecapBridge), content in `src/content/`.
+- **Components:**
+  - AboutSection.astro (for about blocks)
+  - ServicesGrid.astro, ServiceCard.astro (for service listings)
+  - ContactForm.astro (reused across pages)
+  - CSPicture.astro, Image/Picture (for optimized images)
+- **Routing:**
+  - Static: Home, About, Projects, Reviews, Contact, Blog index
+  - Dynamic: `/services/[...service].astro`, `/service-areas/[...city].astro`, `/blog/[...post].astro`
+- **State Management:** Static site generation, no client-side state except for UI toggles (e.g., dark mode).
+- **Hosting:** Netlify (adaptable)
+- **Version Control:** Git (GitHub)
+- **Dependencies:** As per package.json
+
+# Development Roadmap
+- **Phase 1:** Layout, navigation, LESS theming, dark mode toggle
+- **Phase 2:** Service area and service page templates, about section, services grid, contact form integration
+- **Phase 3:** CMS integration for services, service areas, blog
+- **Phase 4:** Projects, reviews, and blog features
+- **Phase 5:** SEO, accessibility, image optimization, performance
+- **Phase 6:** Testing (unit, e2e), QA, deployment
+
+# Logical Dependency Chain
+1. LESS theming, layout, navigation
+2. Dynamic page templates (service/service-area)
+3. AboutSection, ServicesGrid, ContactForm components
+4. CMS content integration
+5. SEO, accessibility, image optimization
+6. Testing and deployment
+
+# Risks and Mitigations
+- **Styling Drift:** Centralize LESS variables/mixins, document design tokens
+- **CMS Integration:** Validate content structure, provide clear CMS instructions
+- **Performance:** Use Astro's image optimization, audit bundle size
+- **Accessibility:** Regular audits, use semantic HTML and ARIA
+- **Content Errors:** Build-time validation, CMS field constraints
+
+# Appendix
+- **Component References:**
+  - `src/components/AboutSection.astro`
+  - `src/components/ServicesGrid.astro`
+  - `src/components/ServiceCard.astro`
+  - `src/components/ContactForm.astro`
+  - `src/components/CSPicture.astro`
+- **Design Mockups:** Link to Figma or design assets if available
+- **CMS Collections:** Blog, Services, Service Areas (see Decap config)
+- **Example Content Structure:** See `src/content/` for markdown frontmatter examples 

@@ -1,0 +1,194 @@
+---
+import { getCollection } from "astro:content";
+import ServiceCard from "./ServiceCard.astro";
+
+interface Props {
+  cityName: string;
+  title?: string | false;
+  className?: string;
+  maxServices?: number;
+}
+
+const { cityName, title, className = "", maxServices } = Astro.props;
+
+// Fetch all services from content collection
+const allServices = await getCollection("services");
+
+// For now, include all services for all cities
+// In the future, this could be filtered based on cityName or service availability
+let services = allServices;
+
+// Limit services if maxServices is specified
+if (maxServices && maxServices > 0) {
+  services = services.slice(0, maxServices);
+}
+
+// Generate default title if not provided
+const gridTitle = title || `Services We Offer in ${cityName}`;
+---
+
+<section class={`cs-services-grid ${className}`} aria-labelledby="services-heading">
+  <div class="cs-container">
+    {title !== false && (
+      <div class="cs-content">
+        <h2 class="cs-title" id="services-heading">{gridTitle}</h2>
+      </div>
+    )}
+    
+    <div class="cs-grid">
+      {services.map((service) => (
+        <ServiceCard
+          title={service.data.title}
+          description={service.data.description}
+          slug={service.data.slug}
+          image={service.data.image}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.cs-services-grid {
+  .section-padding();
+  
+  .cs-container {
+    .container();
+    max-width: 80rem;
+  }
+
+  .cs-content {
+    text-align: center;
+    margin-bottom: @spacing-xxl;
+    position: relative;
+    
+    // Add visual hierarchy element for consistency
+    &::before {
+      content: "Our Services";
+      display: block;
+      font-family: @font-family-base;
+      font-size: @topper-text-size;
+      font-weight: @font-weight-bold;
+      line-height: @line-height-normal;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--secondary);
+      margin-bottom: @spacing-md;
+      position: relative;
+    }
+    
+    &::after {
+      content: "";
+      display: block;
+      width: 3rem;
+      height: 2px;
+      background-color: var(--primary);
+      margin: @spacing-sm auto 0;
+      transition: width @transition-normal;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 2.5rem;
+      
+      @media only screen and (min-width: @tablet) {
+        position: relative;
+        left: auto;
+        transform: none;
+        top: auto;
+        margin: @spacing-sm 0 0;
+      }
+    }
+    
+    @media only screen and (min-width: @tablet) {
+      text-align: left;
+      
+      &::after {
+        margin: @spacing-sm 0 0;
+      }
+    }
+  }
+
+  .cs-title {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+    color: var(--headerColor);
+    
+    body.dark-mode & {
+      color: @dark-text-primary;
+    }
+  }
+
+  .cs-grid {
+    display: grid;
+    gap: @grid-gap;
+    grid-template-columns: 1fr;
+    
+    // Ensure equal height cards
+    .cs-service-card {
+      height: 100%;
+      display: flex;
+    }
+    
+    // Tablet: 2 columns
+    @media only screen and (min-width: @tablet) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: @grid-gap;
+    }
+    
+    // Desktop: 3 columns
+    @media only screen and (min-width: @desktop) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: @grid-gap;
+    }
+    
+    // Large desktop: 4 columns for optimal layout
+    @media only screen and (min-width: @desktop-lg) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: @grid-gap;
+    }
+  }
+  
+  // Grid modifiers for different layouts
+  &.cs-services-grid--three-col {
+    .cs-grid {
+      @media only screen and (min-width: @desktop-lg) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+  
+  &.cs-services-grid--two-col {
+    .cs-grid {
+      @media only screen and (min-width: @desktop) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      @media only screen and (min-width: @desktop-lg) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+
+  // Variant styles for different layouts
+  &.cs-services-grid--compact {
+    padding: @spacing-xxl @spacing-md;
+    
+    .cs-content {
+      margin-bottom: @spacing-xl;
+    }
+  }
+
+  &.cs-services-grid--featured {
+    .cs-grid {
+      .responsive-grid(1, 1, 2);
+      
+      @media only screen and (min-width: @desktop-lg) {
+        .responsive-grid(1, 2, 3);
+      }
+    }
+  }
+}
+</style> 

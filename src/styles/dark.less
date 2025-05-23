@@ -16,16 +16,17 @@
     body.dark-mode {
         background-color: var(--dark);
 
-        p,
-        li,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            color: #fff;
-        }
+        // Update CSS custom properties for dark mode instead of blanket overrides
+        --headerColor: #ffffff;
+        --bodyTextColor: #e5e7eb;
+        --bodyTextColorWhite: #fafbfc;
+        --primary: hsl(80, 90%, 55%);
+        --primaryLight: hsl(80, 80%, 65%);
+        --secondary: #ffffff;
+        --secondaryLight: #e5e7eb;
+
+        // Remove blanket color overrides - let components handle their own dark mode
+        // This prevents the dark text on green background issue
 
         // hide all light classes
         .light {

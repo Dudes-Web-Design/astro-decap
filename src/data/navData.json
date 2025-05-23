@@ -31,9 +31,6 @@
   {
     "key": "Service Areas",
     "url": "/service-areas/",
-    "children": [
-      { "key": "Pulaski, TN", "url": "/service-areas/pulaski-tn/" },
-      { "key": "Athens, AL", "url": "/service-areas/athens-al/" }
-    ]
+    "children": []
   }
 ]

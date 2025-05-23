@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import AboutSection from "@components/AboutSection.astro";
+
+const pageTitle = "AboutSection Component Test";
+const pageDescription = "Testing the new AboutSection component with various content types";
+
+const sampleContent = `
+  <p>This is a <strong>sample about section</strong> that demonstrates the AboutSection component functionality. It includes various HTML elements to test styling and accessibility.</p>
+  
+  <p>Key features include:</p>
+  <ul>
+    <li>Responsive design with mobile-first approach</li>
+    <li>Dark mode support</li>
+    <li>Semantic HTML structure</li>
+    <li>Accessibility enhancements</li>
+  </ul>
+  
+  <p>You can also include <a href="#test">links</a> and <em>emphasized text</em> within the content. The component uses our new LESS variables and mixins for consistent styling.</p>
+`;
+
+const shortContent = `<p>This is a shorter about section without a topper.</p>`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Test with topper and full content -->
+  <AboutSection 
+    topper="Component Testing"
+    title="AboutSection with Topper"
+    content={sampleContent}
+    id="about-with-topper"
+  />
+
+  <!-- Test without topper -->
+  <AboutSection 
+    title="AboutSection without Topper"
+    content={shortContent}
+    id="about-without-topper"
+  />
+
+  <!-- Test with custom class -->
+  <AboutSection 
+    title="AboutSection with Custom Class"
+    content="<p>This AboutSection has a custom CSS class applied for additional styling possibilities.</p>"
+    id="about-custom"
+    className="custom-about-section"
+  />
+</BaseLayout>
+
+<style lang="less">
+@import "@styles/variables.less";
+
+// Custom styling for the test page
+.custom-about-section {
+  background-color: rgba(128, 192, 92, 0.05);
+  
+  body.dark-mode & {
+    background-color: rgba(128, 192, 92, 0.1);
+  }
+}
+</style> 

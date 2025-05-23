@@ -1,0 +1,112 @@
+---
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  slug: string;
+  className?: string;
+}
+
+const { title, description, image, slug, className = "" } = Astro.props;
+---
+
+<article class={`cs-service-card ${className}`} role="article">
+  <a href={`/services/${slug}`} class="cs-card-link" aria-labelledby={`service-${slug}-title`}>
+    <div class="cs-card-content">
+      <h3 class="cs-card-title" id={`service-${slug}-title`}>{title}</h3>
+      <p class="cs-card-description">{description}</p>
+      <span class="cs-card-cta" aria-hidden="true">Learn More</span>
+    </div>
+  </a>
+</article>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+.cs-service-card {
+  .card-base();
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .cs-card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    padding: @spacing-xl @spacing-lg;
+    border-radius: @border-radius-lg;
+    .smooth-transition(transform, box-shadow);
+
+    &:hover,
+    &:focus {
+      transform: translateY(-@spacing-xs);
+    }
+
+    .focus-visible();
+
+    // Dark mode hover states are handled in individual element mixins
+  }
+
+  .cs-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-md;
+  }
+
+  .cs-card-title {
+    .card-title-style();
+    margin-bottom: 0;
+  }
+
+  .cs-card-description {
+    .card-text-style();
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .cs-card-cta {
+    .card-cta-style();
+    margin-top: @spacing-xs;
+    .smooth-transition(color);
+    
+    &::after {
+      content: " →";
+      margin-left: @spacing-xs;
+      transition: transform @transition-fast;
+    }
+
+    &:hover,
+    .cs-card-link:hover &,
+    .cs-card-link:focus & {
+      color: @link-hover-light;
+      
+      &::after {
+        transform: translateX(@spacing-xs);
+      }
+    }
+
+    // Dark mode hover states
+    body.dark-mode & {
+      &:hover,
+      .cs-card-link:hover &,
+      .cs-card-link:focus & {
+        color: @link-hover-dark;
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media only screen and (min-width: @tablet) {
+    .cs-card-link {
+      padding: @spacing-xxl @spacing-xl;
+    }
+  }
+}
+</style> 

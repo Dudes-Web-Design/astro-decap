@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "generatedAt": "2025-05-23T05:18:01.558Z",
+    "tasksAnalyzed": 2,
+    "thresholdScore": 5,
+    "projectName": "Taskmaster",
+    "usedResearch": true
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 10,
+      "taskTitle": "Testing, QA, and Deployment",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the Testing, QA, and Deployment task into subtasks covering unit testing, end-to-end testing, QA processes (accessibility, performance, functionality), and deployment to Netlify with domain configuration.",
+      "reasoning": "This task involves multiple technical domains (testing, QA, deployment) with dependencies on all previous tasks. The cyclomatic complexity is moderate to high due to the various testing paths and deployment configurations required. The task requires both automated and manual testing components, increasing its overall complexity."
+    },
+    {
+      "taskId": 17,
+      "taskTitle": "Implement Decap CMS Integration for Services and Service Areas Content Collections",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the Decap CMS integration task into subtasks covering initial CMS setup, Content Collection schema definition, CMS configuration updates, dynamic route refactoring, image optimization implementation, and SEO metadata integration.",
+      "reasoning": "This task has high complexity due to its technical breadth (CMS integration, TypeScript validation, dynamic routing, image optimization) and depth (detailed configuration requirements). The task involves refactoring existing code paths while implementing new functionality, increasing its cyclomatic complexity. The detailed test strategy and lack of dependencies suggest it's a standalone feature with significant technical scope."
+    }
+  ]
+}

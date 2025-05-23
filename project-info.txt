@@ -1,0 +1,104 @@
+# Product Requirements Document: J.R. Outdoor Solutions Website
+
+## 1. Introduction
+
+This document outlines the requirements for the J.R. Outdoor Solutions website. The primary goal of the website is to showcase the company's services (septic, groundwork, excavation), service areas, past projects, and provide a means for potential customers to contact the business and learn more about its offerings. The website also features a blog for sharing industry insights and company news, managed via Decap CMS.
+
+## 2. Goals
+
+*   **Lead Generation:** Provide clear calls to action (e.g., "Free Quote") and easy ways to contact the business.
+*   **Information Hub:** Clearly present services offered, service areas covered, and company information.
+*   **Showcase Expertise:** Display past projects and provide informative blog content to build trust and authority.
+*   **Brand Awareness:** Establish a professional online presence for J.R. Outdoor Solutions.
+*   **Content Management:** Allow non-technical users (the client) to easily update blog content, service descriptions, and service area information via Decap CMS.
+
+## 3. Target Audience
+
+*   **Homeowners:** Individuals in North Alabama and Middle Tennessee needing septic services, groundwork, excavation, concrete work, or landscaping.
+*   **Businesses/Contractors:** Companies requiring excavation, site preparation, or septic system services for commercial properties or new developments.
+*   **Potential Clients:** Anyone researching local providers for outdoor solutions and excavation services.
+
+## 4. Key Features
+
+### 4.1. Public-Facing Website (Astro)
+
+*   **Homepage (`index.astro`):**
+    *   Hero section with a clear value proposition and calls to action.
+    *   Overview of key services.
+    *   "About Us" section introducing the company and owner.
+    *   Gallery of recent projects.
+    *   FAQ section.
+    *   Customer reviews/testimonials section.
+*   **About Page (`about.astro`):**
+    *   Detailed information about J.R. Outdoor Solutions, its mission, values, and team.
+*   **Services Pages:**
+    *   Main services listing page (`src/pages/services/index.astro`).
+    *   Dynamic individual service pages (`src/pages/services/[...service].astro`) detailing each specific service. Content managed via Decap CMS (`src/content/services/`).
+*   **Service Areas Pages:**
+    *   Main service areas listing page (`src/pages/service-areas/index.astro`).
+    *   Dynamic individual city/area pages (`src/pages/service-areas/[...city].astro`) detailing services offered in specific locations. Content managed via Decap CMS (`src/content/service-areas/`).
+*   **Projects Page (`projects.astro`):**
+    *   Gallery or listing of completed projects.
+    *   Individual project detail pages (currently static, e.g., `src/pages/projects/project-1.astro`).
+*   **Reviews Page (`reviews.astro`):**
+    *   Page dedicated to customer testimonials and reviews.
+*   **Contact Page (`contact.astro`):**
+    *   Contact form.
+    *   Business contact details (phone, email, address if applicable).
+    *   Map (if applicable).
+*   **Blog:**
+    *   Blog listing page (`src/pages/blog/index.astro`) displaying recent posts.
+    *   Individual blog post pages (`src/pages/blog/[...post].astro`). Content managed via Decap CMS (`src/content/blog/`).
+    *   Featured post display capability.
+*   **Responsive Design:** Website must be fully responsive and accessible on desktop, tablet, and mobile devices.
+*   **Performance:** Fast loading times, optimized images (using Astro's asset handling).
+*   **SEO:**
+    *   Clean URLs.
+    *   Appropriate meta tags (title, description) for each page.
+    *   Generated sitemap (`sitemap.xml`).
+    *   `robots.txt` configured.
+*   **Navigation:** Clear and intuitive main navigation, including dropdowns for nested pages. Footer navigation.
+*   **Dark Mode Toggle:** User-selectable dark mode.
+*   **Image Handling:**
+    *   Optimized images using Astro's built-in `<Image />` and `<Picture />` components, and the custom `<CSPicture />` component.
+    *   Lazy loading for off-screen images.
+    *   Preloading for critical above-the-fold images.
+
+### 4.2. Content Management System (Decap CMS)
+
+*   **Admin Dashboard (`/admin`):**
+    *   Secure login via DecapBridge.
+    *   User-friendly interface for managing content.
+*   **Content Collections:**
+    *   **Blog:** Create, edit, delete blog posts (title, description, author, date, cover image, body, featured status).
+    *   **Service Areas:** Create, edit, delete service area pages (title, slug, description, image, body).
+    *   **Services:** Create, edit, delete service pages (title, slug, description, image, body).
+*   **Media Management:** Upload and manage images for CMS-driven content, stored in `src/assets/images/blog/` for Astro optimization.
+
+## 5. Technical Requirements
+
+*   **Framework:** Astro v5
+*   **Styling:** LESS for CSS preprocessing, standard CSS.
+*   **Content Management:** Decap CMS with Git Gateway (DecapBridge).
+*   **Hosting:** Configured for Netlify (though adaptable).
+*   **Version Control:** Git, hosted on GitHub.
+*   **Dependencies:** As per `package.json`.
+*   **Image Optimization:** Astro's built-in asset handling.
+*   **Accessibility:** Adherence to WCAG guidelines where feasible.
+
+## 6. Future Considerations (Out of Scope for Initial Build)
+
+*   Dynamic project pages managed via Decap CMS.
+*   Advanced search functionality for the blog or site content.
+*   Integration with CRM or lead management tools.
+*   Online booking or scheduling system.
+
+## 7. Non-Goals
+
+*   E-commerce functionality.
+*   User accounts or membership areas (beyond CMS admin).
+*   Complex interactive web applications.
+
+---
+
+*This PRD is based on the existing "Intermediate Astro kit - Decap CMS" codebase and its features. An `example_prd.txt` is available in the `scripts/` directory of the project which may have been the original source or inspiration for a more generic project.* 
