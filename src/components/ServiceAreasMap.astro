@@ -67,6 +67,9 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
       return false;
     }
 
+    // Detect Safari
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
     // Set proper container height
     setContainerHeight();
 
@@ -104,19 +107,26 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         wheelPxPerZoomLevel: 120,
       });
 
-      // Add tile layer with smooth CartoDB tiles
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      // Add tile layer with Safari-specific optimizations
+      const tileLayerOptions = {
         attribution: '',
         subdomains: 'abcd',
         maxZoom: 20,
         minZoom: 6,
         tileSize: 256,
         zoomOffset: 0,
-        detectRetina: true,
+        detectRetina: !isSafari, // Disable retina detection on Safari
         updateWhenZooming: false,
         updateWhenIdle: true,
-        keepBuffer: 2,
-      }).addTo(map);
+        keepBuffer: isSafari ? 4 : 2, // Higher buffer for Safari
+        ...(isSafari && {
+          // Safari-specific options
+          crossOrigin: true,
+          className: 'safari-tiles'
+        })
+      };
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', tileLayerOptions).addTo(map);
 
       // Custom marker icon that matches our brand
       const customIcon = L.divIcon({
@@ -226,8 +236,20 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
       setTimeout(() => {
         if (map) {
           map.invalidateSize(true);
-          // Additional mobile-specific fix
-          if (window.innerWidth < 768) {
+          // Safari-specific fixes
+          if (isSafari && window.innerWidth < 768) {
+            // Multiple invalidations for Safari mobile
+            const safariRefresh = () => {
+              if (map) {
+                map.invalidateSize(true);
+                map.getContainer().style.transform = 'translateZ(0)';
+              }
+            };
+            
+            setTimeout(safariRefresh, 100);
+            setTimeout(safariRefresh, 300);
+            setTimeout(safariRefresh, 600);
+          } else if (window.innerWidth < 768) {
             setTimeout(() => {
               if (map) {
                 map.invalidateSize(true);
@@ -244,8 +266,22 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
           setTimeout(() => {
             if (map) {
               map.invalidateSize(true);
-              // Force a redraw on mobile to prevent tile rendering issues
-              if (window.innerWidth < 768) {
+              // Safari-specific resize handling
+              if (isSafari && window.innerWidth < 768) {
+                const container = map.getContainer();
+                container.style.transform = 'translateZ(0)';
+                setTimeout(() => {
+                  if (map) {
+                    map.invalidateSize(true);
+                    container.style.transform = '';
+                    setTimeout(() => {
+                      if (map) {
+                        map.invalidateSize(true);
+                      }
+                    }, 100);
+                  }
+                }, 200);
+              } else if (window.innerWidth < 768) {
                 setTimeout(() => {
                   if (map) {
                     map.invalidateSize(true);
@@ -543,6 +579,49 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
       backface-visibility: hidden;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
+    }
+  }
+
+  // Safari-specific tile fixes
+  :global(.safari-tiles) {
+    image-rendering: auto !important;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  // Safari mobile container fixes
+  @supports (-webkit-touch-callout: none) {
+    @media (max-width: 767px) {
+      .cs-map-container {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-perspective: 1000;
+        perspective: 1000;
+      }
+      
+      .cs-map {
+        -webkit-transform: none !important;
+        transform: none !important;
+        -webkit-backface-visibility: visible !important;
+        backface-visibility: visible !important;
+      }
+      
+      :global(.leaflet-container) {
+        -webkit-transform: none !important;
+        transform: none !important;
+      }
+      
+      :global(.leaflet-map-pane) {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+      }
+      
+      :global(.leaflet-tile-container) {
+        -webkit-transform: none !important;
+        transform: none !important;
+      }
     }
   }
 
