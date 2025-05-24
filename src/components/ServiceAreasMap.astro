@@ -363,9 +363,10 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
 @import "@styles/variables.less";
 @import "@styles/mixins.less";
 
-  .cs-map-container {
-    width: 100%;
-    height: 350px;
+  #service-areas-map.cs-map-container {
+    width: 100% !important;
+    height: 350px !important;
+    min-height: 350px !important;
     border-radius: @border-radius-md;
     overflow: hidden;
     border: 2px solid #6b7280;
@@ -378,12 +379,14 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     
     @media (min-width: 768px) {
       height: 500px !important;
+      min-height: 500px !important;
     }
     
     @media (min-width: 1024px) {
-      width: 70%;
+      width: 70% !important;
       margin: 0 auto;
       height: 500px !important;
+      min-height: 500px !important;
     }
     
     // Dark mode styles
@@ -397,9 +400,10 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     }
   }
 
-  .cs-map {
-    width: 100%;
-    height: 100%;
+  #service-areas-map #map.cs-map {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: inherit !important;
     z-index: 1;
   }
 
@@ -479,5 +483,25 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         fill: #dc2626;
       }
     }
+  }
+
+  // Force proper map container dimensions regardless of external CSS
+  :global(#service-areas-map) {
+    height: 350px !important;
+    min-height: 350px !important;
+    max-height: none !important;
+    display: block !important;
+    
+    @media (min-width: 768px) {
+      height: 500px !important;
+      min-height: 500px !important;
+    }
+  }
+
+  // Ensure Leaflet container maintains proper dimensions
+  :global(#service-areas-map .leaflet-container) {
+    height: 100% !important;
+    min-height: 100% !important;
+    width: 100% !important;
   }
 </style> 
