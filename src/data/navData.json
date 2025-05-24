@@ -5,25 +5,6 @@
     "children": []
   },
   {
-    "key": "About Us",
-    "url": "/about/",
-    "children": []
-  },
-  {
-    "key": "Projects",
-    "url": "/projects/",
-    "children": [
-      {
-        "key": "Project 1",
-        "url": "/projects/project-1/"
-      },
-      {
-        "key": "Project 2",
-        "url": "/projects/project-2/"
-      }
-    ]
-  },
-  {
     "key": "Services",
     "url": "/services/",
     "children": []
@@ -31,6 +12,11 @@
   {
     "key": "Service Areas",
     "url": "/service-areas/",
+    "children": []
+  },
+  {
+    "key": "About Us",
+    "url": "/about/",
     "children": []
   }
 ]

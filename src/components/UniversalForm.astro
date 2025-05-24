@@ -1,0 +1,862 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  topper?: string;
+  formType?: "contact" | "service" | "area-inquiry";
+  serviceName?: string;
+  className?: string;
+  id?: string;
+  compact?: boolean;
+}
+
+const { 
+  title = "Get in Touch", 
+  subtitle,
+  description = "Ready to start your project? Contact us today for a free consultation and estimate.",
+  topper = "Contact",
+  formType = "contact",
+  serviceName,
+  className = "",
+  id = "universal-form",
+  compact = false
+} = Astro.props;
+
+// Configure form based on type
+const isAreaInquiry = formType === "area-inquiry";
+const isService = formType === "service";
+const isContact = formType === "contact";
+
+// Dynamic title configuration
+let dynamicTitle = title;
+if (isService && serviceName && title === "Get in Touch") {
+  dynamicTitle = `Get Started with ${serviceName}`;
+} else if (isAreaInquiry && title === "Get in Touch") {
+  dynamicTitle = "Have a Question About Service in Your Area?";
+}
+
+// Dynamic description configuration
+let dynamicDescription = description;
+if (isAreaInquiry && description === "Ready to start your project? Contact us today for a free consultation and estimate.") {
+  dynamicDescription = "Not sure if we serve your location? Send us a quick message and we'll get back to you with information about our services in your area.";
+} else if (isService && serviceName && description === "Ready to start your project? Contact us today for a free consultation and estimate.") {
+  dynamicDescription = `Ready to start your ${serviceName.toLowerCase()} project? Contact our experienced team today for professional service.`;
+}
+
+// Form configuration
+const showPhone = !isAreaInquiry;
+const showLocation = isAreaInquiry;
+const messageRequired = isContact;
+const messageRows = isAreaInquiry ? "3" : "5";
+const messagePlaceholder = isAreaInquiry 
+  ? "Any specific questions about our services?" 
+  : isService 
+    ? "Tell us about your project..." 
+    : "Tell us about your project...";
+
+// Container max-width based on type
+const containerMaxWidth = isAreaInquiry ? "42rem" : "50rem";
+
+// Background styling based on type
+const sectionClass = isAreaInquiry ? "cs-service-area-inquiry" : "cs-contact-form";
+---
+
+<section class={`${sectionClass} ${className}`} id={id} aria-labelledby={`${id}-heading`}>
+  <div class="cs-container">
+    <form id={`${id}-form`} name={`${formType} Form`} method="post" novalidate role="form" aria-labelledby={`${id}-heading`}>
+      <div class="cs-content">
+        {topper && <span class="cs-topper">{topper}</span>}
+        <h2 class="cs-title" id={`${id}-heading`}>{dynamicTitle}</h2>
+        {subtitle && <h3 class="cs-subtitle">{subtitle}</h3>}
+        {dynamicDescription && <p class="cs-text">{dynamicDescription}</p>}
+      </div>
+      
+      <fieldset>
+        <legend class="sr-only">Contact Information</legend>
+        <div class="cs-form-group">
+          <label for={`${id}-name`}>
+            <span class="cs-label-text">Name <span class="cs-required">*</span></span>
+            <input
+              required
+              type="text"
+              id={`${id}-name`}
+              name="name"
+              placeholder={isAreaInquiry ? "Your name" : "Enter your name"}
+              aria-required="true"
+              autocomplete="name"
+            />
+            <span class="cs-error" aria-live="polite"></span>
+          </label>
+          
+          <label for={`${id}-email`}>
+            <span class="cs-label-text">Email <span class="cs-required">*</span></span>
+            <input
+              required
+              type="email"
+              id={`${id}-email`}
+              name="email"
+              placeholder={isAreaInquiry ? "Your email" : "Enter your email"}
+              aria-required="true"
+              autocomplete="email"
+            />
+            <span class="cs-error" aria-live="polite"></span>
+          </label>
+        </div>
+        
+        {showPhone && (
+          <label for={`${id}-phone`}>
+            <span class="cs-label-text">Phone <span class="cs-required">*</span></span>
+            <input
+              required
+              type="tel"
+              id={`${id}-phone`}
+              name="phone"
+              placeholder="Enter your phone number"
+              aria-required="true"
+              autocomplete="tel"
+            />
+            <span class="cs-error" aria-live="polite"></span>
+          </label>
+        )}
+
+        {showLocation && (
+          <label for={`${id}-location`}>
+            <span class="cs-label-text">Your Location <span class="cs-required">*</span></span>
+            <input
+              required
+              type="text"
+              id={`${id}-location`}
+              name="location"
+              placeholder="City, State (e.g., Nashville, TN)"
+              aria-required="true"
+            />
+            <span class="cs-error" aria-live="polite"></span>
+          </label>
+        )}
+      </fieldset>
+      
+      <fieldset>
+        <legend class="sr-only">Project Details</legend>
+        <label class="cs-label-message" for={`${id}-message`}>
+          <span class="cs-label-text">Message {messageRequired && <span class="cs-required">*</span>}</span>
+          <textarea
+            required={messageRequired}
+            name="message"
+            id={`${id}-message`}
+            placeholder={messagePlaceholder}
+            rows={messageRows}
+            aria-required={messageRequired ? "true" : "false"}
+          ></textarea>
+          <span class="cs-error" aria-live="polite"></span>
+        </label>
+      </fieldset>
+      
+      <button class="cs-button-solid" type="submit" aria-describedby={`${id}-submit-status`}>
+        <span>Submit</span>
+        <svg class="cs-loading" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="32" stroke-dashoffset="32">
+            <animate attributeName="stroke-dasharray" dur="2s" values="0 32;16 16;0 32;0 32" repeatCount="indefinite"/>
+            <animate attributeName="stroke-dashoffset" dur="2s" values="0;-16;-32;-32" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </button>
+      
+      <div class="cs-status" id={`${id}-submit-status`} role="status" aria-live="polite" aria-atomic="true"></div>
+    </form>
+  </div>
+</section>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+// Universal form styling that adapts based on form type
+.cs-contact-form,
+.cs-service-area-inquiry {
+  .section-padding();
+  .smooth-transition(background-color);
+  position: relative;
+  
+  // ContactForm styling (default)
+  &.cs-contact-form {
+    background-color: #f3f3f3; // Same light gray as service area inquiry
+    
+    // Enhanced visual hierarchy with subtle accent
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px; // Match service area inquiry height
+      background: var(--primary); // Use primary color consistently
+      z-index: 1;
+    }
+  }
+  
+  // ServiceAreaInquiry styling
+  &.cs-service-area-inquiry {
+    background-color: #f3f3f3; // Lighter gray instead of var(--accent)
+    
+    // Subtle accent border
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      z-index: 1;
+    }
+  }
+  
+  // Dark mode backgrounds
+  body.dark-mode & {
+    &.cs-contact-form {
+      background-color: var(--medium);
+    }
+    
+    &.cs-service-area-inquiry {
+      background-color: @dark-medium;
+    }
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 50rem; // Default for contact forms
+    
+    // Compact variant for service area inquiry
+    .cs-service-area-inquiry & {
+      max-width: 42rem;
+    }
+  }
+
+  .cs-content {
+    text-align: center;
+    margin-bottom: @spacing-lg;
+    
+    // Mobile: reduce spacing for compact layout
+    @media only screen and (max-width: @tablet - 1px) {
+      margin-bottom: @spacing-lg;
+    }
+    
+    @media only screen and (min-width: @tablet) {
+      text-align: left;
+    }
+    
+    // Service area inquiry has center alignment always
+    .cs-service-area-inquiry & {
+      text-align: center;
+      
+      @media only screen and (max-width: @tablet - 1px) {
+        margin-bottom: @spacing-md;
+      }
+    }
+  }
+
+  .cs-topper {
+    .cs-topper-style();
+    margin-bottom: @spacing-md;
+    display: block;
+    position: relative;
+    
+    // Mobile: smaller margin for compact layout
+    @media only screen and (max-width: @tablet - 1px) {
+      margin-bottom: @spacing-sm;
+    }
+    
+    // Enhanced visual differentiation consistent with AboutSection
+    &::after {
+      content: "";
+      display: block;
+      width: 3rem;
+      height: 2px;
+      background-color: var(--primary);
+      margin: @spacing-sm auto 0;
+      transition: width @transition-normal;
+      
+      @media only screen and (min-width: @tablet) {
+        margin: @spacing-sm 0 0;
+      }
+      
+      // Service area inquiry keeps center alignment
+      .cs-service-area-inquiry & {
+        margin: @spacing-sm auto 0;
+      }
+    }
+    
+    &:hover::after {
+      width: 4rem;
+    }
+  }
+
+  .cs-title {
+    .cs-title-style();
+    margin-bottom: @spacing-lg;
+    color: var(--headerColor);
+    
+    // Mobile: smaller margin for compact layout  
+    @media only screen and (max-width: @tablet - 1px) {
+      margin-bottom: @spacing-md;
+    }
+    
+    // Service area inquiry has different sizing
+    .cs-service-area-inquiry & {
+      font-size: 1.75rem;
+      
+      @media only screen and (max-width: @tablet - 1px) {
+        font-size: 1.5rem;
+      }
+      
+      @media only screen and (min-width: @tablet) {
+        font-size: 2rem;
+      }
+    }
+    
+    body.dark-mode & {
+      color: @dark-text-primary;
+    }
+  }
+
+  .cs-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-weight: @font-weight-semibold;
+    color: var(--primary);
+    margin-bottom: @spacing-md;
+    
+    body.dark-mode & {
+      color: var(--primaryLight);
+    }
+  }
+
+  .cs-text {
+    .cs-text-style();
+    margin: 0;
+    color: var(--bodyTextColor);
+    
+    // Hide body paragraph text on mobile
+    @media only screen and (max-width: @tablet - 1px) {
+      display: none;
+    }
+    
+    body.dark-mode & {
+      color: @dark-text-secondary;
+    }
+  }
+
+  form {
+    // Apply consistent slice-based layout for all breakpoints
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: @spacing-lg @spacing-md;
+    border: none;
+    
+    // Desktop: Maintain adequate padding but remove card styling
+    @media only screen and (min-width: @tablet) {
+      padding: @spacing-lg @spacing-lg;
+    }
+    
+    // Service area inquiry uses slightly different padding
+    .cs-service-area-inquiry & {
+      padding: @spacing-lg @spacing-md;
+      
+      @media only screen and (min-width: @tablet) {
+        padding: @spacing-lg @spacing-lg;
+      }
+    }
+    
+    // Dark mode: Keep transparent background for all breakpoints
+    body.dark-mode & {
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    
+    // Fieldset styling
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+      margin-bottom: @spacing-md;
+    }
+    
+    // Screen reader only content
+    .sr-only {
+      .sr-only();
+    }
+    
+    .cs-form-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: @spacing-md;
+      margin-bottom: @spacing-md;
+      
+      // Desktop: Name and Email side-by-side
+      @media only screen and (min-width: @tablet) {
+        grid-template-columns: 1fr 1fr;
+        gap: @spacing-md;
+        margin-bottom: @spacing-md;
+      }
+    }
+
+    label {
+      .form-label();
+      font-weight: @font-weight-semibold;
+      line-height: @line-height-relaxed;
+      margin-bottom: @spacing-md;
+      color: var(--headerColor);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      
+      body.dark-mode & {
+        color: @dark-text-primary;
+      }
+    }
+
+    .cs-label-text {
+      margin-bottom: @spacing-sm;
+      font-size: @form-label-size;
+      font-weight: @font-weight-semibold;
+    }
+
+    .cs-required {
+      color: @error-color;
+      
+      body.dark-mode & {
+        color: @form-error-dark;
+      }
+    }
+
+    input,
+    textarea {
+      font-size: @form-input-size;
+      font-family: @font-family-base;
+      font-weight: @font-weight-normal;
+      width: 100%;
+      height: 3rem; // 48px - standard height
+      margin-top: 0;
+      box-sizing: border-box;
+      padding: 0 @spacing-md;
+      border: 2px solid var(--primary);
+      border-radius: @border-radius-md;
+      background-color: var(--bodyTextColorWhite);
+      color: var(--bodyTextColor);
+      line-height: @line-height-normal;
+      .smooth-transition(border-color);
+      .smooth-transition(box-shadow);
+      box-shadow: @shadow-xs;
+
+      // Mobile: optimize for touch and prevent zoom
+      @media only screen and (max-width: @tablet - 1px) {
+        height: 2.75rem; // 44px - more compact for mobile
+        padding: 0 @spacing-sm;
+        border-radius: @border-radius-sm;
+        font-size: 1rem; // Ensure 16px to prevent zoom on iOS
+        
+        // Service area inquiry is even more compact
+        .cs-service-area-inquiry & {
+          height: 2.75rem;
+        }
+      }
+
+      &:hover {
+        border-color: var(--primary);
+        box-shadow: @shadow-md;
+      }
+
+      &:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(128, 192, 92, 0.1), @shadow-sm;
+      }
+
+      &::placeholder {
+        color: @form-placeholder;
+        opacity: 1;
+        font-style: italic;
+        font-size: @font-size-sm;
+        
+        // Mobile: adjust placeholder size
+        @media only screen and (max-width: @tablet - 1px) {
+          font-size: @font-size-md;
+        }
+      }
+
+      // Error state
+      &.error {
+        border-color: @form-error-border;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+      }
+
+      body.dark-mode & {
+        background-color: @dark-medium;
+        border-color: var(--primary);
+        color: @dark-text-primary;
+        box-shadow: @shadow-dark-sm;
+
+        &:hover {
+          border-color: var(--primary);
+          box-shadow: @shadow-dark-md;
+        }
+
+        &:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(128, 192, 92, 0.2), @shadow-dark-md;
+        }
+
+        &::placeholder {
+          color: @form-text-muted;
+        }
+
+        &.error {
+          border-color: @form-error-dark;
+        }
+      }
+    }
+
+    textarea {
+      min-height: 5rem; // 80px - default message field
+      padding: @spacing-md;
+      resize: vertical;
+      line-height: @line-height-relaxed;
+      height: auto;
+      
+      // Service area inquiry has smaller textarea
+      .cs-service-area-inquiry & {
+        min-height: 5rem; // Same as default for consistency
+        
+        @media only screen and (max-width: @tablet - 1px) {
+          min-height: 4rem; // 64px - more compact for mobile
+          padding: @spacing-sm;
+        }
+      }
+      
+      // Mobile: smaller textarea
+      @media only screen and (max-width: @tablet - 1px) {
+        min-height: 4rem;
+        padding: @spacing-sm;
+      }
+    }
+
+    .cs-label-message {
+      margin-bottom: @spacing-md;
+    }
+
+    .cs-button-solid {
+      width: 100%;
+      border: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: @spacing-sm;
+      
+      &.loading {
+        pointer-events: none;
+        
+        span {
+          opacity: 0.7;
+        }
+        
+        .cs-loading {
+          display: block;
+        }
+      }
+    }
+
+    .cs-loading {
+      display: none;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .cs-error {
+      font-size: @font-size-xs;
+      color: @error-color;
+      margin-top: @spacing-xs;
+      display: none;
+      
+      &.show {
+        display: block;
+      }
+      
+      body.dark-mode & {
+        color: @form-error-dark;
+      }
+    }
+
+    .cs-status {
+      margin-top: @spacing-md;
+      padding: @spacing-md;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-medium;
+      text-align: center;
+      display: none;
+      border-radius: @border-radius-md;
+      
+      &.show {
+        display: block;
+      }
+      
+      &.success {
+        background-color: @form-success-bg-light;
+        color: @success-color;
+        border: 1px solid @form-success-border-light;
+        
+        body.dark-mode & {
+          background-color: @form-success-bg-dark;
+          color: @form-success-dark;
+          border-color: @form-success-border-dark;
+        }
+      }
+      
+      &.error {
+        background-color: @form-error-status-bg-light;
+        color: @form-error-status-text-light;
+        border: 1px solid @form-error-status-border-light;
+        
+        body.dark-mode & {
+          background-color: @form-error-status-bg-dark;
+          color: @form-error-status-text-dark;
+          border-color: @form-error-status-border-dark;
+        }
+      }
+    }
+  }
+
+  // Enhanced keyframe animations for better mobile UX
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 80px;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Mobile-specific animation optimization
+  @media only screen and (max-width: @tablet - 1px) {
+    &.cs-service-area-inquiry {
+      // Subtle entrance animation for mobile
+      animation: fadeInUp 0.5s ease-out;
+    }
+    
+    &.cs-contact-form {
+      // Subtle entrance animation for mobile
+      animation: fadeInUp 0.6s ease-out;
+    }
+  }
+}
+</style>
+
+<script>
+  // Enhanced mobile form validation and UX for Universal Form
+  document.addEventListener('DOMContentLoaded', function() {
+    const universalForms = document.querySelectorAll('form[id*="-form"]');
+    
+    universalForms.forEach(form => {
+      const inputs = form.querySelectorAll('input[required], textarea[required]');
+      const submitButton = form.querySelector('.cs-button-solid');
+      const statusDiv = form.querySelector('.cs-status');
+      const formId = form.id;
+      const isAreaInquiry = form.closest('.cs-service-area-inquiry') !== null;
+      
+      // Enhanced mobile validation with touch support
+      inputs.forEach(input => {
+        // Real-time validation on blur for better mobile UX
+        input.addEventListener('blur', function() {
+          validateUniversalField(this, isAreaInquiry);
+        });
+        
+        // Clear errors on focus for mobile-friendly experience
+        input.addEventListener('focus', function() {
+          clearUniversalFieldError(this);
+        });
+        
+        // Enhanced input handling for mobile
+        input.addEventListener('input', function() {
+          // Clear validation state on input for immediate feedback
+          if (this.classList.contains('error')) {
+            this.classList.remove('error');
+            clearUniversalFieldError(this);
+          }
+        });
+      });
+      
+      // Enhanced form submission with mobile-optimized feedback
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        
+        // Validate all required fields
+        inputs.forEach(input => {
+          if (!validateUniversalField(input, isAreaInquiry)) {
+            isValid = false;
+          }
+        });
+        
+        if (isValid) {
+          submitUniversalForm(form, isAreaInquiry);
+        } else {
+          // Mobile-friendly error handling - scroll to first error
+          const firstError = form.querySelector('.error');
+          if (firstError) {
+            firstError.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center'
+            });
+            (firstError as HTMLElement).focus();
+          }
+        }
+      });
+    });
+    
+    function validateUniversalField(field, isAreaInquiry = false) {
+      const errorSpan = field.parentNode.querySelector('.cs-error');
+      let isValid = true;
+      let errorMessage = '';
+      
+      // Check if field is empty (for required fields)
+      if (field.hasAttribute('required') && !field.value.trim()) {
+        isValid = false;
+        errorMessage = `${getUniversalFieldLabel(field)} is required.`;
+      }
+      // Email validation
+      else if (field.type === 'email' && field.value.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value.trim())) {
+          isValid = false;
+          errorMessage = 'Please enter a valid email address.';
+        }
+      }
+      // Phone validation (basic)
+      else if (field.type === 'tel' && field.value.trim()) {
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        const cleanPhone = field.value.replace(/[\s\-\(\)\.]/g, '');
+        if (cleanPhone.length < 10) {
+          isValid = false;
+          errorMessage = 'Please enter a valid phone number.';
+        }
+      }
+      // Location validation - should have city and state (for area inquiry)
+      else if (field.name === 'location' && field.value.trim() && isAreaInquiry) {
+        const locationRegex = /^.+,\s*.+$/; // Basic pattern for "City, State"
+        if (!locationRegex.test(field.value.trim())) {
+          isValid = false;
+          errorMessage = 'Please enter location as "City, State" (e.g., Nashville, TN).';
+        }
+      }
+      
+      if (!isValid) {
+        field.classList.add('error');
+        if (errorSpan) {
+          errorSpan.textContent = errorMessage;
+          errorSpan.classList.add('show');
+        }
+      } else {
+        field.classList.remove('error');
+        if (errorSpan) {
+          errorSpan.classList.remove('show');
+          errorSpan.textContent = '';
+        }
+      }
+      
+      return isValid;
+    }
+    
+    function clearUniversalFieldError(field) {
+      const errorSpan = field.parentNode.querySelector('.cs-error');
+      field.classList.remove('error');
+      if (errorSpan) {
+        errorSpan.classList.remove('show');
+        errorSpan.textContent = '';
+      }
+    }
+    
+    function getUniversalFieldLabel(field) {
+      const label = field.parentNode.querySelector('.cs-label-text');
+      if (label) {
+        return label.textContent.replace('*', '').trim();
+      }
+      return 'This field';
+    }
+    
+    function submitUniversalForm(form, isAreaInquiry = false) {
+      const submitButton = form.querySelector('.cs-button-solid');
+      const statusDiv = form.querySelector('.cs-status');
+      const buttonText = submitButton.querySelector('span');
+      const loading = submitButton.querySelector('.cs-loading');
+      
+      // Show loading state with mobile-optimized feedback
+      submitButton.classList.add('loading');
+      submitButton.disabled = true;
+      if (loading) loading.style.display = 'block';
+      if (buttonText) {
+        buttonText.textContent = isAreaInquiry ? 'Checking...' : 'Sending...';
+      }
+      
+      // Hide previous status
+      statusDiv.className = 'cs-status';
+      statusDiv.textContent = '';
+      
+      // Simulate form submission (replace with actual submission logic)
+      const submissionTime = isAreaInquiry ? 1500 : 2000;
+      
+      setTimeout(() => {
+        // Reset button state
+        submitButton.classList.remove('loading');
+        submitButton.disabled = false;
+        if (loading) loading.style.display = 'none';
+        if (buttonText) buttonText.textContent = 'Submit';
+        
+        // Show success message with mobile-friendly animation
+        statusDiv.className = 'cs-status success show';
+        if (isAreaInquiry) {
+          statusDiv.textContent = 'Thank you! We\'ve received your inquiry and will check if we serve your area. We\'ll get back to you within 24 hours.';
+        } else {
+          statusDiv.textContent = 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.';
+        }
+        
+        // Scroll to status message on mobile
+        if (window.innerWidth < 768) {
+          statusDiv.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center'
+          });
+        }
+        
+        // Reset form
+        form.reset();
+        
+        // Clear any remaining error states
+        form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        form.querySelectorAll('.cs-error.show').forEach(el => {
+          el.classList.remove('show');
+          el.textContent = '';
+        });
+        
+      }, submissionTime);
+    }
+  });
+</script> 

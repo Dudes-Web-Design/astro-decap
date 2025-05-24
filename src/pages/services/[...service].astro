@@ -1,8 +1,10 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import Landing from "@components/Landing.astro";
+import UniversalForm from "@components/UniversalForm.astro";
+import "@styles/markdown.less";
 
 export async function getStaticPaths() {
   const services = await getCollection("services");
@@ -17,8 +19,443 @@ const { Content } = await render(service);
 ---
 
 <BaseLayout title={service.data.title} description={service.data.description} preloadedImage={service.data.image}>
-  <Landing title={service.data.title} image={service.data.image} imageAlt={service.data.imageAlt} />
-  <section>
-    <Content />
+  <!-- Card-based Header (replaces Landing component) -->
+  <section class="cs-service-header">
+    <div class="cs-container">
+      <div class="cs-content">
+        {service.data.image && (
+          <div class="cs-header-image-card">
+            <Image 
+              src={service.data.image} 
+              alt={service.data.imageAlt || `${service.data.title} service`}
+              class="cs-header-image"
+              loading="lazy"
+              width={800}
+              height={400}
+            />
+            <div class="cs-header-overlay">
+              <h1 class="cs-header-title">{service.data.title}</h1>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   </section>
-</BaseLayout> 
+
+  <!-- What We Do Card -->
+  {service.data.body && (
+    <section class="cs-what-we-do">
+      <div class="cs-container">
+        <div class="cs-intro-card">
+          <div class="cs-intro-header">
+            <h2 class="cs-intro-title">What We Do</h2>
+          </div>
+          <div class="cs-intro-content">
+            <p>{service.data.body}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+  
+  <!-- Service Content -->
+  <section class="cs-service-content">
+    <div class="cs-container">
+      <div class="cs-content">
+        <!-- Render markdown content -->
+        <div id="service-content">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Universal Form for Service -->
+  <UniversalForm 
+    formType="service"
+    serviceName={service.data.title}
+    subtitle=""
+    topper="Free Quote"
+    id="service-contact-form"
+  />
+</BaseLayout>
+
+<style lang="less">
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
+
+// Card-based Header Section
+.cs-service-header {
+  .section-padding();
+  padding-bottom: 0;
+  background-color: @card-bg-light;
+  .smooth-transition(background-color);
+  
+  // Dark mode background
+  body.dark-mode & {
+    background-color: var(--dark);
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 50rem; // 800px - similar to blog content width
+  }
+
+  .cs-content {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  // Header image card styling (matches markdown image styling with overlay)
+  .cs-header-image-card {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: @border-radius-md; // Same as markdown images
+    overflow: hidden;
+    background-color: @card-bg-light;
+    box-shadow: @shadow-sm;
+    .smooth-transition(box-shadow);
+    
+    &:hover {
+      box-shadow: @shadow-lg;
+    }
+
+    // Dark mode styles
+    body.dark-mode & {
+      background-color: @card-bg-dark;
+      box-shadow: @shadow-dark-sm;
+
+      &:hover {
+        box-shadow: @shadow-dark-lg;
+      }
+    }
+    
+    .cs-header-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 2/1; // 2:1 aspect ratio for header images
+      object-fit: cover;
+      display: block;
+    }
+
+    .cs-header-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cs-header-title {
+      .cs-title-style();
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      color: #ffffff;
+      text-align: center;
+      margin: 0;
+      padding: @spacing-md;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      font-weight: @font-weight-black;
+      line-height: @line-height-tight;
+      max-width: 90%;
+    }
+
+    // Hover effect
+    &:hover {
+      .cs-header-overlay {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+      }
+    }
+
+    // Dark mode adjustments
+    body.dark-mode & {
+      .cs-header-overlay {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
+      }
+
+      &:hover .cs-header-overlay {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 100%);
+      }
+    }
+
+    // Responsive adjustments
+    @media only screen and (min-width: @tablet) {
+      .cs-header-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        padding: @spacing-lg;
+      }
+    }
+  }
+}
+
+// What We Do Section
+.cs-what-we-do {
+  .section-padding();
+  padding-top: @spacing-xl;
+  padding-bottom: 0;
+  background-color: @card-bg-light;
+  .smooth-transition(background-color);
+  
+  // Dark mode background
+  body.dark-mode & {
+    background-color: var(--dark);
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 50rem; // 800px - similar to blog content width
+  }
+
+  // Service introduction card styling
+  .cs-intro-card {
+    .card-base();
+    margin-bottom: 0;
+    padding: @spacing-lg;
+    border-radius: @border-radius-lg;
+    background: transparent;
+    border: 2px solid #bb2e28;
+    color: var(--headerColor);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(187, 46, 40, 0.05);
+      pointer-events: none;
+    }
+
+    .cs-intro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: @spacing-lg;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cs-intro-title {
+      .cs-title-style();
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      margin: 0;
+      color: var(--headerColor);
+      font-weight: @font-weight-black;
+      position: relative;
+      padding-bottom: @spacing-sm;
+      
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 3rem;
+        height: 3px;
+        background: #bb2e28;
+        border-radius: 2px;
+      }
+    }
+
+    .cs-intro-badge {
+      background: rgba(187, 46, 40, 0.1);
+      color: #bb2e28;
+      padding: @spacing-xs @spacing-md;
+      border-radius: @border-radius-sm;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cs-intro-content {
+      position: relative;
+      z-index: 1;
+      
+      p {
+        .cs-text-style();
+        margin-bottom: @spacing-md;
+        color: var(--bodyTextColor);
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        line-height: @line-height-relaxed;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      strong, b {
+        font-weight: @font-weight-bold;
+        color: var(--headerColor);
+      }
+
+      em, i {
+        font-style: italic;
+      }
+    }
+
+    // Dark mode adjustments
+    body.dark-mode & {
+      border-color: #d63e37;
+      background: transparent;
+      
+      &::before {
+        background: rgba(214, 62, 55, 0.1);
+      }
+
+      .cs-intro-title {
+        color: var(--bodyTextColorWhite);
+        
+        &::after {
+          background: #d63e37;
+        }
+      }
+
+      .cs-intro-badge {
+        background: rgba(214, 62, 55, 0.2);
+        color: #d63e37;
+      }
+
+      .cs-intro-content {
+        p, strong, b {
+          color: @dark-text-primary;
+        }
+      }
+    }
+
+    // Responsive adjustments
+    @media only screen and (min-width: @tablet) {
+      padding: @spacing-xxl;
+    }
+  }
+}
+
+.cs-service-content {
+  .section-padding();
+  padding-top: @spacing-lg;
+  background-color: @card-bg-light;
+  .smooth-transition(background-color);
+  
+  // Dark mode background
+  body.dark-mode & {
+    background-color: var(--dark);
+  }
+  
+  .cs-container {
+    .container();
+    max-width: 50rem; // 800px - similar to blog content width
+  }
+
+  .cs-content {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .cs-text {
+    .cs-text-style();
+    margin-bottom: @spacing-xl;
+
+    // Style content HTML elements (similar to AboutSection)
+    p {
+      margin-bottom: @spacing-md;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h2 {
+      .cs-title-style();
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin-bottom: @spacing-lg;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    h3 {
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: @font-weight-bold;
+      color: var(--headerColor);
+      margin: @spacing-lg 0 @spacing-md;
+    }
+
+    strong, b {
+      font-weight: @font-weight-bold;
+      color: var(--headerColor);
+    }
+
+    em, i {
+      font-style: italic;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+      .smooth-transition(color);
+
+      &:hover {
+        color: var(--primaryLight);
+      }
+
+      .focus-visible();
+    }
+
+    ul, ol {
+      margin: @spacing-md 0;
+      padding-left: @spacing-xl;
+
+      li {
+        margin-bottom: @spacing-sm;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    ul li {
+      list-style-type: disc;
+    }
+
+    ol li {
+      list-style-type: decimal;
+    }
+  }
+
+  // Service content uses global markdown styles from @styles/markdown.less
+  #service-content {
+    margin-top: (16/16rem);
+    padding-top: (25/16rem);
+    border-top: 1px solid #a2a0a0;
+  }
+
+  // Dark mode adjustments
+  body.dark-mode & {
+    .cs-text {
+      h2, h3 {
+        color: @dark-text-primary;
+      }
+
+      strong, b {
+        color: @dark-text-primary;
+      }
+
+      a {
+        &:hover {
+          color: var(--primary);
+        }
+      }
+    }
+
+    // Dark mode styles for service content are handled in markdown.less
+  }
+}
+</style> 

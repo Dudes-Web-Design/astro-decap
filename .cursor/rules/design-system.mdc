@@ -1,0 +1,286 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Design System Guidelines
+
+**Always use the established design system variables and mixins instead of hardcoded values.**
+
+## Color System
+
+### **Theme Variables (PREFERRED)**
+Use these semantic color variables that adapt to light/dark mode:
+
+```less
+// Primary & Secondary Colors
+@theme-primary-color        // Main brand color (Fire Brick)
+@theme-secondary-color      // Secondary color (adapts: Eerie Black → White)
+@theme-accent-color         // Neutral accent (Gray)
+
+// Background & Surface Colors
+@theme-background-default   // Main page background (adapts: White → Eerie Black)
+@theme-surface-primary      // Card/component backgrounds (adapts: White → Dark Gray)
+@theme-surface-secondary    // Subtle surface variation
+
+// Text Colors
+@theme-text-primary         // Main text (adapts: Eerie Black → White)
+@theme-text-secondary       // Secondary/muted text (Gray)
+@theme-text-inverse         // Text on dark backgrounds (White in light mode, Eerie Black in dark mode)
+
+// Interactive Colors
+@theme-border-default       // Default borders (adapts: Light Gray → Dark Gray)
+@theme-hover-bg            // Hover backgrounds (Fire Brick with opacity)
+@theme-focus-ring          // Focus outlines (Fire Brick)
+```
+
+### **Context-Specific Colors**
+```less
+// For overlays and hero sections where text should ALWAYS be light
+var(--theme-white)          // Always white, regardless of theme
+var(--bodyTextColorWhite)   // Always light text for dark backgrounds
+
+// Validation & Status Colors
+@error-color: #dc2626      // Red with proper contrast
+@success-color: #059669    // Green with proper contrast  
+@warning-color: #d97706    // Orange with proper contrast
+```
+
+### **Shadow System**
+```less
+// Light Mode Shadows
+@shadow-xs, @shadow-sm, @shadow-md, @shadow-lg, @shadow-xl
+
+// Dark Mode Shadows  
+@shadow-dark-sm, @shadow-dark-md, @shadow-dark-lg, @shadow-dark-xl
+```
+
+## Typography System
+
+### **Typography Mixins (PREFERRED)**
+```less
+.cs-title-style()     // Main headings (uses --headerFontSize, black weight)
+.cs-text-style()      // Body text (uses --bodyFontSize, relaxed line-height)
+.cs-topper-style()    // Small uppercase labels
+.cs-subtitle-style()  // Section subtitles
+
+// Component-Specific Typography
+.card-title-style()   // Card headings
+.card-text-style()    // Card body text  
+.card-cta-style()     // Card call-to-action links
+.form-label()         // Form labels
+```
+
+### **Font Size Scale**
+```less
+@font-size-xs: 0.75rem    // 12px - help text, captions
+@font-size-sm: 0.875rem   // 14px - labels, small text
+@font-size-md: 1rem       // 16px - base body text
+@font-size-lg: 1.125rem   // 18px - large body text
+@font-size-xl: 1.25rem    // 20px - small headings
+@font-size-xxl: 1.5rem    // 24px - medium headings
+@font-size-xxxl: 2rem     // 32px - large headings
+```
+
+### **Font Weights & Line Heights**
+```less
+@font-weight-normal: 400, @font-weight-medium: 500
+@font-weight-semibold: 600, @font-weight-bold: 700, @font-weight-black: 900
+
+@line-height-tight: 1.2     // For headings
+@line-height-normal: 1.4    // For UI text  
+@line-height-relaxed: 1.6   // For body text
+@line-height-loose: 1.8     // For large text blocks
+```
+
+## Spacing System
+
+### **Spacing Variables**
+```less
+@spacing-xs: 0.25rem   // 4px
+@spacing-sm: 0.5rem    // 8px  
+@spacing-md: 1rem      // 16px (base unit)
+@spacing-lg: 1.5rem    // 24px
+@spacing-xl: 2rem      // 32px
+@spacing-xxl: 3rem     // 48px
+```
+
+### **Spacing Mixins**
+```less
+.section-padding()           // Standard section padding
+.container()                 // Standard container width/centering
+.component-spacing()         // Spacing between components
+.stack-spacing(@gap)         // Vertical spacing between child elements
+.inline-spacing(@gap)        // Horizontal spacing between child elements
+```
+
+## Component Mixins
+
+### **Layout & Structure**
+```less
+.responsive-grid(@mobile, @tablet, @desktop)  // Responsive grid layouts
+.card-base()                                  // Standard card styling
+.button-primary()                            // Primary button styling
+.form-input()                                // Form input styling
+```
+
+### **Utility Mixins**
+```less
+.smooth-transition(@property, @duration)     // Consistent transitions
+.focus-visible()                             // Accessible focus styles
+.sr-only()                                   // Screen reader only content
+.text-truncate()                             // Text overflow handling
+```
+
+## Border & Radius System
+
+```less
+@border-radius-sm: 4px, @border-radius-md: 8px, @border-radius-lg: 12px
+@border-width: 1px, @border-style: solid
+```
+
+## Transition System
+
+### **Transition Variables**
+```less
+@transition-fast: 0.15s ease-in-out      // Quick interactions (hover, focus)
+@transition-normal: 0.3s ease-in-out     // Standard interactions (buttons, cards)
+@transition-slow: 0.5s ease-in-out       // Larger animations (modals, transitions)
+
+// Common easing functions
+@ease-in-out, @ease-out, @ease-in
+```
+
+## Responsive Breakpoints
+
+```less
+@mobile: 0em          // 0px
+@tablet: 48em         // 768px  
+@desktop: 64em        // 1024px
+@large-desktop: 80em  // 1280px
+```
+
+## Rules & Best Practices
+
+### **✅ DO**
+- Use semantic theme variables (`@theme-*`) for colors
+- Use typography mixins (`.cs-title-style()`) for text styling
+- Use spacing variables (`@spacing-*`) instead of pixel values
+- Use component mixins (`.card-base()`) for consistent styling
+- Use `var(--theme-white)` for text that must always be light (overlays, hero sections)
+- Apply `.smooth-transition()` for consistent animations
+
+### **❌ DON'T**
+- Hardcode colors (`#ffffff`, `#000000`)
+- Hardcode spacing (`margin: 16px`, `padding: 24px`)
+- Use legacy variables marked as "TO BE DEPRECATED"
+- Mix hardcoded values with design system variables
+- Use `--semantic-text-inverse` for overlay text (it changes in dark mode)
+
+### **Component Development Pattern**
+```less
+.my-component {
+  .card-base();                    // Use card mixin for base styling
+  .smooth-transition(transform);   // Add consistent transitions
+  
+  .my-title {
+    .cs-title-style();            // Use typography mixin
+    margin-bottom: @spacing-lg;   // Use spacing variable
+    color: @theme-text-primary;   // Use theme color
+  }
+  
+  .my-text {
+    .cs-text-style();            // Use typography mixin
+    color: @theme-text-secondary; // Use theme color
+  }
+  
+  &:hover {
+    transform: translateY(-@spacing-xs); // Use spacing for transform
+  }
+}
+```
+
+### **Dark Mode Considerations**
+- Theme variables automatically adapt to dark mode
+- Test components in both light and dark modes
+- Use `body.dark-mode &` selectors only when theme variables aren't sufficient
+- For overlay text, use `var(--theme-white)` or `var(--bodyTextColorWhite)`
+
+### **Form Styling**
+```less
+.my-form {
+  label {
+    .form-label();              // Use form label mixin
+  }
+  
+  input, textarea {
+    .form-input();              // Use form input mixin
+  }
+  
+  .error-message {
+    color: @error-color;        // Use semantic error color
+    font-size: @font-size-sm;   // Use scale font size
+  }
+}
+```
+
+This design system ensures consistency, accessibility, and maintainability across all components.
+
+## Legacy Code Migration
+
+### **Identifying Legacy Patterns**
+When encountering existing code, look for these patterns that need updating:
+
+```less
+// ❌ OLD: Hardcoded colors
+color: #ffffff;
+background-color: #000000;
+border-color: #cccccc;
+
+// ✅ NEW: Semantic theme variables
+color: var(--theme-white);
+background-color: @theme-text-primary;
+border-color: @theme-border-default;
+```
+
+```less
+// ❌ OLD: Hardcoded spacing
+margin: 16px 24px;
+padding: 8px 12px;
+
+// ✅ NEW: Spacing variables
+margin: @spacing-md @spacing-lg;
+padding: @spacing-sm @spacing-md;
+```
+
+```less
+// ❌ OLD: Inconsistent typography
+font-size: 18px;
+font-weight: 600;
+line-height: 1.4;
+
+// ✅ NEW: Typography mixins
+.card-title-style();
+// or for headers: .cs-title-style();
+```
+
+### **Migration Strategy**
+1. **Audit**: Identify hardcoded values in existing components
+2. **Replace**: Update with appropriate design system variables/mixins
+3. **Test**: Verify appearance in both light and dark modes
+4. **Validate**: Ensure accessibility and responsiveness remain intact
+
+### **Working with Legacy Variables**
+Some legacy variables are marked "TO BE DEPRECATED" in `variables.less`:
+- Use them temporarily if needed for consistency with existing code
+- Gradually migrate to the new `@theme-*` semantic variables
+- Prioritize new components to use the modern design system
+
+### **Component Refactoring Checklist**
+- [ ] Replace hardcoded colors with theme variables
+- [ ] Replace hardcoded spacing with spacing variables  
+- [ ] Apply typography mixins for consistent text styling
+- [ ] Add smooth transitions using transition variables
+- [ ] Use component mixins (`.card-base()`, `.form-input()`) where applicable
+- [ ] Test in both light and dark modes
+- [ ] Verify responsive behavior on different screen sizes

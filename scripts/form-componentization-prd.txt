@@ -1,0 +1,120 @@
+# Form Componentization Migration PRD
+
+## Project Overview
+Complete the migration of all form implementations across the Astro website to use the existing UniversalForm.astro component, ensuring consistency, maintainability, and improved user experience.
+
+## Current State Analysis
+The UniversalForm.astro component is already implemented with comprehensive functionality including:
+- Three form types: "contact", "service", "area-inquiry"
+- Dynamic field configuration (phone vs location fields)
+- Advanced validation and accessibility features
+- Mobile-optimized responsive design
+- Loading states and error handling
+- Unified styling using LESS variables
+
+### Current Form Implementations
+1. **UniversalForm.astro** - ✅ Complete, modern implementation
+2. **ContactForm.astro** - 🔄 Legacy component, still used in service area pages
+3. **ServiceAreaInquiry.astro** - 🔄 Legacy component, used in service areas index
+4. **Contact page inline form** - 🔄 Basic HTML form, missing features
+
+### Pages Still Using Legacy Forms
+1. `src/pages/contact.astro` - Inline form HTML
+2. `src/pages/service-areas/[...city].astro` - ContactForm.astro import
+3. `src/pages/service-areas/index.astro` - ServiceAreaInquiry.astro import
+
+## Requirements
+
+### Functional Requirements
+1. **Complete Migration**: All forms must use UniversalForm.astro
+2. **Feature Parity**: Maintain all existing functionality from legacy forms
+3. **Styling Consistency**: Preserve existing visual design and responsive behavior
+4. **Accessibility**: Maintain WCAG compliance and screen reader support
+5. **Validation**: Keep all current validation rules and error messaging
+6. **Mobile Optimization**: Ensure touch-friendly interface on all devices
+
+### Technical Requirements
+1. **Component Interface**: Use existing UniversalForm props system
+2. **Form Types**: Utilize appropriate formType prop for each use case
+3. **Styling**: Leverage existing LESS variable system
+4. **JavaScript**: Maintain client-side validation and submission logic
+5. **Backward Compatibility**: Ensure no breaking changes to existing functionality
+
+### Form Type Mapping
+- **Contact page**: formType="contact" with full contact form fields
+- **Service area pages**: formType="contact" with service-specific messaging
+- **Service areas index**: formType="area-inquiry" with location field
+
+## Implementation Strategy
+
+### Phase 1: Analysis and Documentation
+1. Document current form field configurations across all implementations
+2. Analyze styling differences and requirements
+3. Identify any missing features in UniversalForm that need to be added
+
+### Phase 2: UniversalForm Enhancement (if needed)
+1. Add any missing functionality discovered in analysis
+2. Ensure all form types work correctly with existing styling
+3. Test component across different page contexts
+
+### Phase 3: Page Migration
+1. **Service Area Pages**: Replace ContactForm with UniversalForm
+2. **Service Areas Index**: Replace ServiceAreaInquiry with UniversalForm  
+3. **Contact Page**: Replace inline form with UniversalForm
+
+### Phase 4: Cleanup and Testing
+1. Remove unused legacy form components
+2. Test all forms across devices and browsers
+3. Verify form submissions work correctly
+4. Update any related documentation
+
+## Success Criteria
+1. All forms use UniversalForm.astro component
+2. Visual design remains consistent with current implementation
+3. All form validation and submission functionality works correctly
+4. Mobile responsiveness maintained across all form instances
+5. No accessibility regressions
+6. Legacy form components can be safely removed
+
+## Technical Specifications
+
+### UniversalForm Component Interface
+```typescript
+interface Props {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  topper?: string;
+  formType?: "contact" | "service" | "area-inquiry";
+  serviceName?: string;
+  className?: string;
+  id?: string;
+  compact?: boolean;
+}
+```
+
+### Form Field Configurations
+- **Contact Form**: name, email, phone, message (all required)
+- **Service Form**: name, email, phone, message (all required) + service-specific messaging
+- **Area Inquiry**: name, email, location, message (location required, message optional)
+
+### Styling Requirements
+- Use existing LESS variable system (@spacing-*, @font-*, @color-*)
+- Maintain responsive grid layouts (name/email side-by-side on desktop)
+- Preserve mobile-first design approach
+- Keep consistent button styling and loading states
+
+### Validation Rules
+- Email: Valid email format required
+- Phone: Minimum 10 digits (for contact/service forms)
+- Location: "City, State" format (for area inquiry)
+- Message: Required for contact forms, optional for area inquiry
+
+## Dependencies
+- Existing UniversalForm.astro component
+- LESS styling system and variables
+- Current page layouts and routing
+- Form submission endpoints (if any)
+
+## Timeline
+This is a refactoring project that should be completed systematically to ensure no functionality is lost during the migration process. 

@@ -5,7 +5,7 @@
 **/
 // Import the component and all the images you want to use with it
 
-import ctaImage from "@assets/images/CTA/cabinets2.jpg";
+import ctaImage from "@assets/images/CTA/cta-image.jpg";
 import overlaySvg from "@assets/images/CTA/cta-squares.svg";
 ---
 
@@ -20,7 +20,7 @@ import overlaySvg from "@assets/images/CTA/cta-squares.svg";
       Say something catchy, informative, and encouraging to click the button to
       go to the contact page. I like to add these to the bottom of all pages.
     </p>
-    <a href="/contact" class="cs-button-solid">Get an Estimate Now</a>
+    <a href="/contact" class="cs-button-solid">Get A Free Quote</a>
   </div>
   <img
     class="cta-bg-img"
@@ -69,7 +69,7 @@ import overlaySvg from "@assets/images/CTA/cta-squares.svg";
       line-height: 58/48;
       text-align: center;
       margin-bottom: (36/16rem);
-      color: #fff;
+      color: var(--semantic-text-inverse);
       position: relative;
     }
 
@@ -79,7 +79,7 @@ import overlaySvg from "@assets/images/CTA/cta-squares.svg";
       max-width: (598/16rem);
       margin: auto;
       margin-bottom: (36/16rem);
-      color: #fff;
+      color: var(--semantic-text-inverse);
       opacity: 1;
     }
   }
@@ -110,6 +110,16 @@ import overlaySvg from "@assets/images/CTA/cta-squares.svg";
     #cta {
       &:after {
         display: none;
+      }
+      
+      // CTA should always have white text on dark overlay background
+      // Override semantic variables for CTA specifically in dark mode
+      .title {
+        color: #ffffff !important;
+      }
+      
+      p {
+        color: #ffffff !important;
       }
     }
   }

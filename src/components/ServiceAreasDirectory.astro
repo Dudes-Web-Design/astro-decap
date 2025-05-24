@@ -3,7 +3,7 @@ export interface Props {
   serviceAreas: Array<{
     title: string;
     slug: string;
-    description: string;
+    description?: string;
     lat?: number;
     lng?: number;
   }>;
@@ -50,25 +50,16 @@ const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
 
 <section class={`cs-service-areas-directory ${className}`} aria-labelledby="directory-heading">
   <div class="cs-container">
-    <div class="cs-content">
-      <h2 class="cs-title" id="directory-heading">Service Areas Directory</h2>
-      <p class="cs-text">
-        We proudly serve communities across North Alabama and Middle Tennessee. 
-        Click on any city below to learn more about our services in your area.
-      </p>
-    </div>
-    
     <div class="cs-states-wrapper">
       {sortedStates.map(stateName => (
         <div class="cs-state-section">
           <h3 class="cs-state-title">{stateName}</h3>
           <ul class="cs-cities-list" role="list">
             {groupedAreas[stateName].map(area => (
-              <li class="cs-city-item">
+              <li class="cs-city-item" data-slug={area.slug} id={`service-area-${area.slug}`}>
                 <a href={`/service-areas/${area.slug}`} class="cs-city-link">
                   <div class="cs-city-info">
                     <h4 class="cs-city-name">{area.title}</h4>
-                    <p class="cs-city-description">{area.description}</p>
                   </div>
                   <div class="cs-city-action">
                     <span class="cs-learn-more">
@@ -94,6 +85,7 @@ const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
 
 .cs-service-areas-directory {
   .section-padding();
+  padding-top: 0;
   
   .cs-container {
     .container();
@@ -199,13 +191,24 @@ const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
   .cs-city-item {
     margin-bottom: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    .smooth-transition(background-color);
     
     &:last-child {
       border-bottom: none;
     }
     
+    // Highlight animation for map interaction
+    &.highlighted {
+      background-color: rgba(220, 38, 38, 0.1);
+      animation: highlightPulse 1s ease-out;
+    }
+    
     body.dark-mode & {
       border-bottom-color: @border-color-dark;
+      
+      &.highlighted {
+        background-color: rgba(220, 38, 38, 0.15);
+      }
     }
   }
 
@@ -263,30 +266,11 @@ const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
     font-size: 1.125rem;
     font-weight: @font-weight-semibold;
     color: var(--headerColor);
-    margin: 0 0 @spacing-xs 0;
+    margin: 0;
     transition: color @transition-normal;
     
     body.dark-mode & {
       color: @dark-text-primary;
-    }
-  }
-
-  .cs-city-description {
-    font-size: 0.875rem;
-    line-height: @line-height-normal;
-    color: var(--bodyTextColor);
-    margin: 0;
-    
-    // Truncate on smaller screens
-    @media only screen and (max-width: @tablet) {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    body.dark-mode & {
-      color: @dark-text-secondary;
     }
   }
 
@@ -334,6 +318,37 @@ const sortedStates = Object.keys(groupedAreas).sort((a, b) => {
     
     .cs-state-title {
       font-size: 1.75rem;
+    }
+  }
+  
+  // Keyframe animation for map interaction highlight
+  @keyframes highlightPulse {
+    0% {
+      background-color: rgba(220, 38, 38, 0.2);
+      transform: scale(1.005);
+    }
+    50% {
+      background-color: rgba(220, 38, 38, 0.15);
+    }
+    100% {
+      background-color: rgba(220, 38, 38, 0.1);
+      transform: scale(1);
+    }
+  }
+  
+  body.dark-mode & {
+    @keyframes highlightPulse {
+      0% {
+        background-color: rgba(220, 38, 38, 0.25);
+        transform: scale(1.005);
+      }
+      50% {
+        background-color: rgba(220, 38, 38, 0.2);
+      }
+      100% {
+        background-color: rgba(220, 38, 38, 0.15);
+        transform: scale(1);
+      }
     }
   }
 }

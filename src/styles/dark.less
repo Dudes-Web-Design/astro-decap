@@ -6,39 +6,57 @@
 
 /* Mobile */
 @media only screen and (min-width: 0em) {
-    // Dark Mode Color Scheme
-    :root {
-        --dark: hsl(163, 96%, 5%);
-        --medium: hsl(163, 95%, 8%);
-        --accent: #334756;
-    }
-
+    // Fire Brick Dark Mode Color Overrides
     body.dark-mode {
-        background-color: var(--dark);
+        // Override core CSS custom properties for dark mode
+        --theme-fire-brick: #e64a42;        // Slightly lighter fire brick for better contrast
+        --theme-eerie-black: #1a1a1a;       // Slightly lighter for surfaces in dark mode
+        --theme-gray: #9ca3af;              // Lighter gray for better contrast on dark
+        --theme-white: #ffffff;             // Keep white for text on dark backgrounds
 
-        // Update CSS custom properties for dark mode instead of blanket overrides
-        --headerColor: #ffffff;
+        // Override semantic properties for dark mode
+        --semantic-primary: var(--theme-fire-brick);
+        --semantic-secondary: var(--theme-white);           // Switch to white for dark mode
+        --semantic-accent: var(--theme-gray);
+        --semantic-bg-default: var(--theme-eerie-black);
+        --semantic-surface-primary: #2d2d2d;               // Slightly lighter than background
+        --semantic-surface-secondary: #3a3a3a;             // Even lighter for layered surfaces
+        --semantic-text-primary: var(--theme-white);
+        --semantic-text-secondary: var(--theme-gray);
+        --semantic-text-inverse: var(--theme-eerie-black);
+        --semantic-border-default: #404040;                // Subtle border for dark mode
+        --semantic-border-subtle: #333333;                 // Even more subtle border
+        --semantic-hover-bg: rgba(228, 74, 66, 0.15);     // Fire brick hover with low opacity
+        --semantic-focus-ring: var(--theme-fire-brick);
+
+        // Set the main background
+        background-color: var(--semantic-bg-default);
+
+        // Legacy CSS custom properties for backward compatibility - TO BE DEPRECATED
+        --headerColor: var(--theme-white);
         --bodyTextColor: #e5e7eb;
         --bodyTextColorWhite: #fafbfc;
-        --primary: hsl(80, 90%, 55%);
-        --primaryLight: hsl(80, 80%, 65%);
-        --secondary: #ffffff;
+        --primary: var(--theme-fire-brick);
+        --primaryLight: var(--theme-fire-brick);
+        --secondary: var(--theme-white);
         --secondaryLight: #e5e7eb;
 
-        // Remove blanket color overrides - let components handle their own dark mode
-        // This prevents the dark text on green background issue
+        // Legacy dark mode variables - TO BE DEPRECATED
+        --dark: var(--theme-eerie-black);
+        --medium: #2d2d2d;
+        --accent: var(--theme-gray);
 
-        // hide all light classes
+        // Hide/show utility classes
         .light {
             display: none;
         }
 
-        // show all dark classes
         .dark {
             display: block !important;
         }
     }
 
+    // Utility classes for elements that should be hidden/shown based on theme
     .dark {
         display: none;
     }

@@ -4,33 +4,62 @@
 <---      Color Variables       -->
 <--- -------------------------- -*/
 
-// Primary colors (from root.less CSS custom properties)
-@primary: hsl(80, 90%, 55%);
-@primary-light: hsl(80, 60%, 40%);
-@primary-dark: hsl(80, 50%, 30%);
-@secondary: #001f3f;
-@secondary-light: #001f3f;
+/*-- -------------------------- -->
+<---  Fire Brick Theme Variables -->
+<--- -------------------------- -*/
 
-// Base text colors with improved contrast
-@header-color: #1a1a1a;         // Contrast ratio 12.63:1 on white
-@body-text-color: #333333;      // Improved from #4e4b66, contrast ratio 12.63:1 on white  
-@body-text-color-white: #fafbfc;
-@text-muted: #6b7280;           // For less important text, 7.52:1 contrast on white
+// Core Semantic Theme Variables (using dynamic CSS custom properties)
+@theme-primary-color: var(--semantic-primary, var(--theme-fire-brick));          // Main brand color
+@theme-secondary-color: var(--semantic-secondary, var(--theme-eerie-black));     // Dark secondary color
+@theme-accent-color: var(--semantic-accent, var(--theme-gray));                  // Neutral accent color
 
-// Dark mode colors (from dark.less)
-@dark-bg: hsl(163, 96%, 5%);
-@dark-medium: hsl(163, 95%, 8%);
-@dark-accent: #334756;
-@dark-text-primary: #ffffff;
-@dark-text-secondary: #e5e7eb;
+// Background & Surface Colors (with dynamic fallbacks)
+@theme-background-default: var(--semantic-bg-default, var(--theme-white));       // Main page background
+@theme-surface-primary: var(--semantic-surface-primary, var(--theme-white));     // Card/component backgrounds
+@theme-surface-secondary: var(--semantic-surface-secondary, #f8f9fa);            // Subtle surface variation
 
-// Theme-aware color variables for better contrast management
-@card-bg-light: #ffffff;
-@card-bg-dark: @dark-medium;
-@card-border-light: #e1e5e9;
-@card-border-dark: #334756;
-@card-shadow-light: rgba(0, 0, 0, 0.1);
-@card-shadow-dark: rgba(0, 0, 0, 0.3);
+// Text Colors (with dynamic fallbacks)
+@theme-text-primary: var(--semantic-text-primary, var(--theme-eerie-black));     // Main text color
+@theme-text-secondary: var(--semantic-text-secondary, var(--theme-gray));        // Secondary/muted text
+@theme-text-inverse: var(--semantic-text-inverse, var(--theme-white));           // Text on dark backgrounds
+
+// Border & Interactive Colors (with dynamic fallbacks)
+@theme-border-default: var(--semantic-border-default, #e5e7eb);                  // Default border color
+@theme-border-subtle: var(--semantic-border-subtle, #f3f4f6);                    // Subtle border color
+@theme-hover-bg: var(--semantic-hover-bg, rgba(187, 46, 40, 0.1));              // Hover background
+@theme-focus-ring: var(--semantic-focus-ring, var(--theme-fire-brick));          // Focus outline color
+
+/*-- -------------------------- -->
+<---    Legacy Color Variables  -->
+<--- -------------------------- -*/
+
+// Legacy mapped to new theme variables - TO BE DEPRECATED
+@primary: @theme-primary-color;                 // Maps to Fire Brick
+@primary-light: @theme-primary-color;           // Maps to Fire Brick (same for now)
+@primary-dark: @theme-primary-color;            // Maps to Fire Brick (same for now)
+@secondary: @theme-secondary-color;             // Maps to Eerie Black (light) / White (dark)
+@secondary-light: @theme-secondary-color;      // Maps to Eerie Black (light) / White (dark)
+
+// Base text colors mapped to new theme variables - TO BE DEPRECATED
+@header-color: @theme-text-primary;            // Maps to Eerie Black (light) / White (dark)
+@body-text-color: @theme-text-primary;         // Maps to Eerie Black (light) / White (dark)
+@body-text-color-white: @theme-text-inverse;   // Maps to White (light) / Eerie Black (dark)
+@text-muted: @theme-text-secondary;            // Maps to Gray
+
+// Dark mode colors mapped to new theme variables - TO BE DEPRECATED
+@dark-bg: @theme-background-default;            // Maps dynamically (white/eerie black)
+@dark-medium: @theme-surface-primary;           // Maps dynamically (white/dark gray)
+@dark-accent: @theme-accent-color;              // Maps to Gray
+@dark-text-primary: @theme-text-primary;       // Maps dynamically (eerie black/white)
+@dark-text-secondary: @theme-text-secondary;   // Maps to Gray
+
+// Theme-aware color variables mapped to new system - TO BE DEPRECATED
+@card-bg-light: @theme-surface-primary;         // Maps dynamically (white/dark gray)
+@card-bg-dark: @theme-surface-primary;          // Maps dynamically (white/dark gray)
+@card-border-light: @theme-border-default;      // Maps dynamically (light gray/dark gray)
+@card-border-dark: @theme-border-default;       // Maps dynamically (light gray/dark gray)
+@card-shadow-light: rgba(0, 0, 0, 0.1);         // Keep as static for now
+@card-shadow-dark: rgba(0, 0, 0, 0.3);          // Keep as static for now
 
 // Enhanced shadow system for modern depth
 @shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -45,17 +74,17 @@
 @shadow-dark-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 @shadow-dark-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 
-// Interactive state colors with proper contrast
-@link-color-light: @primary-dark;    // Better contrast than bright primary
-@link-color-dark: @primary;
-@link-hover-light: #2563eb;          // Blue with good contrast
-@link-hover-dark: #60a5fa;
+// Interactive state colors mapped to new theme - TO BE DEPRECATED
+@link-color-light: @theme-primary-color;        // Maps to Fire Brick
+@link-color-dark: @theme-primary-color;         // Maps to Fire Brick
+@link-hover-light: @theme-primary-color;        // Maps to Fire Brick for simplicity
+@link-hover-dark: @theme-primary-color;         // Maps to Fire Brick for simplicity
 
-// Component-specific colors
-@border-color: #e1e5e9;
-@border-color-dark: #334756;
-@hover-bg-light: rgba(128, 128, 128, 0.1);
-@hover-bg-dark: rgba(255, 255, 255, 0.1);
+// Component-specific colors mapped to new theme - TO BE DEPRECATED
+@border-color: @theme-border-default;           // Maps dynamically (light gray/dark gray)
+@border-color-dark: @theme-border-default;      // Maps dynamically (light gray/dark gray)
+@hover-bg-light: @theme-hover-bg;               // Maps to Fire Brick with opacity
+@hover-bg-dark: @theme-hover-bg;                // Maps to Fire Brick with opacity
 
 // Error and success colors with proper contrast
 @error-color: #dc2626;              // Red with 4.5:1 contrast
@@ -189,6 +218,22 @@
 <---    Transition Variables    -->
 <--- -------------------------- -*/
 
-@transition-fast: 0.2s ease;
-@transition-normal: 0.3s ease;
-@transition-slow: 0.5s ease; 
+// Standard transition durations for consistent animations
+@transition-fast: 0.15s ease-in-out;    // Quick interactions (hover states, focus)
+@transition-normal: 0.3s ease-in-out;   // Standard interactions (buttons, cards)
+@transition-slow: 0.5s ease-in-out;     // Larger animations (modals, page transitions)
+
+// Common easing functions
+@ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+@ease-out: cubic-bezier(0, 0, 0.2, 1);
+@ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+/*-- -------------------------- -->
+<---      Breakpoint Variables  -->
+<--- -------------------------- -*/
+
+// Responsive breakpoints (consistent with CodeStitch patterns)
+@mobile: 0em;          // 0px
+@tablet: 48em;         // 768px  
+@desktop: 64em;        // 1024px
+@large-desktop: 80em;  // 1280px 

@@ -2,9 +2,10 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import client from "@data/client.json";
 import Landing from "@components/Landing.astro";
+import UniversalForm from "@components/UniversalForm.astro";
 
 // Import will provide metadata directly
-import landingImageMeta from "@assets/images/landing.jpg";
+import landingImageMeta from "@assets/images/drone-land.jpg";
 // const { getImage } = AstroAssets; // No longer needed if using direct meta
 
 // landingImageMeta is ALREADY an image metadata object.
@@ -26,61 +27,98 @@ const imageToRender = landingImageMeta;
   />
 
   <!-- ============================================ -->
-  <!--                Contact Form                  -->
+  <!--              Contact Section                 -->
   <!-- ============================================ -->
 
   <section id="cs-contact">
     <div class="cs-container">
-      <form id="cs-form" name="Contact Form" method="post">
+      <div class="cs-form-wrapper">
         <div class="cs-content">
           <span class="cs-topper">Contact</span>
-          <h2 class="cs-title">Get in Touch</h2>
+          <h2 class="cs-title">Get A Free Quote</h2>
           <p class="cs-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ridiculus
-            elementum ullamcorper ipsum porttitor aliquam. Id magna urna
-            ultrices odio pulvinar. Sed ut.
+            For an estimate or questions, please call or fill out the form below. We will get back to you quickly.
           </p>
         </div>
-        <label>
-          Name
-          <input
-            required
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Name"
-          />
-        </label>
-        <label>
-          Email
-          <input
-            required
-            type="text"
-            id="email"
-            name="email"
-            placeholder="Email"
-          />
-        </label>
-        <label>
-          Phone
-          <input
-            required
-            type="text"
-            id="phone"
-            name="phone"
-            placeholder="Phone"
-          />
-        </label>
-        <label class="cs-label-message">
-          Message
-          <textarea
-            required
-            name="Message"
-            id="message"
-            placeholder="Write message..."></textarea>
-        </label>
-        <button class="cs-button-solid" type="submit">Submit Message</button>
-      </form>
+        
+        <form id="cs-form" name="Contact Form" method="post" novalidate role="form">
+          <fieldset>
+            <legend class="sr-only">Contact Information</legend>
+            <div class="cs-form-group">
+              <label for="name">
+                <span class="cs-label-text">Name <span class="cs-required">*</span></span>
+                <input
+                  required
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Enter your name"
+                  aria-required="true"
+                  autocomplete="name"
+                />
+                <span class="cs-error" aria-live="polite"></span>
+              </label>
+              
+              <label for="email">
+                <span class="cs-label-text">Email <span class="cs-required">*</span></span>
+                <input
+                  required
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  aria-required="true"
+                  autocomplete="email"
+                />
+                <span class="cs-error" aria-live="polite"></span>
+              </label>
+            </div>
+            
+            <label for="phone">
+              <span class="cs-label-text">Phone <span class="cs-required">*</span></span>
+              <input
+                required
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number"
+                aria-required="true"
+                autocomplete="tel"
+              />
+              <span class="cs-error" aria-live="polite"></span>
+            </label>
+          </fieldset>
+          
+          <fieldset>
+            <legend class="sr-only">Project Details</legend>
+            <label class="cs-label-message" for="message">
+              <span class="cs-label-text">Message <span class="cs-required">*</span></span>
+              <textarea
+                required
+                name="message"
+                id="message"
+                placeholder="Tell us about your project..."
+                rows="5"
+                aria-required="true"
+              ></textarea>
+              <span class="cs-error" aria-live="polite"></span>
+            </label>
+          </fieldset>
+          
+          <button class="cs-button-solid" type="submit">
+            <span>Submit</span>
+            <svg class="cs-loading" aria-hidden="true" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="32" stroke-dashoffset="32">
+                <animate attributeName="stroke-dasharray" dur="2s" values="0 32;16 16;0 32;0 32" repeatCount="indefinite"/>
+                <animate attributeName="stroke-dashoffset" dur="2s" values="0;-16;-32;-32" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </button>
+          
+          <div class="cs-status" role="status" aria-live="polite" aria-atomic="true"></div>
+        </form>
+      </div>
+      
       <div class="cs-right-section">
         <!--Email-->
         <span class="cs-header">Email</span>
@@ -108,12 +146,12 @@ const imageToRender = landingImageMeta;
         <picture class="cs-bg-picture">
           <source
             media="(min-width: 601px)"
-            srcset="/assets/images/skyscraper.jpg"
+            srcset="/assets/images/bulldozer.jpg"
           />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/skyscraper.jpg"
+            src="/assets/images/bulldozer.jpg"
             alt="building"
             loading="lazy"
             width="2500"
@@ -126,343 +164,525 @@ const imageToRender = landingImageMeta;
 </BaseLayout>
 
 <style lang="less">
-  /* PAGE-SPECIFIC STYLES FOR THE CONTACT PAGE */
+@import "@styles/variables.less";
+@import "@styles/mixins.less";
 
-  /*-- -------------------------- -->
-<---          Contact           -->
-<--- -------------------------- -*/
+/* Contact Section with Side-by-Side Layout */
+#cs-contact {
+  .section-padding();
+  background-color: @form-bg-light;
+  font-family: @font-family-base;
+  
+  body.dark-mode & {
+    background-color: @dark-bg;
+  }
 
-  /* Mobile - 360px */
-  @media only screen and (min-width: 0em) {
-    :root {
-      /* 13px - 16px */
-      --topperFontSize: clamp(0.8125rem, 1.6vw, 1rem);
-      /* 31px - 49px */
-      --headerFontSize: clamp(1.9375rem, 4.5vw, 3.0625rem);
-      --bodyFontSize: 1rem;
+  .cs-container {
+    .container();
+    width: 100%;
+    max-width: 50rem;
+    margin: auto;
+    
+    @media only screen and (min-width: 64em) {
+      max-width: 80rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: @spacing-xxl * 2; // 96px gap
+    }
+  }
 
-      /* 60px - 100px top and bottom */
-      --sectionPadding: clamp(3.75em, 7.82vw, 6.25em) 1rem;
+  .cs-form-wrapper {
+    width: 100%;
+    
+    @media only screen and (min-width: 64em) {
+      max-width: (630/16rem);
+      flex: none;
+    }
+  }
+
+  .cs-content {
+    width: 100%;
+    margin-bottom: @spacing-xl;
+  }
+
+  .cs-topper {
+    .cs-topper-style();
+    text-align: left;
+    margin-bottom: @spacing-sm;
+    color: var(--primary);
+    
+    body.dark-mode & {
+      color: var(--primaryLight);
+    }
+  }
+
+  .cs-title {
+    .cs-title-style();
+    text-align: left;
+    max-width: 50rem;
+    margin-bottom: @spacing-md;
+    color: var(--headerColor);
+    
+    body.dark-mode & {
+      color: @dark-text-primary;
+    }
+  }
+
+  .cs-text {
+    .cs-text-style();
+    text-align: left;
+    max-width: clamp(25.25rem, 30vw, 32.625rem);
+    margin: 0;
+    color: var(--bodyTextColor);
+    
+    body.dark-mode & {
+      color: @dark-text-secondary;
+    }
+  }
+
+  #cs-form {
+    .sr-only {
+      .sr-only();
+    }
+    
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+      margin-bottom: @spacing-md;
+    }
+    
+    .cs-form-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: @spacing-md;
+      margin-bottom: @spacing-md;
+      
+      @media only screen and (min-width: 48em) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    label {
+      .form-label();
+      margin-bottom: @spacing-md;
+      display: flex;
+      flex-direction: column;
+      color: var(--headerColor);
+      
+      body.dark-mode & {
+        color: @dark-text-primary;
+      }
     }
 
-    #cs-contact {
-      font-family: "Roboto", "Arial", sans-serif;
-      padding: var(--sectionPadding);
+    .cs-label-text {
+      margin-bottom: @spacing-xs;
+      font-weight: @font-weight-bold;
+    }
 
-      .cs-container {
-        width: 100%;
-        /* changes to 1280px at desktop */
-        max-width: (800/16rem);
-        margin: auto;
+    .cs-required {
+      color: @error-color;
+    }
+
+    .cs-label-message {
+      margin-bottom: @spacing-md;
+    }
+
+    input,
+    textarea {
+      .form-input();
+      width: 100%;
+      height: 3rem;
+      padding: 0 @spacing-md;
+      border: 1px solid @form-border-light;
+      border-radius: @border-radius-md;
+      background-color: var(--bodyTextColorWhite);
+      color: var(--headerColor);
+      .smooth-transition(border-color);
+      
+      &:hover {
+        border-color: var(--primary);
       }
-
-      .cs-content {
-        width: 100%;
+      
+      &:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        border-color: var(--primary);
       }
-
-      .cs-topper {
-        text-align: left;
-        /* 8px - 12px */
-        margin-bottom: clamp(0.5rem, 1.4vw, 0.75rem);
+      
+      &.error {
+        border-color: @error-color;
       }
-
-      .cs-title {
-        text-align: left;
-        max-width: (800/16rem);
-      }
-
-      .cs-text {
-        text-align: left;
-        /* 404px - 522px */
-        max-width: clamp(25.25rem, 30vw, 32.625rem);
-        margin: 0 auto 0 0;
-        /* 40px - 48px */
-        margin-bottom: clamp(2.5rem, 6.3vw, 3rem);
-      }
-
-      #cs-form {
-        margin-bottom: (40/16rem);
-        label {
-          font-size: (16/16rem);
-          font-weight: 700;
-          line-height: 1.5em;
-          /* Standardized spacing to match other forms */
-          margin-bottom: 1.25rem; // @spacing-lg equivalent
-          color: var(--headerColor);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
-          
-          /* Mobile: reduce spacing for compact layout */
-          @media only screen and (max-width: 43.75em) {
-            margin-bottom: 1rem; // @spacing-md equivalent
-          }
-        }
-
-        .cs-label-message {
-          /* Consistent message label spacing */
-          margin-bottom: 1.25rem; // @spacing-lg equivalent
-          
-          /* Mobile: consistent with other fields */
-          @media only screen and (max-width: 43.75em) {
-            margin-bottom: 1rem; // @spacing-md equivalent
-          }
-        }
-
-        input,
-        textarea {
-          font-size: (16/16rem);
-          width: 100%;
-          height: (64/16rem);
-          margin-top: (4/16rem);
-          /* prevents border & padding from affecting height */
-          box-sizing: border-box;
-          padding-left: (20/16rem);
-          border: 1px solid #b4b2c7;
-          border-radius: (8/16rem);
-          transition: border 0.3s;
-
-          &:hover {
-            border: 1px solid var(--primary);
-          }
-        }
-
-        textarea {
-          font-family: inherit;
-          min-height: (120/16rem);
-          padding-top: (20/16rem);
-        }
-
-        .cs-button-solid {
-          width: 100%;
-          border: none;
+      
+      body.dark-mode & {
+        background-color: @dark-medium;
+        border-color: @dark-text-secondary;
+        color: @dark-text-primary;
+        
+        &::placeholder {
+          color: @dark-text-secondary;
         }
       }
+    }
 
-      .cs-right-section {
-        height: (320/16rem);
-        /* 24px - 40px top & bottom */
-        /* 20px - 40px left & right */
-        padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2.5rem);
-        border-radius: (8/16rem);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: flex-start;
-        position: relative;
-        /* cuts off corners on img tag */
-        overflow: hidden;
+    textarea {
+      height: 5rem;
+      padding: @spacing-md;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .cs-error {
+      margin-top: @spacing-xs;
+      font-size: @font-size-sm;
+      color: @error-color;
+      opacity: 0;
+      .smooth-transition(opacity);
+      
+      &.show {
+        opacity: 1;
       }
+    }
 
-      .cs-header {
-        /* 16px - 20px */
-        font-size: clamp(1rem, 3vw, 1.25rem);
-        font-weight: 700;
-        line-height: 1.2em;
-        margin-bottom: (8/16rem);
-        color: var(--bodyTextColorWhite);
-        display: block;
+    .cs-button-solid {
+      .button-primary();
+      width: 100%;
+      position: relative;
+      
+      .cs-loading {
+        display: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-left: @spacing-xs;
       }
-
-      .cs-link {
-        /* 16px - 20px */
-        font-size: clamp(1rem, 3vw, 1.25rem);
-        line-height: 1.2em;
-        text-decoration: none;
-        margin-bottom: (20/16rem);
-        color: var(--bodyTextColorWhite);
-        display: block;
-        position: relative;
-
-        &:before {
-          /* Animated underline */
-          content: "";
-          width: 0%;
-          height: 2px;
-          /* current color of the parent */
-          background: currentColor;
-          opacity: 1;
-          display: block;
-          position: absolute;
-          bottom: (-2/16rem);
-          left: 0;
-          transition: width 0.3s;
+      
+      &.loading {
+        .cs-loading {
+          display: inline-block;
         }
-
-        &:hover {
-          &:before {
-            width: 100%;
-          }
-        }
-
-        &:last-of-type {
-          margin-bottom: 0;
+        
+        span {
+          opacity: 0.7;
         }
       }
-
-      .cs-block {
-        /* sends second address line to the bottom on its own line */
-        display: block;
+    }
+    
+    .cs-status {
+      margin-top: @spacing-md;
+      padding: @spacing-md;
+      border-radius: @border-radius-md;
+      font-size: @font-size-sm;
+      opacity: 0;
+      .smooth-transition(opacity);
+      
+      &.show {
+        opacity: 1;
       }
-
-      .cs-bg-picture {
-        width: 100%;
-        height: 100%;
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        transition: transform 0.6s;
-
-        &:before {
-          /* background color overlay */
-          content: "";
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.8) 100%
-          );
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          z-index: 1;
+      
+      &.success {
+        background-color: @form-success-bg-light;
+        border: 1px solid @form-success-border-light;
+        color: @success-color;
+        
+        body.dark-mode & {
+          background-color: @form-success-bg-dark;
+          border-color: @form-success-border-dark;
         }
-
-        img {
-          width: 100%;
-          height: 100%;
-          /* Makes img tag act as a background image */
-          object-fit: cover;
-          position: absolute;
-          top: 0;
-          left: 0;
+      }
+      
+      &.error {
+        background-color: @form-error-bg-light;
+        border: 1px solid @form-error-border;
+        color: @form-error-light;
+        
+        body.dark-mode & {
+          background-color: @form-error-bg-dark;
+          color: @form-error-dark;
         }
       }
     }
   }
 
-  /* Tablet - 700px */
-  @media only screen and (min-width: 43.75em) {
-    #cs-contact {
-      #cs-form {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-wrap: wrap;
-
-        label {
-          width: 48%;
-        }
-
-        .cs-label-message {
-          width: 100%;
-        }
-      }
-    }
-  }
-
-  /* Small Desktop - 1024px */
-  @media only screen and (min-width: 64em) {
-    #cs-contact {
-      .cs-container {
-        max-width: (1280/16rem);
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-start;
-        gap: (80/16rem);
-      }
-
-      #cs-form {
-        max-width: (630/16rem);
-        label {
-          width: 100%;
-        }
-      }
-
-      .cs-right-section {
-        width: 40%;
-        max-width: (542/16rem);
-        /* changes to 578px at 1300px wide */
-        height: (686/16rem);
-        /* prevents flexbox from squishing it */
-        flex: none;
-
-        &:hover {
-          .cs-bg-picture {
-            transform: scale(1.1);
-          }
-        }
-      }
-
-      .cs-block {
-        /* goes back to inline so it stays "in line" with the rest of the text */
-        display: inline-block;
-      }
-    }
-  }
-
-  /* Small Desktop - 1300px */
-  @media only screen and (min-width: 81.25em) {
-    #cs-contact {
-      #cs-form {
-        column-gap: (0/16rem);
-        label {
-          width: 48%;
-          max-width: (305/16rem);
-        }
-
-        .cs-label-message {
-          max-width: 100%;
-        }
-      }
-
-      .cs-right-section {
-        height: (578/16rem);
-      }
-    }
-  }
-
-  /* Dark Mode */
-  @media only screen and (min-width: 0em) {
-    body.dark-mode {
-      #cs-contact {
-        .cs-text,
-        .cs-title {
-          color: var(--bodyTextColorWhite);
-        }
-
-        .cs-topper {
-          color: var(--primaryLight);
-        }
-
-        #cs-form {
-          label,
-          input,
-          textarea {
-            color: var(--bodyTextColorWhite);
-            background-color: transparent;
-
-            &::placeholder {
-              /* lighten up the color of the text by 40%*/
-              filter: brightness(1.4);
-            }
-          }
-        }
-
+  .cs-right-section {
+    width: 100%;
+    height: (320/16rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2.5rem);
+    margin-top: @spacing-xl;
+    border-radius: @border-radius-md;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    
+    @media only screen and (min-width: 64em) {
+      width: 40%;
+      max-width: (542/16rem);
+      height: (686/16rem);
+      margin-top: 0;
+      flex: none;
+      
+      &:hover {
         .cs-bg-picture {
-          background-color: #000;
-
-          img {
-            /* lets parent background-color bleed through and darken it */
-            opacity: 0.5;
-          }
+          transform: scale(1.1);
         }
       }
     }
+    
+    @media only screen and (min-width: 81.25em) {
+      height: (578/16rem);
+    }
   }
+
+  .cs-header {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-weight: @font-weight-bold;
+    line-height: @line-height-tight;
+    margin-bottom: @spacing-xs;
+    color: var(--bodyTextColorWhite);
+    display: block;
+  }
+
+  .cs-link {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    line-height: @line-height-tight;
+    text-decoration: none;
+    margin-bottom: @spacing-lg;
+    color: var(--bodyTextColorWhite);
+    display: block;
+    position: relative;
+
+    &:before {
+      content: "";
+      width: 0%;
+      height: 2px;
+      background: currentColor;
+      opacity: 1;
+      display: block;
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      .smooth-transition(width);
+    }
+
+    &:hover {
+      &:before {
+        width: 100%;
+      }
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .cs-block {
+    display: block;
+    
+    @media only screen and (min-width: 64em) {
+      display: inline-block;
+    }
+  }
+
+  .cs-bg-picture {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    .smooth-transition(transform);
+    background-color: #f0f0f0;
+
+    &:before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.8) 100%
+      );
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  }
+}
 </style>
+
+<script>
+// Enhanced contact form validation and submission
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('cs-form');
+  if (!form) return;
+  
+  const inputs = form.querySelectorAll('input[required], textarea[required]');
+  const submitButton = form.querySelector('.cs-button-solid');
+  const statusDiv = form.querySelector('.cs-status');
+  
+  // Enhanced validation with proper error handling
+  inputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      validateField(this);
+    });
+    
+    input.addEventListener('focus', function() {
+      clearFieldError(this);
+    });
+    
+    input.addEventListener('input', function() {
+      if (this.classList.contains('error')) {
+        this.classList.remove('error');
+        clearFieldError(this);
+      }
+    });
+  });
+  
+  // Form submission with validation
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    let isValid = true;
+    
+    inputs.forEach(input => {
+      if (!validateField(input)) {
+        isValid = false;
+      }
+    });
+    
+    if (isValid) {
+      submitForm(form);
+    } else {
+      const firstError = form.querySelector('.error');
+      if (firstError) {
+        firstError.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center'
+        });
+        (firstError as HTMLElement).focus();
+      }
+    }
+  });
+  
+  function validateField(field) {
+    const errorSpan = field.parentNode.querySelector('.cs-error');
+    let isValid = true;
+    let errorMessage = '';
+    
+    // Check if field is empty (for required fields)
+    if (field.hasAttribute('required') && !field.value.trim()) {
+      isValid = false;
+      errorMessage = `${getFieldLabel(field)} is required.`;
+    }
+    // Email validation
+    else if (field.type === 'email' && field.value.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(field.value.trim())) {
+        isValid = false;
+        errorMessage = 'Please enter a valid email address.';
+      }
+    }
+    // Phone validation
+    else if (field.type === 'tel' && field.value.trim()) {
+      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+      const cleanPhone = field.value.replace(/\D/g, '');
+      if (cleanPhone.length < 10 || !phoneRegex.test(cleanPhone)) {
+        isValid = false;
+        errorMessage = 'Please enter a valid phone number (at least 10 digits).';
+      }
+    }
+    
+    if (!isValid) {
+      field.classList.add('error');
+      if (errorSpan) {
+        errorSpan.textContent = errorMessage;
+        errorSpan.classList.add('show');
+      }
+    } else {
+      field.classList.remove('error');
+      if (errorSpan) {
+        errorSpan.classList.remove('show');
+        errorSpan.textContent = '';
+      }
+    }
+    
+    return isValid;
+  }
+  
+  function clearFieldError(field) {
+    const errorSpan = field.parentNode.querySelector('.cs-error');
+    field.classList.remove('error');
+    if (errorSpan) {
+      errorSpan.classList.remove('show');
+      errorSpan.textContent = '';
+    }
+  }
+  
+  function getFieldLabel(field) {
+    const label = field.parentNode.querySelector('.cs-label-text');
+    if (label) {
+      return label.textContent.replace('*', '').trim();
+    }
+    return 'This field';
+  }
+  
+  function submitForm(form) {
+    const submitButton = form.querySelector('.cs-button-solid');
+    const statusDiv = form.querySelector('.cs-status');
+    const buttonText = submitButton.querySelector('span');
+    const loading = submitButton.querySelector('.cs-loading');
+    
+    // Show loading state
+    submitButton.classList.add('loading');
+    submitButton.disabled = true;
+    if (loading) loading.style.display = 'inline-block';
+    if (buttonText) buttonText.textContent = 'Sending...';
+    
+    // Hide previous status
+    statusDiv.className = 'cs-status';
+    statusDiv.textContent = '';
+    
+    // Simulate form submission (replace with actual submission logic)
+    setTimeout(() => {
+      // Reset button state
+      submitButton.classList.remove('loading');
+      submitButton.disabled = false;
+      if (loading) loading.style.display = 'none';
+      if (buttonText) buttonText.textContent = 'Submit Message';
+      
+      // Show success message
+      statusDiv.className = 'cs-status success show';
+      statusDiv.textContent = 'Thank you! Your message has been sent successfully. We\'ll get back to you within 24 hours.';
+      
+      // Reset form
+      form.reset();
+      
+      // Clear any remaining error states
+      form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      form.querySelectorAll('.cs-error.show').forEach(el => {
+        el.classList.remove('show');
+        el.textContent = '';
+      });
+      
+    }, 2000);
+  }
+});
+</script>
+

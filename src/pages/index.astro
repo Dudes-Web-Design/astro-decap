@@ -2,7 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import CTA from "@components/CTA.astro";
 import FAQ from "@components/FAQ.astro";
-import { Image } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 // Optimize our landing image and pass it as props to the BaseLayout (for preloading) and Landing (for rendering)
@@ -32,6 +32,26 @@ const sbsrImageData = await Promise.all(
   }))
 );
 sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
+
+// Dynamically import portfolio images for gallery
+const portfolioImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/portfolio/*.{jpg,jpeg,png,avif,webp}");
+const portfolioImageEntries = Object.entries(portfolioImages);
+const portfolioImageData = await Promise.all(
+  portfolioImageEntries.map(async ([path, loader]) => ({
+    path,
+    mod: await loader(),
+  }))
+);
+portfolioImageData.sort((a, b) => a.path.localeCompare(b.path));
+
+// Helper function to get portfolio image by name
+function getPortfolioImage(imageName: string): ImageMetadata {
+  const found = portfolioImageData.find(img => img.path.includes(imageName))?.mod.default;
+  if (!found) {
+    throw new Error(`Portfolio image ${imageName} not found`);
+  }
+  return found;
+}
 ---
 
 <BaseLayout
@@ -51,10 +71,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         <p class="cs-text">
           We are a full-service septic, groundwork, and excavation company serving the North Alabama and Middle Tennessee areas.
         </p>
-        <a href="/about" class="cs-button-solid">Free Quote</a>
-        <a href="/contact" class="cs-button-transparent">
-          Our Work
-        </a>
+        <a href="/contact" class="cs-button-solid">Get A Free Quote</a>
       </div>
     </div>
 
@@ -254,194 +271,112 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
     <div class="cs-container">
       <span class="cs-topper">Our Work</span>
       <h2 class="cs-title">
-        See Our Recent Projects
+        See Our Recent Jobs
       </h2>
       <div class="cs-image-group">
         <!-- Row 1-->
         <div class="cs-row cs-row-1">
           <!-- To add more images, copy and paste this row's picture tags here in order from cs-picture-1 to cs-picture-3 and they will maintain the same layout-->
-          <picture class="cs-picture cs-picture1">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port1-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port1.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port1.jpg"
-              alt="new hallway"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture2">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port4-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port4.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port4.jpg"
-              alt="new home construction"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture3">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port7-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port7.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port7.jpg"
-              alt="building a new wall"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
+          <Picture
+            class="cs-picture cs-picture1"
+            src={getPortfolioImage('retaining-wall-1.jpg')}
+            alt="backyard retaining wall"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture2"
+            src={getPortfolioImage('sidewalk.jpg')}
+            alt="sidewalk"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture3"
+            src={getPortfolioImage('cleared-land.jpg')}
+            alt="cleared land"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
         </div>
         <!-- Row 2 -->
         <div class="cs-row cs-row-2">
           <!-- To add more images, copy and paste this row's picture tags here in order from cs-picture-1 to cs-picture-3 and they will maintain the same layout-->
-          <picture class="cs-picture cs-picture1">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port2-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port2.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port2.jpg"
-              alt="new kitchen"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture2">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port5-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port5.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port5.jpg"
-              alt="apartment addition"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture3">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port8-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port8.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port8.jpg"
-              alt="kew kitchen cabinets"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
+          <Picture
+            class="cs-picture cs-picture1"
+            src={getPortfolioImage('drain-field.jpg')}
+            alt="drain field"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture2"
+            src={getPortfolioImage('patio.jpg')}
+            alt="apartment addition"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture3"
+            src={getPortfolioImage('concrete-pad.jpg')}
+            alt="concrete pad"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
         </div>
         <!-- Row 3 -->
         <div class="cs-row cs-row-3">
           <!-- To add more images, copy and paste this row's picture tags here in order from cs-picture-1 to cs-picture-3 and they will maintain the same layout-->
-          <picture class="cs-picture cs-picture1">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port3-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port3.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port3.jpg"
-              alt="new kitchen"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture2">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port6-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port6.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port6.jpg"
-              alt="apartment addition"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
-          <picture class="cs-picture cs-picture3">
-            <source
-              media="(max-width: 600px)"
-              srcset="/assets/images/portfolio/port9-m.jpg"
-            />
-            <source
-              media="(min-width: 601px)"
-              srcset="/assets/images/portfolio/port9.jpg"
-            />
-            <img
-              aria-hidden="true"
-              decoding="async"
-              src="/assets/images/portfolio/port9.jpg"
-              alt="kew kitchen cabinets"
-              loading="lazy"
-              width="400"
-              height="560"
-            />
-          </picture>
+          <Picture
+            class="cs-picture cs-picture1"
+            src={getPortfolioImage('driveway-extension.jpg')}
+            alt="driveway extension"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture2"
+            src={getPortfolioImage('septic-install.jpg')}
+            alt="septic install"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
+          <Picture
+            class="cs-picture cs-picture3"
+            src={getPortfolioImage('driveway-2.jpg')}
+            alt="driveway"
+            loading="lazy"
+            width={900}
+            height={1200}
+            formats={['avif', 'webp', 'jpg']}
+            quality="mid"
+          />
         </div>
       </div>
-      <a href="/projects" class="cs-button-solid">View all projects</a>
     </div>
   </section>
 
@@ -459,10 +394,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       <span class="cs-topper">Our Reviews</span>
       <h2 class="cs-title">Words From Our Customers</h2>
       <p class="cs-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit dolor
-        volutpat porttitor sagittis nunc nisl. Sagittis sit pellentesque gravida
-        viverra. Leo ut sed euismod tortor risus et. Ornare non neque, leo,
-        ornare. Lorem ipsum dolor sit amet.
+
       </p>
       <ul class="cs-card-group">
         <!-- Review 1 -->
@@ -472,20 +404,18 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            src="https://csimg.nyc3.digitaloceanspaces.com/Reviews/profile5.png"
+            src="https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-1/440303773_122118938678267973_6915145937193664619_n.jpg?stp=dst-jpg_s480x480_tt6&_nc_cat=110&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=CUzeijUKmwkQ7kNvwE4fm00&_nc_oc=AdkhXAiSvgssBs_ExdLc-E8pLqKnQLlk4nbLHBJ4JL5p0YqJsP5IfUGtt34paqF9DWs&_nc_zt=24&_nc_ht=scontent-dfw5-1.xx&_nc_gid=Z3HUbQxfC3rzfPGZ7sEhoA&oh=00_AfIn_U7XJfeIpeUr_PRVUk9iSKYnPY6WZ-kWeF0IzrV7yQ&oe=6836F296"
             alt="profile picture"
             width="80"
             height="80"
           />
           <p class="cs-item-p">
-            Dictum dolor, nullam morbi sem in auctor proin. Consequat dolor
-            habitasse nam sed tempor. Viverra magna pharetra rhoncus, nec sed
-            ullamcorper lectus et. Auctor velit diam fermentum consequat.
-            Feugiat viverra massa urna, volutpat orci imperdiet eget eget.
+            I had J.R. Outdoor come help me on a job and my experience with him was awesome. 
+            Very reasonably priced and did exactly what he said. Highly recommend doing business with J.R. Outdoor.
           </p>
           <span class="cs-reviewer">
-            Jon Doe
-            <span class="cs-desc">Homeowner</span>
+            Whiddon Property Management 
+            <span class="cs-desc">Business</span>
           </span>
           <img
             class="cs-item-stars"
@@ -505,19 +435,17 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            src="https://csimg.nyc3.digitaloceanspaces.com/Reviews/profile-4.png"
+            src="https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-1/278928378_1429368180850186_6937958694947974011_n.jpg?stp=c0.184.1536.1536a_dst-jpg_s480x480_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e99d92&_nc_ohc=3XULJ6eglz8Q7kNvwFGN0E1&_nc_oc=AdmaMg3-w98meGMvMsNaxCbqCXJdq01dfboxLd1VCDcK_L2l_WdzUx8FgxhXj2TaBNo&_nc_zt=24&_nc_ht=scontent-dfw5-2.xx&_nc_gid=u16vv7lm1EgQbGYWomrbFA&oh=00_AfJGsP9MAq2M0H0ECI-gnd2p3fYPFlrkD46i-AZrI6aigg&oe=6836DEAE"
             alt="profile picture"
             width="80"
             height="80"
           />
           <p class="cs-item-p">
-            Dictum dolor, nullam morbi sem in auctor proin. Consequat dolor
-            habitasse nam sed tempor. Viverra magna pharetra rhoncus, nec sed
-            ullamcorper lectus et. Auctor velit diam fermentum consequat.
-            Feugiat viverra massa urna, volutpat orci imperdiet eget eget.
+            Jake and Luke were professional and efficient as they removed dying trees and shrubs, then filled holes and leveled the yard. Very thankful to have a back yard that is much more usable now! Appreciate the work ethic, professionalism, and great job!
+
           </p>
           <span class="cs-reviewer">
-            Jane Doe
+            James Weaver
             <span class="cs-desc">Homeowner</span>
           </span>
           <img
@@ -532,9 +460,6 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
           />
         </li>
       </ul>
-      <a aria-label="read more reviews" href="/reviews" class="cs-button-solid"
-        >Our Reviews</a
-      >
     </div>
   </section>
 
@@ -685,7 +610,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         margin: 0 (8/16rem);
         box-sizing: border-box;
         padding: 0;
-        color: #fff;
+        color: var(--semantic-text-inverse);
         background-color: transparent;
         border: 1px solid var(--bodyTextColorWhite);
         display: inline-flex;
@@ -770,6 +695,11 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
             opacity: 0.8;
           }
         }
+
+        .cs-button-transparent {
+          color: var(--bodyTextColorWhite);
+          border-color: var(--bodyTextColorWhite);
+        }
       }
     }
   }
@@ -787,7 +717,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       margin-top: (-167/16em);
       margin-bottom: (50/16em);
       padding: (50/16em) (20/16em);
-      background: #fff;
+      background: var(--semantic-surface-primary);
       box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.05);
       border-top: (6/16em) solid var(--primary);
       border-radius: (5/16em);
@@ -825,12 +755,13 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
           line-height: 27/20em;
           text-align: center;
           margin-bottom: 13/20em;
-          color: #1a1a1a;
+          color: var(--semantic-text-primary);
         }
         p {
           line-height: 24/18em;
           text-align: center;
           width: 100%;
+          color: var(--semantic-text-primary);
           opacity: 0.7;
         }
       }
@@ -876,7 +807,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
 
         h2 {
           font-weight: bold;
-          color: #fff;
+          color: var(--bodyTextColorWhite);
         }
       }
     }
@@ -940,10 +871,10 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       .cs-picture2 {
         width: (414/16em);
         height: (400/16em);
-        background-color: #fff;
+        background-color: var(--semantic-surface-primary);
         box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 40px;
         /* 6px - 12px */
-        border: clamp(0.375em, 1.5vw, 0.75em) solid #fff;
+        border: clamp(0.375em, 1.5vw, 0.75em) solid var(--semantic-surface-primary);
         right: 0;
         bottom: 0;
       }
@@ -961,12 +892,14 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       .cs-title {
         text-align: left;
         max-width: (800/16rem);
+        color: var(--semantic-text-primary);
       }
 
       .cs-text {
         text-align: left;
         max-width: (750/16rem);
         margin-bottom: (16/16rem);
+        color: var(--semantic-text-primary);
 
         &:last-of-type {
           margin-bottom: (32/16rem);
@@ -976,7 +909,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       .cs-flex-group {
         /* 16px - 32px */
         padding: clamp(1rem, 3vw, 2rem);
-        background-color: #f7f7f7;
+        background-color: var(--semantic-accent);
         border-radius: (16/16rem);
         position: relative;
       }
@@ -986,7 +919,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         font-size: clamp(0.875rem, 1.5vw, 1rem);
         line-height: 1.5em;
         margin: 0 0 (16/16rem);
-        color: #353535;
+        color: var(--semantic-text-inverse);
       }
 
       .cs-name {
@@ -995,15 +928,16 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         line-height: 1.2em;
         text-transform: uppercase;
         margin: 0 0 (4/16rem);
-        color: var(--headerColor);
+        color: var(--semantic-text-inverse);
         display: block;
       }
 
       .cs-job {
         font-size: (14/16rem);
         line-height: 1.5em;
-        color: #353535;
+        color: var(--semantic-text-inverse);
         display: block;
+        opacity: 0.8;
       }
 
       .cs-quote-icon {
@@ -1065,19 +999,8 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
 
         .cs-title,
         .cs-text,
-        .cs-h3,
-        .cs-flex-p,
-        .cs-name {
+        .cs-h3 {
           color: var(--bodyTextColorWhite);
-        }
-
-        .cs-flex-group {
-          background-color: var(--accent);
-        }
-
-        .cs-job {
-          color: var(--bodyTextColorWhite);
-          opacity: 0.8;
         }
 
         .cs-quote-icon {
@@ -1143,10 +1066,10 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       .cs-picture2 {
         width: (414/16em);
         height: (400/16em);
-        background-color: #fff;
+        background-color: var(--semantic-surface-primary);
         box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 40px;
         /* 6px - 12px */
-        border: clamp(0.375em, 1.5vw, 0.75em) solid #fff;
+        border: clamp(0.375em, 1.5vw, 0.75em) solid var(--semantic-surface-primary);
         bottom: 0;
         left: 0;
       }
@@ -1435,11 +1358,13 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
       .cs-topper {
         text-align: center;
         margin-bottom: (16/16rem);
+        color: var(--semantic-accent);
       }
 
       .cs-title {
         text-align: center;
         max-width: (700/16rem);
+        color: var(--semantic-text-primary);
       }
 
       .cs-text {
@@ -1447,6 +1372,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         max-width: (650/16rem);
         /* 88px - 104px */
         margin-bottom: clamp(5.5em, 10.2vw, 6.5em);
+        color: var(--semantic-text-primary);
       }
 
       .cs-card-group {
@@ -1459,6 +1385,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         text-align: left;
         list-style: none;
         width: 100%;
+        min-height: 425px;
         max-width: (542/16rem);
         margin: 0 auto (64/16rem);
         /* Prevents padding from affecting height & width */
@@ -1467,7 +1394,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         padding: (60/16rem) clamp(1rem, 3.2vw, 2rem) 0;
         /* 32px - 40px */
         padding-bottom: clamp(2rem, 5.4vw, 2.5rem);
-        background: #fff;
+        background: var(--semantic-surface-primary);
         box-shadow: 0px 20px 39px 0px rgba(0, 0, 0, 0.05);
         border-radius: (4/16rem);
         display: flex;
@@ -1486,6 +1413,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         height: (80/16rem);
         position: absolute;
         top: (-40/16rem);
+        border-radius: 50%
       }
 
       .cs-item-p {
@@ -1493,7 +1421,7 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         line-height: 1.5em;
         margin: 0 0 (20/16rem);
         padding-bottom: (20/16rem);
-        color: var(--bodyTextColor);
+        color: var(--semantic-text-primary);
         border-bottom: 1px solid #e8e9ec;
       }
 
@@ -1501,16 +1429,16 @@ sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
         font-size: (16/16rem);
         font-weight: 700;
         line-height: 1.5em;
-        width: 40%;
+        width: 50%;
         margin: 0 auto 0 0;
-        color: var(--headerColor);
+        color: var(--semantic-text-primary);
         display: block;
       }
 
       .cs-desc {
         font-size: (14/16rem);
         font-weight: 400;
-        color: var(#353535);
+        color: var(--semantic-text-primary);
         display: block;
       }
 

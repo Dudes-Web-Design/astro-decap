@@ -11,18 +11,15 @@ const optimizedImage = await getImage({ src: landingImage, format: 'avif' });
 const services = await getCollection("services");
 ---
 
-<BaseLayout title="Our Services" description="All the services we offer." preloadedImage={optimizedImage}>
-  <Landing title="Our Services" image={landingImage} imageAlt="Septic and excavation services" />
-
-  <section id="services-intro" class="cs-flex-group">
-    <span class="cs-topper">Full-Service</span>
-    <h2 class="cs-title">Professional Septic, Excavation & Hardscaping</h2>
-    <p class="cs-text">
-      We offer a full range of septic, groundwork, and hardscaping services for residential and commercial clients in North Alabama and Middle Tennessee. If you have questions about any of our services or need a custom solution, please <a href="/contact">reach out</a>—we’re happy to help!
-    </p>
-  </section>
+<BaseLayout title="Quality Excavation & Septic Work" description="All the services we offer." preloadedImage={optimizedImage}>
+  <Landing title="Quality Excavation & Septic Work" image={landingImage} imageAlt="Septic and excavation services" />
 
   <section id="services" class="services">
+    <div id="services-intro" class="cs-flex-group">
+      <p class="cs-text">
+        We offer a full range of septic, groundwork, and hardscaping services for residential and commercial clients in North Alabama and Middle Tennessee. If you have questions about any of our services or need a custom solution, please <a href="/contact">reach out</a>—we're happy to help!
+      </p>
+    </div>
     {services.length > 0 ? (
       <div class="services-list">
         {services.map((service) => (
@@ -39,21 +36,22 @@ const services = await getCollection("services");
     )}
   </section>
 
-  <section id="services-contact-cta" class="cs-flex-group trust-section trust-section-extra-padding trust-section-extra-margin">
-    <h2 class="cs-title">Not Sure What You Need?</h2>
-    <p class="cs-text">
-      Every property and project is unique. If you’re not sure which service is right for you, <a href="/contact">contact us</a> for a free, no-pressure consultation. We’re happy to answer your questions and help you find the best solution.
-    </p>
-    <a href="/contact" class="cs-button-solid" style="margin-top: 1rem">Get an Estimate Now</a>
+  <section id="services-contact-cta" class="services-contact-cta">
+    <div class="services-contact-cta-card">
+      <h2 class="cs-title">Not Sure What You Need?</h2>
+      <p class="cs-text">
+        Every property and project is unique. If you're not sure which service is right for you, <a href="/contact">contact us</a> for a free, no-pressure consultation. We're happy to answer your questions and help you find the best solution.
+      </p>
+      <a href="/contact" class="cs-button-solid" style="margin-top: 1rem">Get A Free Quote</a>
+    </div>
   </section>
 
 </BaseLayout>
 
 <style lang="less">
 #services-intro {
-  padding-top: 3.5rem;
-  max-width: 800px;
-  margin: 0 auto 2.5rem auto;
+  max-width: 1200px;
+  margin: 0 auto 4.5rem auto;
   text-align: center;
   .cs-topper {
     color: var(--primary);
@@ -78,17 +76,19 @@ const services = await getCollection("services");
 }
 .services {
   padding: var(--sectionPadding);
-  background: var(--dark);
+  background: #ffffff;
+  overflow-x: hidden;
 }
 .services-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
+  gap: 1.2rem;
   justify-content: center;
   align-items: stretch;
   width: 100%;
   margin: 0 auto;
-  max-width: 1400px;
+  max-width: 1900px;
+  overflow-x: hidden;
 }
 .service-card {
   display: flex;
@@ -100,12 +100,22 @@ const services = await getCollection("services");
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   padding: 2.5rem 2rem 2rem 2rem;
-  min-width: 260px;
-  max-width: 340px;
+  min-width: 300px;
+  max-width: 500px;
   width: 100%;
   transition: box-shadow 0.2s, border 0.2s, background 0.2s;
   color: var(--headerColor, #222);
   position: relative;
+  
+  @media (max-width: 768px) {
+    min-width: unset;
+    padding: 2rem 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+  }
+  
   &:hover {
     border: 2px solid var(--primary);
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
@@ -114,15 +124,15 @@ const services = await getCollection("services");
   h3 {
     margin: 0 0 0.5rem 0;
     color: var(--headerColor, #222);
-    font-size: 1.35rem;
+    font-size: 1rem;
     font-weight: 700;
     text-align: left;
   }
   p {
     color: var(--bodyTextColor, #444);
     opacity: 0.85;
-    font-size: 1.08rem;
-    margin: 0 0 1.5rem 0;
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
     text-align: left;
   
   }
@@ -168,6 +178,51 @@ const services = await getCollection("services");
 .trust-section-extra-margin {
   margin-top: 3.5rem;
 }
+.services-contact-cta {
+  padding: var(--sectionPadding);
+  background: #ffffff;
+  overflow-x: hidden;
+}
+
+.services-contact-cta-card {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #ffffff;
+  border: 2px solid var(--primary);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  
+  @media (max-width: 850px) {
+    margin: 0 1rem;
+    width: calc(100% - 2rem);
+  }
+  
+  @media (max-width: 600px) {
+    padding: 2rem 1.5rem;
+    margin: 0 0.5rem;
+    width: calc(100% - 1rem);
+  }
+  
+  .cs-title {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    margin-bottom: 1rem;
+    color: var(--headerColor);
+  }
+  
+  .cs-text {
+    color: var(--bodyTextColor);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+    margin-bottom: 0;
+    
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+  }
+}
 .estimate-btn:hover {
   background: #222;
   color: #fff;
@@ -208,6 +263,26 @@ body.dark-mode {
       &:hover {
         color: #fff;
         background: #222;
+      }
+    }
+  }
+  .services-contact-cta {
+    background: var(--medium);
+  }
+  
+  .services-contact-cta-card {
+    background: var(--primaryDark);
+    border: 2px solid var(--primary);
+    
+    .cs-title {
+      color: var(--bodyTextColorWhite);
+    }
+    
+    .cs-text {
+      color: var(--bodyTextColorWhite);
+      
+      a {
+        color: var(--primary);
       }
     }
   }

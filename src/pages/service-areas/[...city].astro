@@ -5,7 +5,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Landing from "@components/Landing.astro";
 import AboutSection from "@components/AboutSection.astro";
 import ServicesGrid from "@components/ServicesGrid.astro";
-import ContactForm from "@components/ContactForm.astro";
+import UniversalForm from "@components/UniversalForm.astro";
 
 export async function getStaticPaths() {
   const areas = await getCollection("service-areas");
@@ -40,11 +40,12 @@ const cityDisplayName = area.data.title.replace(/, (AL|TN)$/, '');
   />
   
   <!-- Contact Form for inquiries -->
-  <ContactForm 
+  <UniversalForm 
+    formType="contact"
     title={`Get Started in ${cityDisplayName}`}
-    subtitle="Free Consultation & Estimate"
+    subtitle=""
     description={`Ready to start your project in ${cityDisplayName}? Contact our experienced team today for professional excavation, septic, and groundwork services.`}
-    topper="Contact Us"
+    topper="Free Quote"
     id="contact-form"
   />
 </BaseLayout> 

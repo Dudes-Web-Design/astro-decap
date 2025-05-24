@@ -10,7 +10,21 @@ import landingImageMeta from "@assets/images/landing.jpg";
 
 // landingImageMeta is ALREADY an image metadata object.
 const imageToRender = landingImageMeta;
+
+// Dynamically import SBS images
+const sbsImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/sbs/*.{jpg,jpeg,png,avif,webp}");
+const sbsImageEntries = Object.entries(sbsImages);
+const sbsImageData = await Promise.all(
+  sbsImageEntries.map(async ([path, loader]) => ({
+    path,
+    mod: await loader(),
+  }))
+);
+// Sort by filename for consistent order
+sbsImageData.sort((a, b) => a.path.localeCompare(b.path));
 ---
+
+
 
 <BaseLayout
   title="About"
@@ -35,18 +49,10 @@ const imageToRender = landingImageMeta;
       <!-- Left Image Section -->
       <div class="cs-left">
         <picture class="cs-picture cs-picture1">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/cabinets2-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/cabinets2.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/cabinets2.jpg"
+            src={sbsImageData[1] ? sbsImageData[1].mod.default.src : '/assets/images/equipment2.jpg'}
             alt="cabinets"
             loading="lazy"
             width="400"
@@ -54,18 +60,10 @@ const imageToRender = landingImageMeta;
           />
         </picture>
         <picture class="cs-picture cs-picture2">
-          <source
-            media="(max-width: 600px)"
-            srcset="/assets/images/construction-m.jpg"
-          />
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/construction.jpg"
-          />
           <img
             aria-hidden="true"
             decoding="async"
-            src="/assets/images/construction.jpg"
+            src={sbsImageData[0] ? sbsImageData[0].mod.default.src : '/assets/images/driveway.jpg'}
             alt="house"
             loading="lazy"
             width="400"
@@ -76,37 +74,31 @@ const imageToRender = landingImageMeta;
       <!-- Right Content Section-->
       <div class="cs-right">
         <span class="cs-topper">About Us</span>
-        <h2 class="cs-title">About Company Title</h2>
+        <h2 class="cs-title">J.R. Outdoor Solutions</h2>
         <p class="cs-text">
-          In consequat tincidunt turpis sit amet imperdiet. Praesent Class
-          officelan nonatoureanor mauris laoreet, iaculis libero quis. Curabitur
-          et tempus eri consequat tincidunt turpis sit amet imperdiet. Praesent
-          nonatourean olei aptent taciti sociosqu ad litora torquent per.
+          At J.R. Outdoor Solutions, we are dedicated to providing exceptional excavation services with integrity, reliability, and a commitment to hard work. We specialize in septic systems, patios, retaining walls, concrete,  and drainage solutions. We prioritize customer satisfaction and superior craftsmanship in all we do. Our mission is to exceed expectations, uphold honesty in all our endeavors, and deliver results that stand the test of time.
         </p>
         <p class="cs-text">
-          In consequat tincidunt turpis sit amet imperdiet. Praesent Class
-          officelan nonatoureanor mauris laoreet, iaculis libero quis. Curabitur
-          et tempus eri consequat tincidunt turpis sit amet imperdiet. Praesent
-          nonatourean olei aptent taciti sociosqu ad litora torquent per.
+          As a young boy, Jake was immersed in the world of agriculture, spending countless hours alongside his father on their family farm. Those years spent working on the farm, ignited a deep-rooted love for the outdoors within him.  It didn’t take him long to find himself drawn to heavy equipment and the experience of working with his hands in the dirt. 
         </p>
-        <div class="cs-flex-group">
-          <p class="cs-flex-p">
-            In consequat tincidunt turpis sit amet imperdiet. Praesent Classei
-            consequat tincidunt turpis sit amet imperdiet for mind.
-          </p>
-          <span class="cs-name">Justin Time</span>
-          <span class="cs-job">CEO-Founder</span>
-          <img
-            class="cs-quote-icon"
-            loading="lazy"
-            decoding="async"
-            src="https://csimg.nyc3.digitaloceanspaces.com/SideBySide/quote-white.svg"
-            alt="gavel"
-            width="136"
-            height="77"
-          />
-        </div>
-        <a href="/projects" class="cs-button-solid">Our Projects</a>
+        <p class="cs-text">
+          When he’s not busy on the job site, you can likely find him enjoying outdoor activities. Whether it is hunting, fishing, or simply tending to the land, he thrives in the great outdoors.         </p>
+          <div class="cs-flex-group">
+            <p class="cs-flex-p">
+              Your project deserves the best, and that's exactly what we deliver.
+            </p>
+            <span class="cs-name">Jake Rubelsky</span>
+            <span class="cs-job">Owner & Operator</span>
+            <img
+              class="cs-quote-icon"
+              loading="lazy"
+              decoding="async"
+              src="https://csimg.nyc3.digitaloceanspaces.com/SideBySide/quote-white.svg"
+              alt="gavel"
+              width="136"
+              height="77"
+            />
+          </div>
       </div>
     </div>
   </section>

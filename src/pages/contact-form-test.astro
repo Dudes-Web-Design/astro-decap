@@ -1,24 +1,25 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import ContactForm from "@components/ContactForm.astro";
+import UniversalForm from "@components/UniversalForm.astro";
 
-const pageTitle = "ContactForm Component Test";
-const pageDescription = "Testing the new ContactForm component with various configurations";
+const pageTitle = "UniversalForm Component Test";
+const pageDescription = "Testing the UniversalForm component with various configurations and form types";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <section class="test-section">
     <div class="cs-container">
-      <h1>ContactForm Component Test</h1>
-      <p>Testing the ContactForm component with different configurations:</p>
+      <h1>UniversalForm Component Test</h1>
+      <p>Testing the UniversalForm component with different configurations and form types:</p>
     </div>
   </section>
 
-  <!-- Default ContactForm -->
-  <ContactForm />
+  <!-- Default Contact Form -->
+  <UniversalForm formType="contact" />
 
-  <!-- Custom content ContactForm -->
-  <ContactForm 
+  <!-- Custom Contact Form -->
+  <UniversalForm 
+    formType="contact"
     title="Start Your Project Today"
     subtitle="Free Consultation Available"
     description="Ready to transform your outdoor space? Our experienced team is here to help bring your vision to life with professional excavation, septic, and groundwork services."
@@ -27,12 +28,32 @@ const pageDescription = "Testing the new ContactForm component with various conf
     className="custom-contact-form"
   />
 
-  <!-- Minimal ContactForm -->
-  <ContactForm 
+  <!-- Service Form with Service Name -->
+  <UniversalForm 
+    formType="service"
+    serviceName="Excavation Services"
+    title="Get Your Excavation Quote"
+    description="Contact us for professional excavation services."
+    topper="Excavation"
+    id="service-contact"
+  />
+
+  <!-- Area Inquiry Form -->
+  <UniversalForm 
+    formType="area-inquiry"
+    title="Check Our Service Area"
+    description="Not sure if we serve your location? Let us know where you're located."
+    id="area-inquiry"
+  />
+
+  <!-- Compact Contact Form -->
+  <UniversalForm 
+    formType="contact"
     title="Quick Contact"
     description=""
     topper=""
     id="minimal-contact"
+    compact={true}
   />
 </BaseLayout>
 

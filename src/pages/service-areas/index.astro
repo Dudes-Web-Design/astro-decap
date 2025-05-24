@@ -3,11 +3,11 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Landing from "@components/Landing.astro";
 import ServiceAreasMap from "@components/ServiceAreasMap.astro";
 import ServiceAreasDirectory from "@components/ServiceAreasDirectory.astro";
-import ServiceAreaInquiry from "@components/ServiceAreaInquiry.astro";
+import UniversalForm from "@components/UniversalForm.astro";
 import { getCollection } from "astro:content";
 
 // Import will provide metadata directly
-import landingImageMeta from "@assets/images/landing.jpg";
+import landingImageMeta from "@assets/images/drone-land-2.jpg";
 // const { getImage } = AstroAssets; // No longer needed if using direct meta
 
 // landingImageMeta is ALREADY an image metadata object.
@@ -25,10 +25,10 @@ const serviceAreasData = areas.map(area => ({
 }));
 ---
 
-<BaseLayout title="Service Areas" description="Our service areas" preloadedImage={imageToRender}>
+<BaseLayout title="Areas We Serve" description="Our service areas" preloadedImage={imageToRender}>
   <Landing 
-    title="Service Areas" 
-    subtitle="Professional Septic & Excavation Services Across North Alabama and Middle Tennessee"
+    title="Areas We Serve" 
+    subtitle="We proudly serve communities across North Alabama and Middle Tennessee. Click on any city below to learn more about our services in your area."
     image={imageToRender} 
   />
   
@@ -43,7 +43,7 @@ const serviceAreasData = areas.map(area => ({
   <ServiceAreasDirectory serviceAreas={serviceAreasData} />
 
   <!-- Service Area Inquiry -->
-  <ServiceAreaInquiry />
+  <UniversalForm formType="area-inquiry" />
 </BaseLayout>
 
 <style lang="less">

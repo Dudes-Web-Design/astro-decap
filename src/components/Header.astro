@@ -1,7 +1,23 @@
 ---
 import navData from "@data/navData.json";
+import client from "@data/client.json";
 import { Icon } from 'astro-icon/components';
 import DarkModeToggle from "@components/DarkModeToggle.astro";
+
+// Define TypeScript interfaces for navigation data
+interface NavChild {
+  key: string;
+  url: string;
+}
+
+interface NavItem {
+  key: string;
+  url: string;
+  children?: NavChild[];
+}
+
+// Type assertion for the imported JSON data
+const typedNavData = navData as NavItem[];
 ---
 
 <!-- ============================================ --><!--                 Navigation                   --><!-- ============================================ -->
@@ -9,8 +25,23 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
   <div class="cs-container">
     <!--Nav Logo-->
     <a href="/" class="cs-logo" aria-label="back to home">
-      <span class="cs-logo-text">J.R. Outdoor Solutions</span>
+      <img
+        loading="lazy"
+        decoding="async"
+        src="/assets/svgs/jr-logo.svg"
+        alt="J.R. Outdoor Solutions"
+        width="160"
+        height="48"
+      />
     </a>
+    
+    <!-- Mobile: Phone link on the left side -->
+    <a href={`tel:${client.phoneForTel}`} class="cs-phone-link" aria-label={`Call ${client.phoneFormatted}`}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="cs-phone-icon">
+        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+      </svg>
+    </a>
+    
     <!--Navigation List-->
     <nav class="cs-nav" role="navigation">
       <!--Mobile Nav Toggle-->
@@ -24,15 +55,15 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       <!-- If you want to use another navigation stitch and enjoy the benefits of dynamic routing, replace the .cs-ul-wrapper in the navigation stitch with this one below -->
       <div class="cs-ul-wrapper">
         <ul id="cs-expanded-ul" class="cs-ul">
-          {navData.map((entry) => (
+          {typedNavData.map((entry) => (
             <li
               class:list={[
                 "cs-li",
-                { "cs-dropdown": entry.children?.length > 0 },
+                { "cs-dropdown": entry.children && entry.children.length > 0 },
               ]}
               
             >
-              {entry.children?.length > 0 ? (
+              {entry.children && entry.children.length > 0 ? (
                 // If entry has children in navData.json, create a button and a dropdown icon
                 <button
                 aria-expanded="false"
@@ -59,7 +90,7 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
                 </a>
               )}
               
-              {entry.children?.length > 0 && (
+              {entry.children && entry.children.length > 0 && (
                 // If entry has children in navData.json, create a drop down menu
                 <ul id={`submenu-${entry.key}`} class="cs-drop-ul">
                   {entry.children.map((child) => (
@@ -79,10 +110,18 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
           ))}
         </ul>
       </div>
+      
+      <!-- Mobile: Theme toggle positioned in hamburger wrapper but outside scrollable area -->
+      <div class="cs-mobile-theme-toggle">
+        <DarkModeToggle />
+      </div>
     </nav>
-    <a href="/contact" class="cs-button-solid cs-nav-button">Contact Us</a>
-    <!--Dark Mode toggle: remove component if you don't want to enable a dark mode toggle-->
-    <DarkModeToggle />
+    <a href="/contact" class="cs-button-solid cs-nav-button">Free Quote</a>
+    
+    <!--Desktop: Dark Mode toggle in original position-->
+    <div class="cs-desktop-theme-toggle">
+      <DarkModeToggle />
+    </div>
   </div>
 </header>
 
@@ -107,10 +146,15 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
     /* prevents padding from affecting height and width */
     box-sizing: border-box;
     padding: (12/16rem) (16/16rem);
-    background-color: #fff;
+    background-color: var(--semantic-surface-primary);
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     position: fixed;
-    z-index: 10000;
+    z-index: 99999; /* Increased from 10000 to ensure it's above everything */
+    
+    /* Remove shadow when hamburger menu is active */
+    &.cs-active {
+      box-shadow: none;
+    }
 
     &:before {
       /* black blurred overlay */
@@ -153,12 +197,12 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      gap: (12/16rem);
     }
 
     .cs-logo {
       width: auto;
-      max-width: 100%;
-      height: 100%;
+      height: (48/16rem); /* Set fixed height for mobile */
       margin: 0 auto 0 0;
       /* prevents padding from affecting height and width */
       box-sizing: border-box;
@@ -167,9 +211,10 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       justify-content: center;
       align-items: center;
       z-index: 10;
+      order: 1; /* Ensure logo stays first */
 
       img {
-        width: 100%;
+        width: auto;
         height: 100%;
         /* ensures the image never overflows the container. It stays contained within it's width and height and expands to fill it then stops once it reaches an edge */
         object-fit: contain;
@@ -177,12 +222,42 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
         object-position: left;
       }
     }
+    
+    /* Mobile phone link styles - now positioned on the left */
+    .cs-phone-link {
+      /* 44px - 48px */
+      width: clamp(2.75rem, 6vw, 3rem);
+      height: clamp(2.75rem, 6vw, 3rem);
+      margin: 0;
+      background-color: var(--theme-fire-brick);
+      border-radius: (8/16rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      order: 2; /* Position after logo */
+      
+      &:hover {
+        background-color: var(--theme-fire-brick);
+        transform: scale(1.05);
+      }
+      
+      .cs-phone-icon {
+        width: (20/16rem);
+        height: (20/16rem);
+        color: white;
+      }
+    }
+    
+    .cs-nav {
+      order: 3; /* Position nav last (hamburger on the right) */
+    }
 
     .cs-toggle {
       /* 44px - 48px */
       width: clamp(2.75rem, 6vw, 3rem);
       height: clamp(2.75rem, 6vw, 3rem);
-      margin: 0 0 0 auto;
+      margin: 0;
       background-color: transparent;
       border: none;
       border-radius: (4/16rem);
@@ -220,7 +295,7 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
     .cs-line {
       width: 100%;
       height: 2px;
-      background-color: #1a1a1a;
+      background-color: var(--headerColor);
       border-radius: 2px;
       position: absolute;
       left: 50%;
@@ -254,16 +329,15 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
 
     .cs-ul-wrapper {
       height: 100vh;
-      background-color: #fff;
-      box-shadow: inset rgba(0, 0, 0, 0.2) 0px 8px 24px;
+      background-color: var(--semantic-surface-primary);
       opacity: 0;
       visibility: hidden;
       position: absolute;
       top: 100%;
       right: 0;
       left: auto;
-      z-index: -1;
-      overflow: hidden;
+      z-index: 100000;
+      overflow: visible;
       transform: scaleX(0);
       transition: transform 0.4s, opacity 0.3s;
       transform-origin: top right;
@@ -356,6 +430,50 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
     .cs-button-solid {
       display: none;
     }
+    
+    /* Hide desktop theme toggle on mobile */
+    .cs-desktop-theme-toggle {
+      display: none;
+    }
+    
+    /* Mobile theme toggle in hamburger menu */
+    .cs-mobile-theme-toggle {
+      position: fixed; /* Changed to fixed to position relative to viewport */
+      bottom: (24/16rem);
+      right: (24/16rem);
+      z-index: 100000; /* Higher than navigation to ensure it's always visible */
+      width: (48/16rem);
+      height: (48/16rem);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      
+      #dark-mode-toggle {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        
+        /* Ensure no unwanted pseudo-elements */
+        &:before,
+        &:after {
+          display: none !important;
+          content: none !important;
+        }
+      }
+    }
+    
+    /* Show theme toggle when navigation is active */
+    &.cs-active {
+      .cs-mobile-theme-toggle {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0.4s; /* Delay to appear after menu animation */
+      }
+    }
   }
 }
 
@@ -371,7 +489,7 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       }
 
       .cs-line {
-        background-color: #fff;
+        background-color: var(--bodyTextColorWhite);
       }
 
       .cs-ul-wrapper {
@@ -380,6 +498,18 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
 
       .cs-li-link {
         color: var(--bodyTextColorWhite);
+      }
+      
+      .cs-mobile-theme-toggle {
+        /* No special dark mode styling needed - inherits from global dark mode toggle styles */
+      }
+      
+      .cs-phone-link {
+        background-color: var(--theme-fire-brick);
+        
+        &:hover {
+          background-color: var(--theme-fire-brick);
+        }
       }
     }
   }
@@ -462,7 +592,7 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       &.cs-drop-link {
         /* 14px - 16px */
         font-size: clamp(0.875rem, 2vw, 1.25rem);
-        color: #fff;
+        color: var(--semantic-text-inverse);
       }
     }
 
@@ -520,7 +650,7 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       min-width: (200/16rem);
       margin: 0;
       padding: 0;
-      background-color: #fff;
+      background-color: var(--semantic-surface-primary);
       box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 16px;
       opacity: 0;
       border-bottom: 5px solid var(--primary);
@@ -663,10 +793,10 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
     /* prevents padding from affecting height and width */
     box-sizing: border-box;
     padding: 0 (16/16rem);
-    background-color: #fff;
+    background-color: var(--semantic-surface-primary);
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     position: fixed;
-    z-index: 10000;
+    z-index: 99999; /* Updated to match mobile navigation */
 
     .cs-container {
       width: 100%;
@@ -683,22 +813,22 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
     }
 
     .cs-logo {
-      width: 18.4%;
-      max-width: (350/16rem);
+      width: auto;
       height: (65/16rem);
       /* margin-right auto pushes everything away from it to the right */
       margin: 0 auto 0 0;
       padding: 0;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       z-index: 100;
 
       img {
-        width: 100%;
+        width: auto;
         height: 100%;
         /* ensures the image never overflows the container. It stays contained within it's width and height and expands to fill it then stops once it reaches an edge */
         object-fit: contain;
+        object-position: left;
       }
     }
 
@@ -755,6 +885,21 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
         transition: width 0.3s;
       }
     }
+    
+    /* Hide mobile phone link on desktop */
+    .cs-phone-link {
+      display: none;
+    }
+    
+    /* Hide mobile theme toggle on desktop */
+    .cs-mobile-theme-toggle {
+      display: none;
+    }
+    
+    /* Show desktop theme toggle on desktop */
+    .cs-desktop-theme-toggle {
+      display: block;
+    }
   }
 }
 
@@ -780,19 +925,6 @@ import DarkModeToggle from "@components/DarkModeToggle.astro";
       }
     }
   }
-}
-
-.cs-logo-text {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--primary, #1a1a1a);
-  font-family: 'Display', 'Arial', sans-serif;
-  display: block;
-  line-height: 1.2;
-  text-decoration: none;
-  white-space: nowrap;
-  /* Adjust as needed for your brand */
 }
 
 .cs-logo {
