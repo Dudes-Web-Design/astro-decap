@@ -82,13 +82,13 @@ const services = await getCollection("services");
 .services-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.2rem;
+  gap: 2rem;
   justify-content: center;
   align-items: stretch;
   width: 100%;
   margin: 0 auto;
-  max-width: 1900px;
-  overflow-x: hidden;
+  max-width: 1400px;
+  padding: 0 2rem;
 }
 .service-card {
   display: flex;
@@ -99,16 +99,14 @@ const services = await getCollection("services");
   border: 1.5px solid #e8e8e8;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  padding: 2.5rem 2rem 2rem 2rem;
-  min-width: 300px;
-  max-width: 500px;
+  padding: 2rem 2.5rem;
   width: 100%;
+  min-height: 200px;
   transition: box-shadow 0.2s, border 0.2s, background 0.2s;
   color: var(--headerColor, #222);
   position: relative;
   
   @media (max-width: 768px) {
-    min-width: unset;
     padding: 2rem 1.5rem;
   }
   
@@ -152,16 +150,18 @@ const services = await getCollection("services");
   .services-list {
     grid-template-columns: repeat(2, 1fr);
     max-width: 900px;
+    gap: 2.5rem;
+    padding: 0 1.5rem;
   }
 }
 @media (max-width: 700px) {
   .services-list {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    padding: 0 1rem;
   }
   .service-card {
     width: 100%;
-    max-width: 100%;
   }
 }
 .trust-section {
@@ -229,10 +229,18 @@ const services = await getCollection("services");
 }
 @media (min-width: 900px) {
   .services-list {
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .service-card {
-    width: 320px;
+    padding: 2.5rem 3rem;
+    min-height: 220px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .services-list {
+    max-width: 1600px;
+    gap: 3rem;
   }
 }
 body.dark-mode {

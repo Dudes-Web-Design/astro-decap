@@ -62,5 +62,12 @@ const serviceAreasData = areas.map(area => ({
     .container();
     max-width: 80rem;
   }
+  
+  // Override the default map height for this page
+  :global(.cs-map-container) {
+    @media (min-width: 1024px) {
+      height: 550px; // Reduced from 750px to 400px
+    }
+  }
 }
 </style> 
