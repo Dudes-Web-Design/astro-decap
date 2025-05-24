@@ -2,7 +2,7 @@
 title: Land Clearing & Grading
 slug: land-clearing-grading
 description: Professional land clearing and grading services for any size project.
-image: ../../assets/images/land-clearing-lander.jpg
+image: ../../assets/images/land-clearing-lander-original.jpg
 imageAlt: Land clearing and grading
 body: |
   Whether you're preparing for new construction, reclaiming overgrown areas, or enhancing your property's usability, our professional land clearing and grading services provide the perfect canvas. We efficiently remove unwanted vegetation and debris, then expertly sculpt the land to meet your specific requirements for drainage, stability, and aesthetics.
