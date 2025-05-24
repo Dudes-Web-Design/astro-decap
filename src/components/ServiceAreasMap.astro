@@ -110,6 +110,12 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         subdomains: 'abcd',
         maxZoom: 20,
         minZoom: 6,
+        tileSize: 256,
+        zoomOffset: 0,
+        detectRetina: true,
+        updateWhenZooming: false,
+        updateWhenIdle: true,
+        keepBuffer: 2,
       }).addTo(map);
 
       // Custom marker icon that matches our brand
@@ -216,13 +222,36 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         map.setView([35.0, -86.8], 8);
       }
 
+      // Force map refresh after initial load to prevent tile rendering issues
+      setTimeout(() => {
+        if (map) {
+          map.invalidateSize(true);
+          // Additional mobile-specific fix
+          if (window.innerWidth < 768) {
+            setTimeout(() => {
+              if (map) {
+                map.invalidateSize(true);
+              }
+            }, 300);
+          }
+        }
+      }, 500);
+
       // Handle responsive behavior
       function handleResize() {
         setContainerHeight();
         if (map) {
           setTimeout(() => {
             if (map) {
-              map.invalidateSize();
+              map.invalidateSize(true);
+              // Force a redraw on mobile to prevent tile rendering issues
+              if (window.innerWidth < 768) {
+                setTimeout(() => {
+                  if (map) {
+                    map.invalidateSize(true);
+                  }
+                }, 250);
+              }
             }
           }, 100);
         }
@@ -401,7 +430,7 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     overflow: hidden;
     border: 2px solid #6b7280;
     box-shadow: @shadow-sm;
-    .smooth-transition(box-shadow, border-color);
+    transition: box-shadow 0.3s ease;
     
     &:hover {
       box-shadow: @shadow-lg;
@@ -432,6 +461,14 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     width: 100%;
     height: 100%;
     z-index: 1;
+    
+    // Improve mobile tile rendering
+    @media (max-width: 767px) {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
   }
 
   // Screen reader only content
@@ -485,6 +522,28 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
   // Remove Leaflet attribution control styles
   :global(.leaflet-control-attribution) {
     display: none !important;
+  }
+
+  // Improve mobile tile rendering
+  :global(.leaflet-container) {
+    @media (max-width: 767px) {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  }
+
+  :global(.leaflet-tile) {
+    @media (max-width: 767px) {
+      image-rendering: optimizeSpeed;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
   }
 
   // Custom marker icon styles
