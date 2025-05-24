@@ -448,7 +448,7 @@ const typedNavData = navData as NavItem[];
       visibility: hidden;
       transition: opacity 0.3s, visibility 0.3s;
       
-      #dark-mode-toggle {
+      .dark-mode-toggle {
         position: relative;
         top: auto;
         right: auto;
@@ -482,11 +482,6 @@ const typedNavData = navData as NavItem[];
   body.dark-mode {
     #cs-navigation {
       background-color: var(--dark);
-
-      .cs-logo {
-        /* makes it white */
-        filter: grayscale(1) brightness(1000%);
-      }
 
       .cs-line {
         background-color: var(--bodyTextColorWhite);
@@ -898,7 +893,19 @@ const typedNavData = navData as NavItem[];
     
     /* Show desktop theme toggle on desktop */
     .cs-desktop-theme-toggle {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: (48/16rem);
+      height: (48/16rem);
+      
+      .dark-mode-toggle {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin: 0;
+      }
     }
   }
 }
@@ -908,11 +915,6 @@ const typedNavData = navData as NavItem[];
   body.dark-mode {
     #cs-navigation {
       background-color: var(--dark);
-
-      .cs-logo {
-        /* makes it turn white */
-        filter: grayscale(1) brightness(1000%);
-      }
 
       .cs-li-link {
         color: var(--bodyTextColorWhite);
