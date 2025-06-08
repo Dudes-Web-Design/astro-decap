@@ -8,7 +8,14 @@ import type { ImageMetadata } from 'astro';
 // Optimize our landing image and pass it as props to the BaseLayout (for preloading) and Landing (for rendering)
 import landingImage from "@assets/images/landing.jpg"
 import { getImage } from "astro:assets";
-const optimizedImage = await getImage({src: landingImage, format: 'avif'})
+// Use JPEG for better OpenGraph compatibility and set proper dimensions for social media
+const optimizedImage = await getImage({
+  src: landingImage, 
+  format: 'jpeg',
+  width: 1200,
+  height: 630,
+  quality: 85
+})
 
 // Import review images
 import whiddonManagementImg from "@assets/images/whiddon-management.jpg";
@@ -88,7 +95,7 @@ function getPortfolioImage(imageName: string): ImageMetadata {
         aria-hidden="true"
         decoding="async"
         src={optimizedImage.src}
-        alt="new septic system"
+        alt="J.R. Outdoor Solutions septic and excavation equipment working on site"
         width="2500"
         height="1667"
         loading="eager"
