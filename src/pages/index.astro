@@ -10,6 +10,10 @@ import landingImage from "@assets/images/landing.jpg"
 import { getImage } from "astro:assets";
 const optimizedImage = await getImage({src: landingImage, format: 'avif'})
 
+// Import review images
+import whiddonManagementImg from "@assets/images/whiddon-management.jpg";
+import jamesWeaverImg from "@assets/images/james-weaver.png";
+
 // Dynamically import SBS images
 const sbsImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/sbs/*.{jpg,jpeg,png,avif,webp}");
 const sbsImageEntries = Object.entries(sbsImages);
@@ -399,15 +403,14 @@ function getPortfolioImage(imageName: string): ImageMetadata {
       <ul class="cs-card-group">
         <!-- Review 1 -->
         <li class="cs-item">
-          <img
+          <Image
             class="cs-item-img"
-            aria-hidden="true"
+            src={whiddonManagementImg}
+            alt="Whiddon Property Management profile picture"
             loading="lazy"
-            decoding="async"
-            src="https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-1/440303773_122118938678267973_6915145937193664619_n.jpg?stp=dst-jpg_s480x480_tt6&_nc_cat=110&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=CUzeijUKmwkQ7kNvwE4fm00&_nc_oc=AdkhXAiSvgssBs_ExdLc-E8pLqKnQLlk4nbLHBJ4JL5p0YqJsP5IfUGtt34paqF9DWs&_nc_zt=24&_nc_ht=scontent-dfw5-1.xx&_nc_gid=Z3HUbQxfC3rzfPGZ7sEhoA&oh=00_AfIn_U7XJfeIpeUr_PRVUk9iSKYnPY6WZ-kWeF0IzrV7yQ&oe=6836F296"
-            alt="profile picture"
-            width="80"
-            height="80"
+            width={80}
+            height={80}
+            format="webp"
           />
           <p class="cs-item-p">
             I had J.R. Outdoor come help me on a job and my experience with him was awesome. 
@@ -430,15 +433,14 @@ function getPortfolioImage(imageName: string): ImageMetadata {
         </li>
         <!-- Review 2 -->
         <li class="cs-item">
-          <img
+          <Image
             class="cs-item-img"
-            aria-hidden="true"
+            src={jamesWeaverImg}
+            alt="James Weaver profile picture"
             loading="lazy"
-            decoding="async"
-            src="https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-1/278928378_1429368180850186_6937958694947974011_n.jpg?stp=c0.184.1536.1536a_dst-jpg_s480x480_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e99d92&_nc_ohc=3XULJ6eglz8Q7kNvwFGN0E1&_nc_oc=AdmaMg3-w98meGMvMsNaxCbqCXJdq01dfboxLd1VCDcK_L2l_WdzUx8FgxhXj2TaBNo&_nc_zt=24&_nc_ht=scontent-dfw5-2.xx&_nc_gid=u16vv7lm1EgQbGYWomrbFA&oh=00_AfJGsP9MAq2M0H0ECI-gnd2p3fYPFlrkD46i-AZrI6aigg&oe=6836DEAE"
-            alt="profile picture"
-            width="80"
-            height="80"
+            width={80}
+            height={80}
+            format="webp"
           />
           <p class="cs-item-p">
             Jake and Luke were professional and efficient as they removed dying trees and shrubs, then filled holes and leveled the yard. Very thankful to have a back yard that is much more usable now! Appreciate the work ethic, professionalism, and great job!

@@ -107,7 +107,7 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         wheelPxPerZoomLevel: 120,
       });
 
-      // Add tile layer with Safari-specific optimizations
+      // Add tile layer with unified mobile optimizations
       const tileLayerOptions = {
         attribution: '',
         subdomains: 'abcd',
@@ -119,11 +119,8 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
         updateWhenZooming: false,
         updateWhenIdle: true,
         keepBuffer: isSafari ? 4 : 2, // Higher buffer for Safari
-        ...(isSafari && {
-          // Safari-specific options
-          crossOrigin: true,
-          className: 'safari-tiles'
-        })
+        crossOrigin: true,
+        className: 'unified-mobile-tiles' // Use unified class for all mobile browsers
       };
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', tileLayerOptions).addTo(map);
@@ -236,68 +233,125 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
       setTimeout(() => {
         if (map) {
           map.invalidateSize(true);
-          // Safari-specific fixes
-          if (isSafari && window.innerWidth < 768) {
-            // Multiple invalidations for Safari mobile
-            const safariRefresh = () => {
-              if (map) {
-                map.invalidateSize(true);
-                map.getContainer().style.transform = 'translateZ(0)';
-              }
-            };
+          // Unified mobile refresh with GPU layer optimization
+          if (window.innerWidth < 768) {
+            const container = map.getContainer();
+            // Force both map container and tiles onto GPU layer
+            container.style.transform = 'translateZ(0)';
+            container.style.backfaceVisibility = 'hidden';
             
-            setTimeout(safariRefresh, 100);
-            setTimeout(safariRefresh, 300);
-            setTimeout(safariRefresh, 600);
-          } else if (window.innerWidth < 768) {
+            // Single debounced refresh to avoid race conditions
             setTimeout(() => {
               if (map) {
                 map.invalidateSize(true);
               }
-            }, 300);
+            }, 200);
           }
         }
       }, 500);
 
-      // Handle responsive behavior
+      // Debounced resize handler to prevent excessive invalidateSize calls
+      let resizeTimeout: any = null;
       function handleResize() {
-        setContainerHeight();
-        if (map) {
-          setTimeout(() => {
-            if (map) {
-              map.invalidateSize(true);
-              // Safari-specific resize handling
-              if (isSafari && window.innerWidth < 768) {
-                const container = map.getContainer();
-                container.style.transform = 'translateZ(0)';
-                setTimeout(() => {
-                  if (map) {
-                    map.invalidateSize(true);
-                    container.style.transform = '';
-                    setTimeout(() => {
-                      if (map) {
-                        map.invalidateSize(true);
-                      }
-                    }, 100);
-                  }
-                }, 200);
-              } else if (window.innerWidth < 768) {
-                setTimeout(() => {
-                  if (map) {
-                    map.invalidateSize(true);
-                  }
-                }, 250);
-              }
-            }
-          }, 100);
+        // Clear previous timeout to debounce rapid resize events
+        if (resizeTimeout) {
+          clearTimeout(resizeTimeout);
         }
+        
+        // Set container height immediately for visual feedback
+        setContainerHeight();
+        
+        // Debounce the expensive operations
+        resizeTimeout = setTimeout(() => {
+          if (map) {
+            const container = map.getContainer();
+            const isMobile = window.innerWidth < 768;
+            
+            // Apply GPU layer optimizations based on screen size
+            if (isMobile) {
+              container.style.transform = 'translateZ(0)';
+              container.style.backfaceVisibility = 'hidden';
+              container.style.willChange = 'transform';
+            } else {
+              // Remove mobile optimizations on desktop
+              container.style.transform = '';
+              container.style.backfaceVisibility = '';
+              container.style.willChange = 'auto';
+            }
+            
+            // Force map to recalculate dimensions
+            map.invalidateSize(true);
+            
+            // Additional mobile-specific refresh for iOS
+            if (isMobile && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+              setTimeout(() => {
+                if (map) {
+                  map.invalidateSize(true);
+                }
+              }, 150);
+            }
+          }
+          resizeTimeout = null;
+        }, 150); // 150ms debounce delay
       }
 
       window.addEventListener('resize', handleResize);
       
+      // Handle orientation changes on mobile devices
+      window.addEventListener('orientationchange', () => {
+        // Delay to allow orientation change to complete
+        setTimeout(() => {
+          setContainerHeight();
+          if (map) {
+            map.invalidateSize(true);
+            // Additional refresh for iOS after orientation change
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+              setTimeout(() => {
+                if (map) {
+                  map.invalidateSize(true);
+                }
+              }, 200);
+            }
+          }
+        }, 300);
+      });
+      
+      // Handle scroll events to maintain map synchronization on mobile
+      let scrollTimeout: any = null;
+      function handleScroll() {
+        // Only handle on mobile devices
+        if (window.innerWidth < 768 && map) {
+          // Clear previous timeout
+          if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+          }
+          
+          // Debounce scroll handling
+          scrollTimeout = setTimeout(() => {
+            if (map) {
+              // Force a quick invalidateSize to maintain sync
+              map.invalidateSize(false); // Use false for performance
+            }
+            scrollTimeout = null;
+          }, 100);
+        }
+      }
+      
+      // Add scroll listener for mobile sync
+      if (window.innerWidth < 768) {
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }
+      
       // Store cleanup function
       (window as any).cleanupServiceAreasMap = () => {
         window.removeEventListener('resize', handleResize);
+        window.removeEventListener('scroll', handleScroll);
+        if (resizeTimeout) {
+          clearTimeout(resizeTimeout);
+        }
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
         if (map) {
           try {
             map.remove();
@@ -498,12 +552,25 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     height: 100%;
     z-index: 1;
     
-    // Improve mobile tile rendering
+    // Optimize for mobile scrolling performance
     @media (max-width: 767px) {
+      will-change: transform;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      // Prevent text selection during scroll
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    @media (min-width: 768px) {
+      // Reset mobile optimizations on desktop
+      will-change: auto;
+      transform: none;
+      -webkit-transform: none;
+      backface-visibility: visible;
+      -webkit-backface-visibility: visible;
     }
   }
 
@@ -560,13 +627,21 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     display: none !important;
   }
 
-  // Improve mobile tile rendering
+  // Optimize leaflet container for mobile performance
   :global(.leaflet-container) {
     @media (max-width: 767px) {
+      will-change: transform;
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
+      // Improve touch responsiveness
+      touch-action: pan-x pan-y;
+    }
+    
+    @media (min-width: 768px) {
+      will-change: auto;
+      touch-action: auto;
     }
   }
 
@@ -582,56 +657,118 @@ const serviceAreasWithCoords = serviceAreas.filter(area => area.lat && area.lng)
     }
   }
 
-  // Safari-specific tile fixes
-  :global(.safari-tiles) {
-    image-rendering: auto !important;
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-    transform: none !important;
-    -webkit-transform: none !important;
-  }
-
-  // Safari mobile container fixes
-  @supports (-webkit-touch-callout: none) {
+  // Unified mobile tiles class (replaces safari-tiles)
+  :global(.unified-mobile-tiles) {
     @media (max-width: 767px) {
-      .cs-map-container {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-        -webkit-perspective: 1000;
-        perspective: 1000;
-      }
-      
-      .cs-map {
-        -webkit-transform: none !important;
-        transform: none !important;
-        -webkit-backface-visibility: visible !important;
-        backface-visibility: visible !important;
-      }
-      
-      :global(.leaflet-container) {
-        -webkit-transform: none !important;
-        transform: none !important;
-      }
-      
-      :global(.leaflet-map-pane) {
-        -webkit-transform: translate3d(0, 0, 0) !important;
-        transform: translate3d(0, 0, 0) !important;
-      }
-      
-      :global(.leaflet-tile-container) {
-        -webkit-transform: none !important;
-        transform: none !important;
-      }
+      // Ensure tiles stay on same GPU layer as markers
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      image-rendering: optimizeSpeed;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+    }
+    
+    @media (min-width: 768px) {
+      // Reset GPU optimizations on desktop
+      will-change: auto;
+      -webkit-backface-visibility: visible;
+      backface-visibility: visible;
+      transform: none;
+      -webkit-transform: none;
+      image-rendering: auto;
     }
   }
 
-  // Custom marker icon styles
+  // Unified mobile container optimizations for all WebKit browsers
+  @media (max-width: 767px) {
+    .cs-map-container {
+      // Force container onto GPU layer for smooth scrolling
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-perspective: 1000px;
+      perspective: 1000px;
+    }
+    
+    // Ensure all map elements use consistent GPU layer
+    :global(.leaflet-container),
+    :global(.leaflet-map-pane),
+    :global(.leaflet-tile-container),
+    :global(.leaflet-marker-pane) {
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+  }
+  
+  // Reset optimizations on desktop
+  @media (min-width: 768px) {
+    .cs-map-container {
+      will-change: auto;
+      -webkit-transform: none;
+      transform: none;
+      -webkit-perspective: none;
+      perspective: none;
+    }
+    
+    :global(.leaflet-container),
+    :global(.leaflet-map-pane),
+    :global(.leaflet-tile-container),
+    :global(.leaflet-marker-pane) {
+      will-change: auto;
+      -webkit-backface-visibility: visible;
+      backface-visibility: visible;
+      -webkit-transform: none;
+      transform: none;
+    }
+  }
+
+  // Custom marker icon styles with GPU layer optimization
   :global(.custom-marker-icon) {
     background: none !important;
     border: none !important;
     
+    // Ensure markers are on same GPU layer as tiles on mobile
+    @media (max-width: 767px) {
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    
+    @media (min-width: 768px) {
+      will-change: auto;
+      -webkit-backface-visibility: visible;
+      backface-visibility: visible;
+      -webkit-transform: none;
+      transform: none;
+    }
+    
     .custom-marker {
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      
+      // Ensure SVG also gets GPU acceleration on mobile
+      @media (max-width: 767px) {
+        will-change: transform;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+      
+      @media (min-width: 768px) {
+        will-change: auto;
+        -webkit-backface-visibility: visible;
+        backface-visibility: visible;
+        -webkit-transform: none;
+        transform: none;
+      }
       
       svg {
         display: block;

@@ -3,10 +3,11 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import client from "@data/client.json";
 import Landing from "@components/Landing.astro";
 import UniversalForm from "@components/UniversalForm.astro";
+import { Image } from "astro:assets";
 
 // Import will provide metadata directly
 import landingImageMeta from "@assets/images/drone-land.jpg";
-// const { getImage } = AstroAssets; // No longer needed if using direct meta
+import bulldozerImage from "@assets/images/bulldozer.jpg";
 
 // landingImageMeta is ALREADY an image metadata object.
 const imageToRender = landingImageMeta;
@@ -129,12 +130,8 @@ const imageToRender = landingImageMeta;
           >{client.phoneFormatted}</a
         >
         <!--Address-->
-        <span class="cs-header">Address</span>
+        <span class="cs-header">Headquarters</span>
         <a class="cs-link" href={client.address.mapLink}>
-          {client.address.lineOne},
-          <br />
-          {client.address.lineTwo},
-          <br />
           <span class="cs-block">
             {client.address.city}
             {client.address.state}
@@ -143,21 +140,19 @@ const imageToRender = landingImageMeta;
         </a>
 
         <!-- Background Image-->
-        <picture class="cs-bg-picture">
-          <source
-            media="(min-width: 601px)"
-            srcset="/assets/images/bulldozer.jpg"
-          />
-          <img
-            aria-hidden="true"
-            decoding="async"
-            src="/assets/images/bulldozer.jpg"
+        <div class="cs-bg-picture">
+          <Image
+            src={bulldozerImage}
             alt="building"
             loading="lazy"
-            width="2500"
-            height="1667"
+            quality={90}
+            format="webp"
+            widths={[600, 900, 1200, 1600, 2000]}
+            sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 542px"
+            aria-hidden="true"
+            class="cs-bg-img"
           />
-        </picture>
+        </div>
       </div>
     </div>
   </section>
@@ -514,6 +509,7 @@ const imageToRender = landingImageMeta;
       z-index: 1;
     }
 
+    .cs-bg-img,
     img {
       width: 100%;
       height: 100%;

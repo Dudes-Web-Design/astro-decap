@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "generatedAt": "2025-06-08T15:50:17.368Z",
+    "tasksAnalyzed": 1,
+    "totalTasks": 7,
+    "analysisCount": 1,
+    "thresholdScore": 5,
+    "projectName": "Taskmaster",
+    "usedResearch": false
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 7,
+      "taskTitle": "Fix iOS map marker-tile synchronization during scrolling",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand the task 'Fix iOS map marker-tile synchronization during scrolling' into detailed subtasks covering: auditing and consolidating Safari-specific CSS/JS fixes; aligning markers and tiles on the same GPU/compositor layer; adjusting backface-visibility and transform settings; implementing and verifying invalidateSize calls; creating a cross-device test plan for real iOS devices; and documenting changes and performance metrics.",
+      "reasoning": "Requires deep debugging of WebKit optimizations, CSS transforms, GPU layers, and extensive real-device testing across multiple scrolling scenarios, making it moderately complex."
+    }
+  ]
+}

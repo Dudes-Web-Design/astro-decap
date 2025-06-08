@@ -59,8 +59,6 @@ const currentYear = getCurrentYear()
           </li>
           <li>
             <a href="/contact">
-              {client.address.lineOne}<br />
-              {client.address.lineTwo}<br />
               {client.address.city}
               {client.address.state}
               {client.address.zip}
@@ -68,12 +66,12 @@ const currentYear = getCurrentYear()
           </li>
           <li>
             <a href={`tel:${client.phoneForTel}`}>
-              T:
+              Cell:
               {client.phoneFormatted}
             </a>
           </li>
           <li>
-            <a href={`mailto:${client.email}`}>Click to Email</a>
+            <a href={`mailto:${client.email}`}>jroutdoorsolutions23@gmail.com</a>
           </li>
         </ul>
       </div>
