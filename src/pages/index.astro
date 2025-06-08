@@ -44,6 +44,72 @@ const sbsrImageData = await Promise.all(
 );
 sbsrImageData.sort((a, b) => a.path.localeCompare(b.path));
 
+// Optimize SBS images with responsive variants
+const sbsImage1Desktop = await getImage({
+  src: sbsImageData[1]?.mod.default || '/assets/images/equipment2.jpg',
+  format: 'webp',
+  width: 800,
+  height: 890,
+  quality: 95
+});
+
+const sbsImage1Mobile = await getImage({
+  src: sbsImageData[1]?.mod.default || '/assets/images/equipment2.jpg',
+  format: 'webp',
+  width: 400,
+  height: 445,
+  quality: 95
+});
+
+const sbsImage2Desktop = await getImage({
+  src: sbsImageData[0]?.mod.default || '/assets/images/driveway.jpg',
+  format: 'webp',
+  width: 650,
+  height: 630,
+  quality: 95
+});
+
+const sbsImage2Mobile = await getImage({
+  src: sbsImageData[0]?.mod.default || '/assets/images/driveway.jpg',
+  format: 'webp',
+  width: 350,
+  height: 340,
+  quality: 95
+});
+
+// Optimize SBS-R images with responsive variants
+const sbsrImage1Desktop = await getImage({
+  src: sbsrImageData[0]?.mod.default || '/assets/images/construction.jpg',
+  format: 'webp',
+  width: 800,
+  height: 890,
+  quality: 95
+});
+
+const sbsrImage1Mobile = await getImage({
+  src: sbsrImageData[0]?.mod.default || '/assets/images/construction.jpg',
+  format: 'webp',
+  width: 400,
+  height: 445,
+  quality: 95
+});
+
+const sbsrImage2Desktop = await getImage({
+  src: sbsrImageData[1]?.mod.default || '/assets/images/cabinets2.jpg',
+  format: 'webp',
+  width: 650,
+  height: 630,
+  quality: 95
+});
+
+const sbsrImage2Mobile = await getImage({
+  src: sbsrImageData[1]?.mod.default || '/assets/images/cabinets2.jpg',
+  format: 'webp',
+  width: 350,
+  height: 340,
+  quality: 95
+});
+
 // Dynamically import portfolio images for gallery
 const portfolioImages = import.meta.glob<{ default: ImageMetadata }>("/src/assets/images/portfolio/*.{jpg,jpeg,png,avif,webp}");
 const portfolioImageEntries = Object.entries(portfolioImages);
@@ -63,6 +129,8 @@ function getPortfolioImage(imageName: string): ImageMetadata {
   }
   return found;
 }
+
+
 ---
 
 <BaseLayout
@@ -99,6 +167,7 @@ function getPortfolioImage(imageName: string): ImageMetadata {
         width="2500"
         height="1667"
         loading="eager"
+        fetchpriority="high"
       />
     </picture>
 
@@ -168,55 +237,45 @@ function getPortfolioImage(imageName: string): ImageMetadata {
       <!-- Left Image Section -->
       <div class="cs-left">
         <picture class="cs-picture cs-picture1">
+          <source media="(max-width: 600px)" srcset={sbsImage1Mobile.src} />
+          <source media="(min-width: 601px)" srcset={sbsImage1Desktop.src} />
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsImageData[1] ? sbsImageData[1].mod.default.src : '/assets/images/equipment2.jpg'}
-            alt="cabinets"
+            src={sbsImage1Desktop.src}
+            alt="excavation equipment"
             loading="lazy"
-            width="400"
-            height="563"
+            width="522"
+            height="581"
           />
         </picture>
         <picture class="cs-picture cs-picture2">
+          <source media="(max-width: 600px)" srcset={sbsImage2Mobile.src} />
+          <source media="(min-width: 601px)" srcset={sbsImage2Desktop.src} />
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsImageData[0] ? sbsImageData[0].mod.default.src : '/assets/images/driveway.jpg'}
-            alt="house"
+            src={sbsImage2Desktop.src}
+            alt="completed driveway project"
             loading="lazy"
-            width="400"
-            height="563"
+            width="414"
+            height="400"
           />
         </picture>
       </div>
       <!-- Right Content Section-->
       <div class="cs-right">
         <span class="cs-topper">About Us</span>
-        <h2 class="cs-title">J.R. Outdoor Solutions</h2>
+        <h2 class="cs-title">
+          Professional Septic & Excavation Services You Can Trust
+        </h2>
         <p class="cs-text">
-          We transform properties with expert excavation and hardscaping services across North Alabama and Middle Tennessee. Our specialized team delivers premium septic system installations, custom patio designs, retaining walls, professional concrete work, and drainage solutions.
+          With years of experience in the septic and excavation industry, J.R. Outdoor Solutions has built a reputation for quality workmanship and reliable service throughout North Alabama and Middle Tennessee.
         </p>
         <p class="cs-text">
-          As a young boy, Jake was immersed in the world of agriculture, spending countless hours alongside his father on their family farm. Those years spent working on the farm, ignited a deep-rooted love for the outdoors within him.  It didn't take him long to find himself drawn to heavy equipment and the experience of working with his hands in the dirt. 
+          Our team of licensed professionals specializes in septic system installation, repair, and maintenance, as well as comprehensive excavation services including site preparation, grading, and drainage solutions.
         </p>
-        <div class="cs-flex-group">
-          <p class="cs-flex-p">
-            Your project deserves the best, and that's exactly what we deliver.
-          </p>
-          <span class="cs-name">Jake Rubelsky</span>
-          <span class="cs-job">Owner & Operator</span>
-          <img
-            class="cs-quote-icon"
-            loading="lazy"
-            decoding="async"
-            src="https://csimg.nyc3.digitaloceanspaces.com/SideBySide/quote-white.svg"
-            alt="gavel"
-            width="136"
-            height="77"
-          />
-        </div>
-        <a href="/about" class="cs-button-solid">More About Us</a>
+        <a href="/about" class="cs-button-solid">Learn More About Us</a>
       </div>
     </div>
   </section>
@@ -230,46 +289,45 @@ function getPortfolioImage(imageName: string): ImageMetadata {
       <!-- Left Image Section -->
       <div class="cs-left">
         <picture class="cs-picture cs-picture1">
+          <source media="(max-width: 600px)" srcset={sbsrImage1Mobile.src} />
+          <source media="(min-width: 601px)" srcset={sbsrImage1Desktop.src} />
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsrImageData[0] ? sbsrImageData[0].mod.default.src : '/assets/images/construction.jpg'}
-            alt="house"
+            src={sbsrImage1Desktop.src}
+            alt="construction site preparation"
             loading="lazy"
-            width="400"
-            height="560"
+            width="522"
+            height="581"
           />
         </picture>
         <picture class="cs-picture cs-picture2">
+          <source media="(max-width: 600px)" srcset={sbsrImage2Mobile.src} />
+          <source media="(min-width: 601px)" srcset={sbsrImage2Desktop.src} />
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsrImageData[1] ? sbsrImageData[1].mod.default.src : '/assets/images/cabinets2.jpg'}
-            alt="cabinets"
+            src={sbsrImage2Desktop.src}
+            alt="professional excavation work"
             loading="lazy"
-            width="400"
-            height="560"
+            width="414"
+            height="400"
           />
         </picture>
       </div>
       <!-- Right Content Section-->
       <div class="cs-right">
-        <span class="cs-topper">Full-Service</span>
-        <h2 class="cs-title">Septic Install, Repairs, and Maintenance</h2>
+        <span class="cs-topper">Our Services</span>
+        <h2 class="cs-title">
+          Complete Septic & Excavation Solutions
+        </h2>
         <p class="cs-text">
-          Transform your property with professional septic system installation 
-          and repair services from our expert excavation team. From complete septic system 
-          overhauls to new installations for commercial properties, we deliver reliable solutions 
-          that stand the test of time. Our comprehensive services include a variety of drainage systems, field line installation, and extensions that
-          ensures your septic system operates at peak efficiency. 
+          From septic system installations to complex excavation projects, we provide comprehensive solutions for residential and commercial clients. Our services include septic pumping, drain field repair, site grading, and utility trenching.
         </p>
         <p class="cs-text">
-          Beyond septic services, we're your trusted partner for other excavation needs, 
-          including driveway and patio construction, retaining walls, and concrete pad installations. 
-          With our proven track record in land management and commercial site preparation, 
-          property owners trust us to handle projects of any scale. Every job is executed with precision and care, 
-          backed by our commitment to quality and customer satisfaction.
+          We use modern equipment and proven techniques to ensure every project is completed efficiently and to the highest standards. All work is performed by licensed professionals with full insurance coverage.
         </p>
+        <a href="/services" class="cs-button-solid">View All Services</a>
       </div>
     </div>
   </section>

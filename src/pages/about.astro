@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import CTA from "@components/CTA.astro";
 import Landing from "@components/Landing.astro";
 import FAQ from "@components/FAQ.astro";
+import { getImage } from "astro:assets";
 
 // Import will provide metadata directly
 import landingImageMeta from "@assets/images/landing.jpg";
@@ -22,6 +23,23 @@ const sbsImageData = await Promise.all(
 );
 // Sort by filename for consistent order
 sbsImageData.sort((a, b) => a.path.localeCompare(b.path));
+
+// Optimize SBS images
+const sbsImage1 = await getImage({
+  src: sbsImageData[1]?.mod.default || '/assets/images/equipment2.jpg',
+  format: 'webp',
+  width: 522,
+  height: 581,
+  quality: 95
+});
+
+const sbsImage2 = await getImage({
+  src: sbsImageData[0]?.mod.default || '/assets/images/driveway.jpg',
+  format: 'webp',
+  width: 414,
+  height: 400,
+  quality: 95
+});
 ---
 
 
@@ -52,22 +70,22 @@ sbsImageData.sort((a, b) => a.path.localeCompare(b.path));
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsImageData[1] ? sbsImageData[1].mod.default.src : '/assets/images/equipment2.jpg'}
-            alt="cabinets"
+            src={sbsImage1.src}
+            alt="excavation equipment"
             loading="lazy"
-            width="400"
-            height="563"
+            width="522"
+            height="581"
           />
         </picture>
         <picture class="cs-picture cs-picture2">
           <img
             aria-hidden="true"
             decoding="async"
-            src={sbsImageData[0] ? sbsImageData[0].mod.default.src : '/assets/images/driveway.jpg'}
-            alt="house"
+            src={sbsImage2.src}
+            alt="completed driveway project"
             loading="lazy"
-            width="400"
-            height="563"
+            width="414"
+            height="400"
           />
         </picture>
       </div>
@@ -76,29 +94,28 @@ sbsImageData.sort((a, b) => a.path.localeCompare(b.path));
         <span class="cs-topper">About Us</span>
         <h2 class="cs-title">J.R. Outdoor Solutions</h2>
         <p class="cs-text">
-          At J.R. Outdoor Solutions, we are dedicated to providing exceptional excavation services with integrity, reliability, and a commitment to hard work. We specialize in septic systems, patios, retaining walls, concrete,  and drainage solutions. We prioritize customer satisfaction and superior craftsmanship in all we do. Our mission is to exceed expectations, uphold honesty in all our endeavors, and deliver results that stand the test of time.
+          We transform properties with expert excavation and hardscaping services across North Alabama and Middle Tennessee. Our specialized team delivers premium septic system installations, custom patio designs, retaining walls, professional concrete work, and drainage solutions.
         </p>
         <p class="cs-text">
-          As a young boy, Jake was immersed in the world of agriculture, spending countless hours alongside his father on their family farm. Those years spent working on the farm, ignited a deep-rooted love for the outdoors within him.  It didn’t take him long to find himself drawn to heavy equipment and the experience of working with his hands in the dirt. 
+          As a young boy, Jake was immersed in the world of agriculture, spending countless hours alongside his father on their family farm. Those years spent working on the farm, ignited a deep-rooted love for the outdoors within him.  It didn't take him long to find himself drawn to heavy equipment and the experience of working with his hands in the dirt. 
         </p>
-        <p class="cs-text">
-          When he’s not busy on the job site, you can likely find him enjoying outdoor activities. Whether it is hunting, fishing, or simply tending to the land, he thrives in the great outdoors.         </p>
-          <div class="cs-flex-group">
-            <p class="cs-flex-p">
-              Your project deserves the best, and that's exactly what we deliver.
-            </p>
-            <span class="cs-name">Jake Rubelsky</span>
-            <span class="cs-job">Owner & Operator</span>
-            <img
-              class="cs-quote-icon"
-              loading="lazy"
-              decoding="async"
-              src="https://csimg.nyc3.digitaloceanspaces.com/SideBySide/quote-white.svg"
-              alt="gavel"
-              width="136"
-              height="77"
-            />
-          </div>
+        <div class="cs-flex-group">
+          <p class="cs-flex-p">
+            Your project deserves the best, and that's exactly what we deliver.
+          </p>
+          <span class="cs-name">Jake Rubelsky</span>
+          <span class="cs-job">Owner & Operator</span>
+          <img
+            class="cs-quote-icon"
+            loading="lazy"
+            decoding="async"
+            src="https://csimg.nyc3.digitaloceanspaces.com/SideBySide/quote-white.svg"
+            alt="gavel"
+            width="136"
+            height="77"
+          />
+        </div>
+        <a href="/about" class="cs-button-solid">More About Us</a>
       </div>
     </div>
   </section>
