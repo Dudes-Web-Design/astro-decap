@@ -4,7 +4,7 @@ import icon from "astro-icon";
 import favicons from "astro-favicons";
 
 export default defineConfig({
-  site: "https://www.yourwebsite.com", // update me!
+  site: "https://www.jroutdoorsolutions.com", // update me!
   image: {
     // Enable modern image formats and better compression
     service: {
