@@ -1,0 +1,18 @@
+[build]
+  publish = "dist"
+  command = "pnpm build"
+
+# Netlify Forms configuration
+[forms]
+  enabled = true
+
+# Security headers
+# Note: Redirects for SPA routing not needed for Astro static sites
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin" 

@@ -42,7 +42,10 @@ const imageToRender = landingImageMeta;
           </p>
         </div>
         
-        <form id="cs-form" name="Contact Form" method="post" novalidate role="form">
+        <form id="cs-form" name="Contact Form" method="post" data-netlify="true" novalidate role="form">
+          <!-- Hidden input for Netlify form identification -->
+          <input type="hidden" name="form-name" value="Contact Form" />
+          
           <fieldset>
             <legend class="sr-only">Contact Information</legend>
             <div class="cs-form-group">
@@ -655,8 +658,14 @@ document.addEventListener('DOMContentLoaded', function() {
     statusDiv.className = 'cs-status';
     statusDiv.textContent = '';
     
-    // Simulate form submission (replace with actual submission logic)
-    setTimeout(() => {
+    // Submit to Netlify
+    const formData = new FormData(form);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData as any).toString()
+    })
+    .then(() => {
       // Reset button state
       submitButton.classList.remove('loading');
       submitButton.disabled = false;
@@ -676,8 +685,20 @@ document.addEventListener('DOMContentLoaded', function() {
         el.classList.remove('show');
         el.textContent = '';
       });
+    })
+    .catch(error => {
+      console.error('Form submission error:', error);
       
-    }, 2000);
+      // Reset button state
+      submitButton.classList.remove('loading');
+      submitButton.disabled = false;
+      if (loading) loading.style.display = 'none';
+      if (buttonText) buttonText.textContent = 'Submit Message';
+      
+      // Show error message
+      statusDiv.className = 'cs-status error show';
+      statusDiv.textContent = 'There was an error sending your message. Please try again or contact us directly.';
+    });
   }
 });
 </script>
