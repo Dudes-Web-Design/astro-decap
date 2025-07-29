@@ -62,6 +62,9 @@ const { description, title, preloadedImage } = Astro.props as Props;
             <meta name="description" content={description}>
             <meta name="keywords" content="">
             <link rel="canonical" href={`https://${client.domain}${Astro.url.pathname}`}>
+            
+            <!-- Google Site Verification -->
+            <meta name="google-site-verification" content="OTfzbWehQI17guM1akMdCfdDv-dtrerZOCAUOIiXcS4" />
 
             <!-- If present, preloads the image passed as a prop -->
             {preloadedImage && <link rel="preload" href={preloadedImage.src} as="image" />}
