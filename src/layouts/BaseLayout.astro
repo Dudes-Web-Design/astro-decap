@@ -73,8 +73,8 @@ const { description, title, preloadedImage } = Astro.props as Props;
     />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8MSFH2QR8W"></script>
-    <script type="application/javascript">
+    <script async is:inline src="https://www.googletagmanager.com/gtag/js?id=G-8MSFH2QR8W"></script>
+    <script is:inline type="application/javascript">
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
