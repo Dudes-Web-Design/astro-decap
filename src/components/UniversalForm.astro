@@ -60,11 +60,17 @@ const containerMaxWidth = isAreaInquiry ? "42rem" : "50rem";
 
 // Background styling based on type
 const sectionClass = isAreaInquiry ? "cs-service-area-inquiry" : "cs-contact-form";
+
+// Form name for Netlify
+const formName = `${formType} Form`;
 ---
 
 <section class={`${sectionClass} ${className}`} id={id} aria-labelledby={`${id}-heading`}>
   <div class="cs-container">
-    <form id={`${id}-form`} name={`${formType} Form`} method="post" novalidate role="form" aria-labelledby={`${id}-heading`}>
+    <form id={`${id}-form`} name={formName} method="post" data-netlify="true" novalidate role="form" aria-labelledby={`${id}-heading`}>
+      <!-- Hidden input for Netlify form identification -->
+      <input type="hidden" name="form-name" value={formName} />
+      
       <div class="cs-content">
         {topper && <span class="cs-topper">{topper}</span>}
         <h2 class="cs-title" id={`${id}-heading`}>{dynamicTitle}</h2>
@@ -820,10 +826,14 @@ const sectionClass = isAreaInquiry ? "cs-service-area-inquiry" : "cs-contact-for
       statusDiv.className = 'cs-status';
       statusDiv.textContent = '';
       
-      // Simulate form submission (replace with actual submission logic)
-      const submissionTime = isAreaInquiry ? 1500 : 2000;
-      
-      setTimeout(() => {
+      // Submit to Netlify
+      const formData = new FormData(form);
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString()
+      })
+      .then(() => {
         // Reset button state
         submitButton.classList.remove('loading');
         submitButton.disabled = false;
@@ -855,8 +865,28 @@ const sectionClass = isAreaInquiry ? "cs-service-area-inquiry" : "cs-contact-for
           el.classList.remove('show');
           el.textContent = '';
         });
+      })
+      .catch(error => {
+        console.error('Form submission error:', error);
         
-      }, submissionTime);
+        // Reset button state
+        submitButton.classList.remove('loading');
+        submitButton.disabled = false;
+        if (loading) loading.style.display = 'none';
+        if (buttonText) buttonText.textContent = 'Submit';
+        
+        // Show error message
+        statusDiv.className = 'cs-status error show';
+        statusDiv.textContent = 'There was an error sending your message. Please try again or contact us directly.';
+        
+        // Scroll to status message on mobile
+        if (window.innerWidth < 768) {
+          statusDiv.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center'
+          });
+        }
+      });
     }
   });
 </script> 

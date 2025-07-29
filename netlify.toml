@@ -1,0 +1,32 @@
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+# Environment variables for Sharp compatibility
+[build.environment]
+  # Sharp configuration for Netlify
+  SHARP_IGNORE_GLOBAL_LIBVIPS = "1"
+  # Ensure pnpm allows build scripts
+  PNPM_ENABLE_PRE_POST_SCRIPTS = "true"
+
+# Netlify Forms configuration
+[forms]
+  enabled = true
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Context-specific configurations
+[context.deploy-preview]
+  # Deploy previews inherit global settings but can be customized
+  # No specific overrides needed for static Astro sites
+
+[context.branch-deploy]
+  # Branch deploys inherit global settings but can be customized
+  # No specific overrides needed for static Astro sites 
