@@ -1,6 +1,6 @@
 {
   "extends": "astro/tsconfigs/base",
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": ["dist"],
   "compilerOptions": {
     // necessary for Astro content collections
