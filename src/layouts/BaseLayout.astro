@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import type { GetImageResult } from 'astro';
+import type { GetImageResult } from "astro";
 import client from "@data/client.json";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
@@ -23,19 +23,19 @@ type PreloadedImage = GetImageResult | ContentImage;
 
 // Helper function to get image properties safely
 function getImageProps(image: PreloadedImage) {
-  if ('options' in image) {
+  if ("options" in image) {
     // This is a GetImageResult
     return {
       width: image.options.width || 1200,
       height: image.options.height || 630,
-      format: image.options.format || 'jpeg'
+      format: image.options.format || "jpeg",
     };
   } else {
     // This is a ContentImage
     return {
       width: image.width || 1200,
       height: image.height || 630,
-      format: image.format || 'jpeg'
+      format: image.format || "jpeg",
     };
   }
 }
@@ -47,148 +47,222 @@ interface Props {
 }
 
 const { description, title, preloadedImage } = Astro.props as Props;
-
 ---
+
 <!-- A fully fleshed-out <head>, dynamically changing based on client.json and the page front matter -->
 <html lang="en">
-        <head>
-            <!-- View Transitions support -->
-            <ViewTransitions />
+  <head>
+    <!-- View Transitions support -->
+    <ViewTransitions />
 
-            <!-- Standard meta tags -->
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta name="description" content={description}>
-            <meta name="keywords" content="">
-            <link rel="canonical" href={`https://${client.domain}${Astro.url.pathname}`}>
-            
-            <!-- Google Site Verification -->
-            <meta name="google-site-verification" content="OTfzbWehQI17guM1akMdCfdDv-dtrerZOCAUOIiXcS4" />
+    <!-- Standard meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="keywords" content="" />
+    <link
+      rel="canonical"
+      href={`https://${client.domain}${Astro.url.pathname}`}
+    />
 
-            <!-- If present, preloads the image passed as a prop -->
-            {preloadedImage && <link rel="preload" href={preloadedImage.src} as="image" />}
-            
-            <!-- Preload critical CSS and fonts -->
-            <link rel="preload" href="/assets/fonts/roboto-v29-latin-regular.woff2" as="font" type="font/woff2" crossorigin />
-            <link rel="preload" href="/assets/fonts/roboto-v29-latin-700.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Google Site Verification -->
+    <meta
+      name="google-site-verification"
+      content="OTfzbWehQI17guM1akMdCfdDv-dtrerZOCAUOIiXcS4"
+    />
 
-            <!-- OpenGraph / Social Media Display -->
-            <meta property="og:title" content={title} />
-            <meta property="og:description" content={description} />
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content={`https://${client.domain}${Astro.url.pathname}`} />
-            <meta property="og:site_name" content={client.name} />
-            <meta property="og:locale" content="en_US" />
-            {
-              preloadedImage && (() => {
-                const imageProps = getImageProps(preloadedImage);
-                return (
-                  <>
-                    <meta property="og:image" content={`https://${client.domain}${preloadedImage.src}`} />
-                    <meta property="og:image:secure_url" content={`https://${client.domain}${preloadedImage.src}`} />
-                    <meta property="og:image:width" content={imageProps.width.toString()} />
-                    <meta property="og:image:height" content={imageProps.height.toString()} />
-                    <meta property="og:image:alt" content={title} />
-                    <meta property="og:image:type" content={`image/${imageProps.format}`} />
-                  </>
-                );
-              })()
-            }
-            
-            <!-- Twitter Card -->
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content={title} />
-            <meta name="twitter:description" content={description} />
-            {
-              preloadedImage && (
-                <>
-                  <meta name="twitter:image" content={`https://${client.domain}${preloadedImage.src}`} />
-                  <meta name="twitter:image:alt" content={title} />
-                </>
-              )
-            }
-                
-            <!-- Favicons -->
-            <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
-            <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png?v2">
-            <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png">
-            <link rel="manifest" href="/assets/favicons/site.webmanifest">
-            <meta name="msapplication-TileColor" content="#da532c">
-            <meta name="theme-color" content="#ffffff">
-         
-            <!-- For home page, use service keywords for the title, including location for SEO.
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8MSFH2QR8W"></script>
+    <script type="application/javascript">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-8MSFH2QR8W");
+    </script>
+
+    <!-- If present, preloads the image passed as a prop -->
+    {
+      preloadedImage && (
+        <link rel="preload" href={preloadedImage.src} as="image" />
+      )
+    }
+
+    <!-- Preload critical CSS and fonts -->
+    <link
+      rel="preload"
+      href="/assets/fonts/roboto-v29-latin-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/roboto-v29-latin-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- OpenGraph / Social Media Display -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content={`https://${client.domain}${Astro.url.pathname}`}
+    />
+    <meta property="og:site_name" content={client.name} />
+    <meta property="og:locale" content="en_US" />
+    {
+      preloadedImage &&
+        (() => {
+          const imageProps = getImageProps(preloadedImage);
+          return (
+            <>
+              <meta
+                property="og:image"
+                content={`https://${client.domain}${preloadedImage.src}`}
+              />
+              <meta
+                property="og:image:secure_url"
+                content={`https://${client.domain}${preloadedImage.src}`}
+              />
+              <meta
+                property="og:image:width"
+                content={imageProps.width.toString()}
+              />
+              <meta
+                property="og:image:height"
+                content={imageProps.height.toString()}
+              />
+              <meta property="og:image:alt" content={title} />
+              <meta
+                property="og:image:type"
+                content={`image/${imageProps.format}`}
+              />
+            </>
+          );
+        })()
+    }
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {
+      preloadedImage && (
+        <>
+          <meta
+            name="twitter:image"
+            content={`https://${client.domain}${preloadedImage.src}`}
+          />
+          <meta name="twitter:image:alt" content={title} />
+        </>
+      )
+    }
+
+    <!-- Favicons -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/favicons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/favicons/favicon-32x32.png?v2"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/favicons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/assets/favicons/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- For home page, use service keywords for the title, including location for SEO.
             Other pages should just include the page name.
             
             EXAMPLE:
             Home page - House Painting Contractors | Painters and Co. | TestCity, WA
             About Page - About us | Painters and Co.
             -->
-            <title>
-                {Astro.url.pathname === "/" ?  (`${ title }
+    <title>
+      {
+        Astro.url.pathname === "/"
+          ? `${title}
                 |
-                ${ client.name }
+                ${client.name}
                 |
-                ${ client.address.city },
-                ${ client.address.state }`) :
-                (`${ title }
+                ${client.address.city},
+                ${client.address.state}`
+          : `${title}
                     |
-                    ${ client.name }`)
-            }
-            </title>
+                    ${client.name}`
+      }
+    </title>
 
-            <!-- Sitewide Scripts -->
-            <script src="@js/nav.js"></script>
-            
-            <!-- Analytics -->
-            <script src="https://tinylytics.app/embed/zco3WUibHze_azXwoYYA.js" defer></script>
-        </head>
-        <body>
-            <!-- Screen reader skip main nav -->
-            <a class="skip" aria-label="skip to main content" href="#main">Click To Skip To Main Content</a>
-    
-            <Header />
-            <main id="main">
-                <slot/>
-            </main>
-            <Footer />
-    
-        </body>
+    <!-- Sitewide Scripts -->
+    <script src="@js/nav.js"></script>
+
+    <!-- Analytics -->
+    <script src="https://tinylytics.app/embed/zco3WUibHze_azXwoYYA.js" defer
+    ></script>
+  </head>
+  <body>
+    <!-- Screen reader skip main nav -->
+    <a class="skip" aria-label="skip to main content" href="#main"
+      >Click To Skip To Main Content</a
+    >
+
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
 
 <script is:inline>
-    // helper functions to toggle dark mode
-    function enableDarkMode() {
-      document.body.classList.add("dark-mode");
-      localStorage.setItem("theme", "dark");
+  // helper functions to toggle dark mode
+  function enableDarkMode() {
+    document.body.classList.add("dark-mode");
+    localStorage.setItem("theme", "dark");
+  }
+
+  function disableDarkMode() {
+    document.body.classList.remove("dark-mode");
+    localStorage.setItem("theme", "light");
+  }
+
+  function setTheme() {
+    // default to the light theme
+    let theme = "light";
+
+    // check localStorage for a saved 'theme' variable. if it's there, the user has visited before, so apply the necessary theme choices
+    if (localStorage.getItem("theme")) {
+      theme = localStorage.getItem("theme");
     }
-  
-    function disableDarkMode() {
-      document.body.classList.remove("dark-mode");
-      localStorage.setItem("theme", "light");
+    // if it's not there, check to see if the user has applied dark mode preferences themselves in the browser
+    else if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      theme = "dark";
     }
-  
-    function setTheme() {
-      // default to the light theme
-      let theme = "light";
-  
-      // check localStorage for a saved 'theme' variable. if it's there, the user has visited before, so apply the necessary theme choices
-      if (localStorage.getItem("theme")) {
-        theme = localStorage.getItem("theme");
-      }
-      // if it's not there, check to see if the user has applied dark mode preferences themselves in the browser
-      else if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        theme = "dark";
-      }
-  
-      // if there is no preference set, the default of light will be used. apply accordingly
-      theme === "dark" ? enableDarkMode() : disableDarkMode();
-    }
-  
-    setTheme();
-  
-    document.addEventListener("astro:after-swap", setTheme); // For View Transitions purposes - astro:after-swap ensures that the theme is kept after navigating to a new page.
-  </script>
+
+    // if there is no preference set, the default of light will be used. apply accordingly
+    theme === "dark" ? enableDarkMode() : disableDarkMode();
+  }
+
+  setTheme();
+
+  document.addEventListener("astro:after-swap", setTheme); // For View Transitions purposes - astro:after-swap ensures that the theme is kept after navigating to a new page.
+</script>
