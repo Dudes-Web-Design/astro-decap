@@ -1,27 +1,32 @@
 [build]
+  command = "pnpm build"
   publish = "dist"
-  command = "pnpm install --frozen-lockfile && pnpm build"
 
-# Environment variables for build
+# Environment variables for Sharp compatibility
 [build.environment]
   # Sharp configuration for Netlify
   SHARP_IGNORE_GLOBAL_LIBVIPS = "1"
   # Ensure pnpm allows build scripts
   PNPM_ENABLE_PRE_POST_SCRIPTS = "true"
-  # Force pnpm to install with build scripts
-  ENABLE_PNPM_BUILD_SCRIPTS = "true"
 
 # Netlify Forms configuration
 [forms]
   enabled = true
 
 # Security headers
-# Note: Redirects for SPA routing not needed for Astro static sites
-
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin" 
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Context-specific configurations
+[context.deploy-preview]
+  # Deploy previews inherit global settings but can be customized
+  # No specific overrides needed for static Astro sites
+
+[context.branch-deploy]
+  # Branch deploys inherit global settings but can be customized
+  # No specific overrides needed for static Astro sites 
