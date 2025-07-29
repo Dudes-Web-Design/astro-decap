@@ -6,9 +6,9 @@ import favicons from "astro-favicons";
 export default defineConfig({
   site: "https://www.jroutdoorsolutions.com", // update me!
   image: {
-    // Enable modern image formats and better compression
+    // Use squoosh service for better Netlify compatibility
     service: {
-      entrypoint: 'astro/assets/services/sharp',
+      entrypoint: 'astro/assets/services/squoosh',
       config: {
         limitInputPixels: false,
       }

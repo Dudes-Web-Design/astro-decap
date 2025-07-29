@@ -1,6 +1,15 @@
 [build]
   publish = "dist"
-  command = "pnpm build"
+  command = "pnpm install --frozen-lockfile && pnpm build"
+
+# Environment variables for build
+[build.environment]
+  # Allow Sharp to be installed properly
+  SHARP_IGNORE_GLOBAL_LIBVIPS = "1"
+  # Enable pnpm to run build scripts
+  ENABLE_PNPM_BUILD_SCRIPTS = "true"
+  # Force pnpm to allow build scripts
+  PNPM_ENABLE_PRE_POST_SCRIPTS = "true"
 
 # Netlify Forms configuration
 [forms]
